@@ -25,7 +25,6 @@ import RenderingManager from "../Rendering/RenderingManager";
 import Debug from "../Debug/Debug";
 import TimerManager from "../Timing/TimerManager";
 import TweenManager from "../Rendering/Animations/TweenManager";
-import ParticleSystemManager from "../Rendering/Animations/ParticleSystemManager";
 
 /**
  * Scenes are the main container in the game engine.
@@ -173,9 +172,6 @@ export default class Scene implements Updateable {
         
         // Update all tweens
         TweenManager.getInstance().update(deltaT);
-
-        // Update all particle systems
-        ParticleSystemManager.getInstance().update(deltaT);
 
         // Update viewport
         this.viewport.update(deltaT);

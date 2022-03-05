@@ -2,7 +2,6 @@ import Updateable from "../DataTypes/Interfaces/Updateable";
 import MathUtils from "../Utils/MathUtils";
 import TimerManager from "./TimerManager";
 
-/** */
 export default class Timer implements Updateable {
 
     /** The current state of this timer */

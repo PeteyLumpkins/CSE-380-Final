@@ -2,10 +2,9 @@ import AI from "../DataTypes/Interfaces/AI";
 import GameEvent from "../Events/GameEvent";
 import GameNode from "../Nodes/GameNode";
 
-/** */
 export default abstract class ControllerAI implements AI {
     /** The owner of this controller */
-	protected owner: GameNode;
+    owner: GameNode;
 
     /** Removes the instance of the owner of this AI */
     destroy(): void {

@@ -1,6 +1,5 @@
 import Stack from "../DataTypes/Stack";
 
-/** */
 export default class MemoryUtils {
     /**
      * Returns an approximate size in bytes of any object

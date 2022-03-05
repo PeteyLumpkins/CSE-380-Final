@@ -1,40 +1,49 @@
 import Game from "./Wolfie2D/Loop/Game";
-import hw4_scene from "./hw4/Scenes/hw4_scene";
+import { Homework3Shaders } from "./hw3/HW3_Enums";
+import GradientCircleShaderType from "./hw3/GradientCircleShaderType";
+import MainMenu from "./hw3/Scenes/MainMenu";
+import AABB from "./Wolfie2D/DataTypes/Shapes/AABB";
+import Vec2 from "./Wolfie2D/DataTypes/Vec2";
+import Circle from "./Wolfie2D/DataTypes/Shapes/Circle";
+import Homework3_Scene from "./hw3/Scenes/HW3_Scene";
 import RegistryManager from "./Wolfie2D/Registry/RegistryManager";
-import WeaponTemplateRegistry from "./hw4/Registry/WeaponRegistry";
-import WeaponTypeRegistry from "./hw4/Registry/WeaponTypeRegistry";
-import MainMenu from "./hw4/Scenes/MainMenu";
-import GoapActionPlanner from "./Wolfie2D/AI/GoapActionPlanner";
+import LinearGradientCircleShaderType from "./hw3/LinearGradientCircleShaderType";
 
 // The main function is your entrypoint into Wolfie2D. Specify your first scene and any options here.
 (function main(){
-    // Run any tests
-    runTests();
+    // Note - just because your program passes all of these tests does not mean your algorithm works.
+    // The tests should cover most cases, but run your own to be sure
 
     // Set up options for our game
     let options = {
-        canvasSize: {x: 1200, y: 800},          // The size of the game
+        canvasSize: {x: 900, y: 900},          // The size of the game
         clearColor: {r: 0.1, g: 0.1, b: 0.1},   // The color the game clears to
         inputs: [
-            {name: "forward", keys: ["w"]},
-            {name: "backward", keys: ["s"]},
-            {name: "left", keys: ["a"]},
-            {name: "right", keys: ["d"]},
-            {name: "pickup", keys: ["e"]},
-            {name: "drop", keys: ["q"]},
-            {name: "slot1", keys: ["1"]},
-            {name: "slot2", keys: ["2"]},
+            { name: "forward", keys: ["w"] },   // Forward is assigned to w
+            { name: "backward", keys: ["s"] },  // and so on...
+            { name: "left", keys: ["a"] },
+            { name: "right", keys: ["d"] },
         ],
-        useWebGL: false,                        // Tell the game we want to use webgl
+        useWebGL: true,                        // Tell the game we want to use webgl
         showDebug: false                       // Whether to show debug messages. You can change this to true if you want
     }
 
-    // Set up custom registries
-    let weaponTemplateRegistry = new WeaponTemplateRegistry();
-    RegistryManager.addCustomRegistry("weaponTemplates", weaponTemplateRegistry);
-    
-    let weaponTypeRegistry = new WeaponTypeRegistry();
-    RegistryManager.addCustomRegistry("weaponTypes", weaponTypeRegistry);
+    // We have a custom shader, so lets add it to the registry and preload it
+    // The registry essentially just ensures that we can locate items by name later, rather than needing
+    // the class constructor. Here, we additionally make sure to preload the data so our
+    // shader is available throughout the application
+    RegistryManager.shaders.registerAndPreloadItem(
+        Homework3Shaders.GRADIENT_CIRCLE,   // The key of the shader program
+        GradientCircleShaderType,           // The constructor of the shader program
+        "hw3_assets/shaders/gradient_circle.vshader",   // The path to the vertex shader
+        "hw3_assets/shaders/gradient_circle.fshader");  // the path to the fragment shader*/
+
+    // This is the custom shader that you'll implement, although currently it's exactly the same as our gradient circle shader
+    RegistryManager.shaders.registerAndPreloadItem(
+        Homework3Shaders.LINEAR_GRADIENT_CIRCLE,   // The key of the shader program
+        LinearGradientCircleShaderType,           // The constructor of the shader program
+        "hw3_assets/shaders/linear_gradient_circle.vshader",   // The path to the vertex shader
+        "hw3_assets/shaders/linear_gradient_circle.fshader");  // the path to the fragment shader*/
 
     // Create a game with the options specified
     const game = new Game(options);
@@ -43,6 +52,3 @@ import GoapActionPlanner from "./Wolfie2D/AI/GoapActionPlanner";
     game.start(MainMenu, {});
 })();
 
-function runTests(){
-    
-};
