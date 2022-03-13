@@ -1,0 +1,54 @@
+{
+    "name": "Adam",
+    "spriteSheetImage": "Adam.png",
+    "spriteWidth": 16,
+    "spriteHeight": 16,
+    "leftBuffer": 0,
+    "rightBuffer": 0,
+    "topBuffer": 0,
+    "bottomBuffer": 0,
+    "columns": 24,
+    "rows": 7,
+    "animations": [
+        {
+            "name": "idleRight",
+            "repeat": true,
+            "frames": [
+                {
+                    "index": 0, 
+                    "duration": 1
+                }
+            ]
+        }, 
+        {
+            "name": "idleUp",
+            "repeat": true,
+            "frames": [
+                {
+                    "index": 1,
+                    "duration": 1
+                }
+            ]
+        },
+        {
+            "name": "idleDown",
+            "repeat": true,
+            "frames": [
+                {
+                    "index": 2, 
+                    "duration": 1
+                }
+            ]
+        },
+        {
+            "name": "idleLeft",
+            "repeat": true,
+            "frames": [
+                {
+                    "index": 3, 
+                    "duration": 1
+                }
+            ]
+        }
+    ]
+}
