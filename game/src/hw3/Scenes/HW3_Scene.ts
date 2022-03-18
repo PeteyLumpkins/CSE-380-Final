@@ -11,7 +11,7 @@ import Color from "../../Wolfie2D/Utils/Color";
 import RandUtils from "../../Wolfie2D/Utils/RandUtils";
 import RockAI from "../AI/RockAI";
 import BulletBehavior from "../AI/BulletAI";
-import { Homework3Animations, Homework3Event, Homework3Shaders } from "../HW3_Enums";
+import { Homework3Animations, Homework3Event, AdamAnimations, Homework3Shaders } from "../HW3_Enums";
 import CarPlayerController from "../AI/CarPlayerController";
 import Circle from "../../Wolfie2D/DataTypes/Shapes/Circle";
 import GameOver from "./GameOver";
@@ -36,12 +36,9 @@ export default class Homework3_Scene extends Scene {
 
 	// Create an object pool for our bullets
 	private MAX_BULLETS_SIZE = 5;
-	private bullets: Array<Graphic> = new Array(this.MAX_BULLETS_SIZE);
 
 	// Create an object pool for our rocks
 	private MAX_NUM_ROCKS = 15;
-	private INITIAL_NUM_ROCKS = 1;
-	private rocks: Array<Sprite> = new Array(this.MAX_NUM_ROCKS);
 
 	// Create an object pool for our minerals
 	private MAX_NUM_MINERALS = 20;
@@ -80,7 +77,7 @@ export default class Homework3_Scene extends Scene {
 	loadScene(){
 		/* ##### DO NOT MODIFY ##### */
 		// Load in the player car spritesheet
-		this.load.spritesheet("player", "hw3_assets/spritesheets/cars.json");
+		this.load.spritesheet("player", "hw3_assets/spritesheets/Adam.json");
 
 		// Load in the background image
 		this.load.image("desert_road", "hw3_assets/sprites/road.jpg");
@@ -188,10 +185,10 @@ export default class Homework3_Scene extends Scene {
 		
 		// Set the player's position to the middle of the screen, and scale it down
 		this.player.position.set(this.viewport.getCenter().x, this.viewport.getCenter().y);
-		this.player.scale.set(0.4, 0.4);
+		this.player.scale.set(3, 3);
 
 		// Play the idle animation by default
-		this.player.animation.play(Homework3Animations.CAR_DRIVE);
+		this.player.animation.play(AdamAnimations.IDLE_RIGHT);
 
 		// Give the player a smaller hitbox
 		console.log(this.player.sizeWithZoom.toString());

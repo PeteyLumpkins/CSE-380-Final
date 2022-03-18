@@ -7,7 +7,7 @@ import Receiver from "../../Wolfie2D/Events/Receiver";
 import Input from "../../Wolfie2D/Input/Input";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import MathUtils from "../../Wolfie2D/Utils/MathUtils";
-import { Homework3Animations, Homework3Event } from "../HW3_Enums";
+import { Homework3Animations, AdamAnimations, Homework3Event } from "../HW3_Enums";
 
 export default class CarPlayerController implements AI {
 	// We want to be able to control our owner, so keep track of them
@@ -56,17 +56,7 @@ export default class CarPlayerController implements AI {
 
 	handleEvent(event: GameEvent): void {
 		// We need to handle animations when we get hurt
-		if(event.type === Homework3Event.PLAYER_DAMAGE){
-			if(event.data.get("health") === 0){
-				// Play animation and queue event to end game
-				this.emitter.fireEvent(Homework3Event.PLAYER_DEAD);
-				this.owner.animation.play("dying", false, Homework3Event.PLAYER_DEAD);
-				this.owner.animation.queue("dead", true);
-				this.isDead = true;
-			} else {
-				this.owner.animation.play("damage", false, Homework3Event.PLAYER_I_FRAMES_END);
-			}
-		}
+		
 	}
 
 	update(deltaT: number): void {
@@ -76,17 +66,6 @@ export default class CarPlayerController implements AI {
 			this.handleEvent(this.receiver.getNextEvent());
 		}
 
-		//HOMEWORK 3 - TODO 
-		//When the player clicks their mouse, a bullet should be fired by using the SHOOT_BULLET event.
-		//Note that you shouldn't be able to fire a bullet while holding shift.
-
-		//If shift is currently being held down, increase the speed of the car. If not, check if mouse click has been pressed to shoot a bullet.
-		if(Input.isKeyPressed("shift")) {
-			this.speed = this.MAX_SPEED;
-		} else if (Input.isMouseJustPressed()) {
-			this.emitter.fireEvent(Homework3Event.SHOOT_BULLET, {position: this.owner.relativePosition});
-			this.owner.animation.playIfNotAlready(Homework3Animations.CAR_FIRING);
-		}
 
 		// We need to handle player input for movement
 		let forwardAxis = (Input.isPressed('forward') ? 1 : 0) + (Input.isPressed('backward') ? -1 : 0);
@@ -99,9 +78,11 @@ export default class CarPlayerController implements AI {
 		this.owner.position.add(movement.scaled(deltaT));
 
 		// Animations
-		if(!this.owner.animation.isPlaying("damage") && !this.owner.animation.isPlaying("dying") && !this.owner.animation.isPlaying("firing")){
-			this.owner.animation.playIfNotAlready("driving");
-		}
+		if (Input.isPressed('forward')) { this.owner.animation.play(AdamAnimations.IDLE_UP); }
+		else if (Input.isPressed('right')) { this.owner.animation.play(AdamAnimations.IDLE_RIGHT); }
+		else if (Input.isPressed('left')) { this.owner.animation.play(AdamAnimations.IDLE_LEFT); }
+		else if (Input.isPressed('backward')) { this.owner.animation.play(AdamAnimations.IDLE_DOWN); }
+
 	}
 
 	destroy(): void {

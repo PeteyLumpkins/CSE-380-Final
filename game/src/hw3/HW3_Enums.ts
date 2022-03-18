@@ -28,3 +28,17 @@ export enum Homework3Animations {
 	CAR_DEAD = "dead", 
 	CAR_FIRING = "firing"
 }
+
+export enum AdamAnimations {
+	IDLE_RIGHT = "idleRight",
+	RUN_RIGHT = "runRight",
+
+	IDLE_UP = "idleUp",
+	RUN_UP = "runUp",
+
+	IDLE_LEFT = "idleLeft",
+	RUN_LEFT = "runLeft",
+
+	IDLE_DOWN = "idleDown",
+	RUN_DOWN = "runDown"
+}
