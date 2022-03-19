@@ -3,6 +3,7 @@ import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Layer from "../../Wolfie2D/Scene/Layer";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
+import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import { Homework3Event } from "../HW3_Enums";
 import Homework1_Scene from "./HW3_Scene";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
@@ -12,11 +13,21 @@ export default class MainMenu extends Scene {
     private mainMenu: Layer;
     private controls: Layer;
     private about: Layer;
+    private background: Sprite;
 
-    loadScene(){}
+    loadScene(){
+
+        this.load.image("background", "hw3_assets/IMG_0551.jpeg");
+    }
 
     startScene(){
         const center = this.viewport.getCenter();
+
+        // The background layer
+        this.addLayer("background", 0);
+        this.background = this.add.sprite("background", "background");
+		this.background.scale.set(.5, .5);
+		this.background.position.copy(this.viewport.getCenter());
 
         // The main menu
         this.mainMenu = this.addUILayer("mainMenu");

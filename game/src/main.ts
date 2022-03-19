@@ -1,13 +1,13 @@
 import Game from "./Wolfie2D/Loop/Game";
-import { Homework3Shaders } from "./hw3/HW3_Enums";
-import GradientCircleShaderType from "./hw3/GradientCircleShaderType";
-import MainMenu from "./hw3/Scenes/MainMenu";
+import { Homework3Shaders } from "./game/HW3_Enums";
+import GradientCircleShaderType from "./game/GradientCircleShaderType";
+import MainMenu from "./game/Scenes/MainMenu";
 import AABB from "./Wolfie2D/DataTypes/Shapes/AABB";
 import Vec2 from "./Wolfie2D/DataTypes/Vec2";
 import Circle from "./Wolfie2D/DataTypes/Shapes/Circle";
-import Homework3_Scene from "./hw3/Scenes/HW3_Scene";
+import Homework3_Scene from "./game/Scenes/HW3_Scene";
 import RegistryManager from "./Wolfie2D/Registry/RegistryManager";
-import LinearGradientCircleShaderType from "./hw3/LinearGradientCircleShaderType";
+import LinearGradientCircleShaderType from "./game/LinearGradientCircleShaderType";
 
 // The main function is your entrypoint into Wolfie2D. Specify your first scene and any options here.
 (function main(){
