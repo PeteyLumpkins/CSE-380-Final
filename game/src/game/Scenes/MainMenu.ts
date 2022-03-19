@@ -10,6 +10,7 @@ import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 
 export default class MainMenu extends Scene {
     // Layers, for multiple main menu screens
+    private splash: Layer; //added, we need a new layer for the splash screen
     private mainMenu: Layer;
     private controls: Layer;
     private about: Layer;
