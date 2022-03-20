@@ -1,5 +1,5 @@
 # Campus Caverns Game Design Documentation
-A 2D top-down dungeon crawler game by Peter Walsh, Jeffery Tsang, Han Lin.
+A 2D top-down ish dungeon crawler game by Peter Walsh, Jeffery Tsang, Han Lin.
 
 ## Introduction
 
@@ -25,6 +25,20 @@ Peter's goal is to explore the basement of the old computer science building and
     1. Continue - unpauses the game
     2. Main Menu - returns the player to the main menu
     3. Help/Controls - displays a small popup with the game controls listed out
+
+## Gameplay
+
+The game will be played in a top-down fashion, but not completely top-down. You will get a complete 2D view of your character (ie. you won't just be looking down at the heads of the enemies and player).
+
+Peter (the player) will be loaded into the first level at some initial starting position (TBA). From here, Peter will be able to traverse through the levels playing area. Within the play area there are several enemies the Peter will have to fight, or sneak around.
+
+To exit/move between levels, Peter will have to defeat the areas boss, who will drop a special key that can be used to unlock the door to the next area.
+
+Several of Peter's friends have been scattered and taken captive by the level areas boss. Peter doesn't have to rescue all of his friends to move onto the next level, however, every rescued friend will give Peter some sort of buff (be that health, speed, or strength).
+
+## AI
+
+How the AI in the game work is going to be different for each type of enemy in the game. There will also have to be some kind of boss specific AI system in place for the bosses. More details about this coming soon.
 
 ## Graphical User Interface
 
@@ -122,5 +136,32 @@ There will be one tileset per level in the game. Besides conforming to the theme
 ## Sound Effects
 TBA
 
-## Gamee Music
+## Game Music
 TBA
+
+## Mockup Diagrams
+
+### Splash
+This is our mockup diagram for our games splash screen. The logo is a work in progress.
+
+![image](./images/Splash.png)
+
+### Main Menu
+This is our mockup diagram for the main menu of our game. We're working on the game logo right now, it will go in place of the game logo tag. The background has been faded a little bit, this is intentional.
+
+![image](./images/MainMenu.png)
+
+### Controls
+This is our controls screen. It's pretty similar to the control screens of the games we did for homework.
+
+![image](./images/Controls.png)
+
+### Levels
+This is the format for our levels selection page. There will be 6 levels as per the assignment specification. There is a back button to return to the main menu. Each level will have a small image preview of the level.
+
+![image](./images/Levels.png)
+
+### Help
+The help page will have basically just one text box with a description of the games story and a back button that brings the player back to thee main menu. 
+
+![image](./images/Help.png)
