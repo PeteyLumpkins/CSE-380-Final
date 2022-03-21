@@ -5,7 +5,7 @@ A 2D top-down ish dungeon crawler game by Peter Walsh, Jeffery Tsang, Han Lin.
 
 
 ## Backstory
-Deep beneath Stony Brooks Univeersity's West Campus, evil stirs. 
+Deep beneath Stony Brooks University's West Campus, evil stirs. 
 
 Recently, Peter's friends have been mysteriously disappearing around the Old Computer Science buidling. One day, when Peter was leaving his office hours, he noticed a mysterious door he'd never seen before. Upon further inspection, he found a stairwell that lead to the Old CS basement.
 
