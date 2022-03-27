@@ -20,6 +20,7 @@ import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import CanvasNode from "../../Wolfie2D/Nodes/CanvasNode";
 import Shape from "../../Wolfie2D/DataTypes/Shapes/Shape";
 import Timer from "../../Wolfie2D/Timing/Timer";
+import Input from "../../Wolfie2D/Input/Input";
 
 /**
  * In Wolfie2D, custom scenes extend the original scene class.

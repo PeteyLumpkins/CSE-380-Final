@@ -16,13 +16,14 @@ import LinearGradientCircleShaderType from "./game/LinearGradientCircleShaderTyp
 
     // Set up options for our game
     let options = {
-        canvasSize: {x: 900, y: 900},          // The size of the game
+        canvasSize: {x: 1024, y: 1024},          // The size of the game
         clearColor: {r: 0.1, g: 0.1, b: 0.1},   // The color the game clears to
         inputs: [
             { name: "forward", keys: ["w"] },   // Forward is assigned to w
             { name: "backward", keys: ["s"] },  // and so on...
             { name: "left", keys: ["a"] },
             { name: "right", keys: ["d"] },
+            { name: "pause", keys: ["ESC"]}
         ],
         useWebGL: true,                        // Tell the game we want to use webgl
         showDebug: false                       // Whether to show debug messages. You can change this to true if you want
