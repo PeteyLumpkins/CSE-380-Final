@@ -119,10 +119,10 @@ The game will have approximately six levels. Each level will have it's own uniqu
 Each level will in the game will have it's own tileset that conforms (generally) to the themes of the game levels which are as follows:
 
 1. **Old CS Basement**. Just concrete, pipes and mold.
-2. 
-3.
+2. **Chemistry Building Basement** Some sort of secret meth lab?
+3. **Hospital** Who knows these are just ideas
 4. **Library Basement**. Old books/bookshelves and cobwebs. Wooden theme?
-5.
+5. TBA?
 6. **Jatvits Lecture Basement/Bunker**. Some kind of fallout shelter or secret nuclear bunker. Maybe very modern theme?
 
 #### Tiles
@@ -165,3 +165,8 @@ This is the format for our levels selection page. There will be 6 levels as per 
 The help page will have basically just one text box with a description of the games story and a back button that brings the player back to thee main menu. 
 
 ![image](./images/Help.png)
+
+### In-game GUI (rough version)
+The in-game GUI is the one thing that is most likely subject to change as time goes on here. I've drawn a rough mockup diagram of it here. It's in the paused state to kind of show what the pause/unpause buttons would look like.
+
+![image](./images/GameMenu.png)
