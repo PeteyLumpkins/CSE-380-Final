@@ -11,172 +11,152 @@
 
 <body class="app">
   <h1 id="campus-caverns-game-design-documentation">Campus Caverns Game Design Documentation</h1>
-  <p>A 2D top-down ish dungeon crawler game by Peter Walsh, Jeffery Tsang, Han Lin.</p>
-  <h2 id="introduction">Introduction</h2>
-  <h2 id="backstory">Backstory</h2>
-  <p>Deep beneath Stony Brooks University&#39;s West Campus, evil stirs. </p>
-  <p>Recently, Peter&#39;s friends have been mysteriously disappearing around the Old Computer Science building. One
-    day, when Peter was leaving his office hours, he noticed a mysterious door he&#39;d never seen before. Upon further
-    inspection, he found a stairwell that leads to the Old CS basement.</p>
-  <h2 id="objective">Objective</h2>
-  <p>Peter&#39;s goal is to explore the basement of the old computer science building and wherever it leads. As he goes
-    along he&#39;s likely to encounter many foes and potential hazards. After all, who knows what&#39;s been festering
-    down there all these years. Armed with nothing but a whiffle-ball bat he stole from the SBCS storage room,
-    Peter&#39;s on a mission to explore the basement of the old computer science building and rescue his friends.</p>
-  <h2 id="game-controls">Game Controls</h2>
-  <ul>
-  <li><strong>A</strong> - Move left</li>
-  <li><strong>S</strong> - Move down</li>
-  <li><strong>D</strong> - Move right</li>
-  <li><strong>W</strong> - Move Up</li>
-  <li><strong>SPACE</strong> - Attack</li>
-  <li><p><strong>ESC</strong> - Pauses the game and displays a small window with two options. </p>
-  <ol>
-  <li>Continue - unpauses the game</li>
-  <li>Main Menu - returns the player to the main menu</li>
-  <li>Help/Controls - displays a small popup with the game controls listed out</li>
-  </ol>
-  </li>
-  </ul>
-  <h2 id="gameplay">Gameplay</h2>
-  <p>The game will be played in a top-down fashion, but not completely top-down. You will get a complete 2D view of your
-    character (ie. you won&#39;t just be looking down at the heads of the enemies and player).</p>
-  <p>Peter (the player) will be loaded into the first level at some initial starting position (TBA). From here, Peter
-    will be able to traverse through the level playing area. Within the play area, there are several enemies that Peter
-    will have to fight, or sneak around.</p>
-  <p>To exit/move between levels, Peter will have to defeat the area&#39;s boss, who will drop a special key that can be
-    used to unlock the door to the next area.</p>
-  <p>Several of Peter&#39;s friends have been scattered and taken captive by the level area&#39;s boss. Peter
-    doesn&#39;t have to rescue all of his friends to move onto the next level, however, every rescued friend will give
-    Peter some sort of buff (be that health, speed, or strength).</p>
-  <h2 id="ai">AI</h2>
-  <p>How the AI in the game work is going to be different for each type of enemy in the game. There will also have to be
-    some kind of boss-specific AI system in place for the bosses. More details about this coming soon.</p>
-  <h2 id="graphical-user-interface">Graphical User Interface</h2>
-  <p>The graphical user interface for the screens will be as follows:</p>
-  <ul>
-    <li>
-      <p>Splash Screen - will just display the game&#39;s logo and game name, with a single button that says
-        &quot;Start&quot;</p>
-    </li>
-    <li>
-      <p>Main Menu - the main menu will have the following visual elements</p>
-      <ol>
-        <li>A background image of the tunnels</li>
-        <li>A cavelike border around the edge of the screen</li>
-        <li>A &quot;Play&quot; button that loads the player into the first level of the game</li>
-        <li>A &quot;Controls&quot; button that loads a page describing the controls to the player</li>
-        <li>A &quot;Levels&quot; button that will allow the player to select any level of the game they have unlocked to
-          play</li>
-        <li>A &quot;Credits&quot; button that will display the credits for the game. Includes all of us (the devs) and
-          McKenna the TAs who worked on the game engine. Includes software used to develop the game.</li>
-        <li>A &quot;Story&quot; button that gives the player some backstory on the game and what it&#39;s about</li>
-      </ol>
-    </li>
-  </ul>
-  <h2 id="player-ui-hud">Player UI/HUD</h2>
-  <p>The in-game player heads up display will display the following items to the player:</p>
-  <ol>
-    <li>The Player&#39;s health (as a number). Visual health bar would be a bonus</li>
-    <li>Number of each type of enemy killed. We only display the label if the count is &gt; 0. </li>
-    <li>Friends rescued. The number of Peter&#39;s friends he&#39;s found/rescued from tunnels.</li>
-    <li>The level that the player is on (as a number)</li>
-  </ol>
-  <p>More HUD items TBA. In general, we probably want to keep the HUD as minimal as possible, to keep try and the
-    experience as immersive as possible.</p>
-  <h2 id="artwork">Artwork</h2>
-  <p>All artwork for the game is going to have to be original. We need to create/develop the following:</p>
-  <h3 id="sprites">Sprites</h3>
-  <ul>
-  <li><p>Peter - our main character/protagonist. He&#39;s going to be a simple animated sprite (size TBA) with the following animations:</p>
-  <ol>
-  <li>Walking left</li>
-  <li>Walking right</li>
-  <li>Walking up</li>
-  <li>Walking down</li>
-  <li>Attacking left</li>
-  <li>Attacking right</li>
-  <li>Attacking up</li>
-  <li>Attacking down</li>
-  <li>Taking damage</li>
-  <li>Dying</li>
-  </ol>
-  </li>
-  <li><p>Rat - one of the critters crawling around in the tunnels. Also an animated sprite (size TBA):</p>
-  <ol>
-  <li>Walking left</li>
-  <li>Walking right</li>
-  <li>Walking up</li>
-  <li>Walking down</li>
-  <li>Attacking left</li>
-  <li>Attacking right</li>
-  <li>Attacking up</li>
-  <li>Attacking down</li>
-  <li>Taking damage</li>
-  <li>Dying</li>
-  </ol>
-  </li>
-  <li><p>Monkey - a few of the monkeys that were in Old CS in the early 2000s escaped into the tunnels. Also an animated sprite (size TBA) with the following animations:</p>
-  <ol>
-  <li>Walking left</li>
-  <li>Walking right</li>
-  <li>Walking up</li>
-  <li>Walking down</li>
-  <li>Attacking left</li>
-  <li>Attacking right</li>
-  <li>Attacking up</li>
-  <li>Attacking down</li>
-  <li>Taking damage</li>
-  <li>Dying</li>
-  </ol>
-  </li>
-  </ul>
-  <h3 id="tiles-and-tilesets">Tiles and Tilesets</h3>
-  <p>The game will have approximately six levels. Each level will have its unique tileset and tiles.</p>
-  <h4 id="tilesets">Tilesets</h4>
-  <p>Each level will in the game will have its own tileset that conforms (generally) to the themes of the game levels
-    which are as follows:</p>
-  <ol>
-    <li><strong>Old CS Basement</strong>. Just concrete, pipes, and mold.</li>
-    <li>3.</li>
-    <li><strong>Library Basement</strong>. Old books/bookshelves and cobwebs. Wooden theme?
-      5.</li>
-    <li><strong>Javits Lecture Basement/Bunker</strong>. Some kind of fallout shelter or secret nuclear bunker. Maybe a
-      very modern theme?</li>
-  </ol>
-  <h4 id="tiles">Tiles</h4>
-  <p>There will be one tileset per level in the game. Besides conforming to the theme of the level, each tileset should have the following tiles:</p>
-  <ul>
-    <li>Floor Tile - the basic floor tile of the level. Should have a little bit of an outline.</li>
-    <li>Wall tiles - should fit the theme of the room. More details TBA.</li>
-    <li>Outline tiles - clearly define the playable space that the player can play in. Because the levels will attempt
-      to simulate a 3D box of sorts, we want clear boundaries indicated to the player. These will be the same for every
-      tileset.</li>
-  </ul>
-  <h2 id="sound-effects">Sound Effects</h2>
-  <p>TBA</p>
-  <h2 id="game-music">Game Music</h2>
-  <p>TBA</p>
-  <h2 id="mockup-diagrams">Mockup Diagrams</h2>
-  <h3 id="splash">Splash</h3>
-  <p>This is our mockup diagram for our game&#39;s splash screen. The logo is a work in progress.</p>
-  <p><img src="./images/Splash.png" alt="image"></p>
-  <h3 id="main-menu">Main Menu</h3>
-  <p>This is our mockup diagram for the main menu of our game. We&#39;re working on the game logo right now, it will go in place of the game logo tag. The background has been faded a little bit, this is intentional.</p>
-  <p><img src="./images/MainMenu.png" alt="image"></p>
-  <h3 id="controls">Controls</h3>
-  <p>This is our controls screen. It&#39;s pretty similar to the control screens of the games we did for homework.</p>
-  <p><img src="./images/Controls.png" alt="image"></p>
-  <h3 id="levels">Levels</h3>
-  <p>This is the format for our levels selection page. There will be 6 levels as per the assignment specification. There is a back button to return to the main menu. Each level will have a small image preview of the level.</p>
-  <p><img src="./images/Levels.png" alt="image"></p>
-  <h3 id="help">Help</h3>
-  <p>The help page will have just one text box with a description of the game&#39;s story and a back button that brings
-    the player back to the main menu. </p>
-  <p><img src="./images/Help.png" alt="image"></p>
-  <h3 id="in-game-gui-rough-version-">In-game GUI (rough version)</h3>
-  <p>The in-game GUI is the one thing that is most likely subject to change as time goes on here. I&#39;ve drawn a rough mockup diagram of it here. It&#39;s in the paused state to kind of show what the pause/unpause buttons would look like.</p>
-  <p><img src="./images/GameMenu.png" alt="image"></p>
+<p>A 2D top-down ish dungeon crawler game by Peter Walsh, Jeffery Tsang, Han Lin.</p>
+<h2 id="game-logo">Game Logo</h2>
+<p>In the design docs for the game, there is a square that says insert game logo here in a few places. This is our games logo. It will appear in those places.</p>
+<p><img height="400" width="800" src="./images/logo.png" alt="image"></p>
+<h2 id="backstory">Backstory</h2>
+<p>Deep beneath Stony Brooks University&#39;s West Campus, evil stirs. </p>
+<p>Recently, Peter&#39;s friends have been mysteriously disappearing around the Old Computer Science buidling. One day, when Peter was leaving his office hours, he noticed a mysterious door he&#39;d never seen before. Upon further inspection, he found a stairwell that lead to the Old CS basement.</p>
+<h2 id="objective">Objective</h2>
+<p>Peter&#39;s goal is to explore the basement of the old computer science building and wherever it leads. As he goes along he&#39;s likely to encounter many foes, and potential hazards. After all, who knows whats been festering down there all these years. Armed with nothing but a whiffel-ball bat he stole from the SBCS storage room, Peter&#39;s on a mission to explore the basement of the old computer science building and rescue his friends.</p>
+<h2 id="game-controls">Game Controls</h2>
+<ul>
+<li><strong>A</strong> - Move left</li>
+<li><strong>S</strong> - Move down</li>
+<li><strong>D</strong> - Move right</li>
+<li><strong>W</strong> - Move Up</li>
+<li><strong>SPACE</strong> - Attack</li>
+<li><p><strong>ESC</strong> - Pauses the game and displays a small window with two options. </p>
+<ol>
+<li>Continue - unpauses the game</li>
+<li>Main Menu - returns the player to the main menu</li>
+<li>Help/Controls - displays a small popup with the game controls listed out</li>
+</ol>
+</li>
+</ul>
+<h2 id="gameplay">Gameplay</h2>
+<p>The game will be played in a top-down fashion, but not completely top-down. You will get a complete 2D view of your character (ie. you won&#39;t just be looking down at the heads of the enemies and player).</p>
+<p>Peter (the player) will be loaded into the first level at some initial starting position (TBA). From here, Peter will be able to traverse through the levels playing area. Within the play area there are several enemies the Peter will have to fight, or sneak around.</p>
+<p>To exit/move between levels, Peter will have to defeat the areas boss, who will drop a special key that can be used to unlock the door to the next area.</p>
+<p>Several of Peter&#39;s friends have been scattered and taken captive by the level areas boss. Peter doesn&#39;t have to rescue all of his friends to move onto the next level, however, every rescued friend will give Peter some sort of buff (be that health, speed, or strength).</p>
+<h2 id="ai">AI</h2>
+<p>How the AI in the game work is going to be different for each type of enemy in the game. There will also have to be some kind of boss specific AI system in place for the bosses. More details about this coming soon.</p>
+<h2 id="graphical-user-interface">Graphical User Interface</h2>
+<p>The graphical user interface for the screens will be as follows:</p>
+<ul>
+<li><p>Splash Screen - will just display the game&#39;s logo and game name, with a single button that say &quot;Start&quot;</p>
+</li>
+<li><p>Main Menu - the main menu will have the following visual elements</p>
+<ol>
+<li>A background image of the tunnels</li>
+<li>A cavelike border around the edge of the screen</li>
+<li>A &quot;Play&quot; button that loads the player into the first level of the game</li>
+<li>A &quot;Controls&quot; button that loads the a page describing the controls to the player</li>
+<li>A &quot;Levels&quot; button that will allow the player to select any level of the game they have unlocked to play</li>
+<li>A &quot;Credits&quot; button that will display the credits for the game. Includes all of us (the devs) and McKenna the the TAs who worked on the game engine. Includes software used to develop the game.</li>
+<li>A &quot;Story&quot; button that gives the player some backstory on the game and what it&#39;s about</li>
+</ol>
+</li>
+</ul>
+<h2 id="player-ui-hud">Player UI/HUD</h2>
+<p>The in-game player heads up display will display the following items to the player:</p>
+<ol>
+<li>The Player&#39;s health (as a number). Visual health bar would be an added bonus</li>
+<li>Number of each type of enemy killed. We only display the label if count &gt; 0. </li>
+<li>Friends rescued. The number of Peter&#39;s friends he&#39;s found/rescued from tunnels.</li>
+<li>The level that the player is on (as a number)</li>
+</ol>
+<p>More HUD items TBA. In general we probably want to keep the HUD as minimal as possible, to keep try and the experience as immersive as possible.</p>
+<h2 id="artwork">Artwork</h2>
+<p>All artwork for the game is going to have to be original. We need to create/develop the following:</p>
+<h3 id="sprites">Sprites</h3>
+<ul>
+<li><p>Peter - our main character/protagonist. He&#39;s going to be a simple animated sprite (size TBA) with the following animations:</p>
+<ol>
+<li>Walking left</li>
+<li>Walking right</li>
+<li>Walking up</li>
+<li>Walking down</li>
+<li>Attacking left</li>
+<li>Attacking right</li>
+<li>Attacking up</li>
+<li>Attacking down</li>
+<li>Taking damage</li>
+<li>Dying</li>
+</ol>
+</li>
+<li><p>Rat - one of the critters crawling around in the tunnels. Also an animated sprite (size TBA):</p>
+<ol>
+<li>Walking left</li>
+<li>Walking right</li>
+<li>Walking up</li>
+<li>Walking down</li>
+<li>Attacking left</li>
+<li>Attacking right</li>
+<li>Attacking up</li>
+<li>Attacking down</li>
+<li>Taking damage</li>
+<li>Dying</li>
+</ol>
+</li>
+<li><p>Monkey - a few of the monkeys that were in Old CS in the early 2000s escaped into the tunnels. Also an animated sprite (size TBA) with the following animations:</p>
+<ol>
+<li>Walking left</li>
+<li>Walking right</li>
+<li>Walking up</li>
+<li>Walking down</li>
+<li>Attacking left</li>
+<li>Attacking right</li>
+<li>Attacking up</li>
+<li>Attacking down</li>
+<li>Taking damage</li>
+<li>Dying</li>
+</ol>
+</li>
+</ul>
+<h3 id="tiles-and-tilesets">Tiles and Tilesets</h3>
+<p>The game will have approximately six levels. Each level will have it&#39;s own unique tileset and tiles.</p>
+<h4 id="tilesets">Tilesets</h4>
+<p>Each level will in the game will have it&#39;s own tileset that conforms (generally) to the themes of the game levels which are as follows:</p>
+<ol>
+<li><strong>Old CS Basement</strong>. Just concrete, pipes and mold.</li>
+<li><strong>Chemistry Building Basement</strong> Some sort of secret meth lab?</li>
+<li><strong>Hospital</strong> Who knows these are just ideas</li>
+<li><strong>Library Basement</strong>. Old books/bookshelves and cobwebs. Wooden theme?</li>
+<li>TBA?</li>
+<li><strong>Jatvits Lecture Basement/Bunker</strong>. Some kind of fallout shelter or secret nuclear bunker. Maybe very modern theme?</li>
+</ol>
+<h4 id="tiles">Tiles</h4>
+<p>There will be one tileset per level in the game. Besides conforming to the theme of the level, each tileset should have the following tiles:</p>
+<ul>
+<li>Floor Tile - the basic floor tile of the level. Should have a little bit of an outline.</li>
+<li>Wall tiles - should fit the theme of the room. More details TBA.</li>
+<li>Outline tiles - clearly define the playable space that the player can play in. Because the levels will attempt to simulate a 3D box of sorts, we want clear boundries indicated to the player. These will be the same for every tileset.</li>
+</ul>
+<h2 id="sound-effects">Sound Effects</h2>
+<p>TBA</p>
+<h2 id="game-music">Game Music</h2>
+<p>TBA</p>
+<h2 id="mockup-diagrams">Mockup Diagrams</h2>
+<h3 id="splash">Splash</h3>
+<p>This is our mockup diagram for our games splash screen. The logo is a work in progress.</p>
+<p><img src="./images/Splash.png" alt="image"></p>
+<h3 id="main-menu">Main Menu</h3>
+<p>This is our mockup diagram for the main menu of our game. We&#39;re working on the game logo right now, it will go in place of the game logo tag. The background has been faded a little bit, this is intentional.</p>
+<p><img src="./images/MainMenu.png" alt="image"></p>
+<h3 id="controls">Controls</h3>
+<p>This is our controls screen. It&#39;s pretty similar to the control screens of the games we did for homework.</p>
+<p><img src="./images/Controls.png" alt="image"></p>
+<h3 id="levels">Levels</h3>
+<p>This is the format for our levels selection page. There will be 6 levels as per the assignment specification. There is a back button to return to the main menu. Each level will have a small image preview of the level.</p>
+<p><img src="./images/Levels.png" alt="image"></p>
+<h3 id="help">Help</h3>
+<p>The help page will have basically just one text box with a description of the games story and a back button that brings the player back to thee main menu. </p>
+<p><img src="./images/Help.png" alt="image"></p>
+<h3 id="in-game-gui-rough-version-">In-game GUI (rough version)</h3>
+<p>The in-game GUI is the one thing that is most likely subject to change as time goes on here. I&#39;ve drawn a rough mockup diagram of it here. It&#39;s in the paused state to kind of show what the pause/unpause buttons would look like.</p>
+<p><img height="700" width="800" src="./images/GameMenu.png" alt="image"></p>
 
 </body>
 

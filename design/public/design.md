@@ -1,8 +1,10 @@
 # Campus Caverns Game Design Documentation
 A 2D top-down ish dungeon crawler game by Peter Walsh, Jeffery Tsang, Han Lin.
 
-## Introduction
+## Game Logo
+In the design docs for the game, there is a square that says insert game logo here in a few places. This is our games logo. It will appear in those places.
 
+![image](./images/logo.png)
 
 ## Backstory
 Deep beneath Stony Brooks University's West Campus, evil stirs. 
