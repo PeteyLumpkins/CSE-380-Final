@@ -110,7 +110,6 @@ export default class GameLevel extends Scene {
 
         const pauseLayer = this.addLayer(GameLayers.PAUSED);
 
-        
 
         // Initially we hide the pause layer
         pauseLayer.setHidden(true);
