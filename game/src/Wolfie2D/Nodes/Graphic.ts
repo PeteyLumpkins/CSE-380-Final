@@ -29,4 +29,28 @@ export default abstract class Graphic extends CanvasNode {
     setColor(color: Color){
         this.color = color;
     }
+
+    set colorR(r: number){
+        this.color.r = r;
+    }
+
+    get colorR(): number {
+        return this.color.r;
+    }
+
+    set colorG(g: number){
+        this.color.g = g;
+    }
+
+    get colorG(): number {
+        return this.color.g;
+    }
+
+    set colorB(b: number){
+        this.color.b = b;
+    }
+
+    get colorB(): number {
+        return this.color.b;
+    }
 }

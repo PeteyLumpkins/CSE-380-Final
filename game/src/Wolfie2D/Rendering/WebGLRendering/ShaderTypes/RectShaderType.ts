@@ -4,6 +4,7 @@ import Rect from "../../../Nodes/Graphics/Rect";
 import ResourceManager from "../../../ResourceManager/ResourceManager";
 import QuadShaderType from "./QuadShaderType";
 
+/** */
 export default class RectShaderType extends QuadShaderType {
 
 	constructor(programKey: string){

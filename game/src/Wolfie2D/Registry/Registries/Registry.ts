@@ -1,5 +1,6 @@
 import Map from "../../DataTypes/Map";
 
+/** */
 export default abstract class Registry<T> extends Map<T>{
 
     /** Preloads registry data */

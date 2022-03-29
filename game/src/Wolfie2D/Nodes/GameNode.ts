@@ -18,6 +18,7 @@ import TweenController from "../Rendering/Animations/TweenController";
 import Debug from "../Debug/Debug";
 import Color from "../Utils/Color";
 import Circle from "../DataTypes/Shapes/Circle";
+import GoapAI from "../DataTypes/Interfaces/GoapAI";
 
 /**
  * The representation of an object in the game world.
@@ -54,7 +55,7 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 	isColliding: boolean = false;
 
 	/*---------- ACTOR ----------*/
-	_ai: AI;
+	_ai: AI | GoapAI;
 	aiActive: boolean;
 	path: NavigationPath;
 	pathfinding: boolean = false;
@@ -331,11 +332,11 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 	}
 
 	/*---------- ACTOR ----------*/
-	get ai(): AI {
+	get ai(): AI | GoapAI {
 		return this._ai;
 	}
 
-	set ai(ai: AI) {
+	set ai(ai: AI | GoapAI) {
 		if(!this._ai){
 			// If we haven't been previously had an ai, register us with the ai manager
 			this.scene.getAIManager().registerActor(this);
@@ -346,7 +347,7 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 	}
 
 	// @implemented
-	addAI<T extends AI>(ai: string | (new () => T), options?: Record<string, any>): void {
+	addAI<T extends AI | GoapAI>(ai: string | (new () => T), options?: Record<string, any>, type?: number): void {
 		if(!this._ai){
 			this.scene.getAIManager().registerActor(this);
 		}
@@ -357,6 +358,7 @@ export default abstract class GameNode implements Positioned, Unique, Updateable
 			this._ai = new ai();
 		}
 
+		// Question, how much do we want different type of AI to be handled the same, i.e. should GoapAI and AI similar methods and signatures for the sake of unity
 		this._ai.initializeAI(this, options);
 
 		this.aiActive = true;

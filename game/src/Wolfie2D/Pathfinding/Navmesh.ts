@@ -21,17 +21,22 @@ export default class Navmesh implements Navigable {
 	}
 
 	// @implemented
-	getNavigationPath(fromPosition: Vec2, toPosition: Vec2): NavigationPath {
+	getNavigationPath(fromPosition: Vec2, toPosition: Vec2, direct: boolean): NavigationPath {
 		let start = this.getClosestNode(fromPosition);
 		let end = this.getClosestNode(toPosition);
-
-		let parent = GraphUtils.djikstra(this.graph, start);
 
 		let pathStack = new Stack<Vec2>(this.graph.numVertices);
 		
 		// Push the final position and the final position in the graph
 		pathStack.push(toPosition.clone());
+
+		if (direct) {
+			return new NavigationPath(pathStack);
+		}
+
 		pathStack.push(this.graph.positions[end]);
+
+		let parent = GraphUtils.djikstra(this.graph, start);
 
 		// Add all parents along the path
 		let i = end;

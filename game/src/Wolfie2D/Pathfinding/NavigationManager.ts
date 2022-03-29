@@ -30,10 +30,11 @@ export default class NavigationManager {
 	 * @param navName The name of the registered Navigable object
 	 * @param fromPosition The starting position of navigation
 	 * @param toPosition The ending position of Navigation
+	 * @param direct If true, go direct from fromPosition to toPosition, don't use NavMesh
 	 * @returns A NavigationPath containing the route to take over the Navigable entity to get between the provided positions.
 	 */
-	getPath(navName: string, fromPosition: Vec2, toPosition: Vec2): NavigationPath {
+	getPath(navName: string, fromPosition: Vec2, toPosition: Vec2, direct?: boolean): NavigationPath {
 		let nav = this.navigableEntities.get(navName);
-		return nav.getNavigationPath(fromPosition.clone(), toPosition.clone());
+		return nav.getNavigationPath(fromPosition.clone(), toPosition.clone(), direct);
 	}
 }

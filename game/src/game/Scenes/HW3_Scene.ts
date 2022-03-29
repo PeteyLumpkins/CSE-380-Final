@@ -3,7 +3,7 @@ import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import Graphic from "../../Wolfie2D/Nodes/Graphic";
 import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
-import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import AnimatedSprite from  "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../Wolfie2D/Scene/Scene";
@@ -21,6 +21,7 @@ import CanvasNode from "../../Wolfie2D/Nodes/CanvasNode";
 import Shape from "../../Wolfie2D/DataTypes/Shapes/Shape";
 import Timer from "../../Wolfie2D/Timing/Timer";
 import Input from "../../Wolfie2D/Input/Input";
+import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 
 /**
  * In Wolfie2D, custom scenes extend the original scene class.
@@ -62,6 +63,8 @@ export default class Homework3_Scene extends Scene {
 
 	private gameScoreTimer: number = 0;
 
+	private walls: OrthogonalTilemap;
+
 	// Other variables
 	private WORLD_PADDING: Vec2 = new Vec2(64, 64);
 	private ROCK_SPEED: number = 300;
@@ -81,12 +84,14 @@ export default class Homework3_Scene extends Scene {
 	loadScene(){
 		/* ##### DO NOT MODIFY ##### */
 		// Load in the player car spritesheet
-		this.load.spritesheet("player", "hw3_assets/spritesheets/cars.json");
+		// this.load.spritesheet("player", "hw3_assets/spritesheets/cars.json");
 
-		// Load in the background image
-		this.load.image("desert_road", "hw3_assets/sprites/road.jpg");
+		// // Load in the background image
+		// this.load.image("desert_road", "hw3_assets/sprites/road.jpg");
 
-		this.load.image("rock", "hw3_assets/sprites/stone.png");
+		// this.load.image("rock", "hw3_assets/sprites/stone.png");
+
+		this.load.tilemap("level", "hw3_assets/MyMap.json");
 	}
 
 	/*
@@ -96,24 +101,35 @@ export default class Homework3_Scene extends Scene {
 	startScene(){
 		/* ##### DO NOT MODIFY ##### */
 		// Create a background layer
-		this.addLayer("background", 0);
+
+		let tilemapLayers = this.add.tilemap("level", new Vec2(0.5, 0.5));
+
+		console.log(tilemapLayers);
+         // Get the wall layer
+        this.walls = <OrthogonalTilemap>tilemapLayers[1].getItems()[0];
+
+        // Set the viewport bounds to the tilemap
+        let tilemapSize: Vec2 = this.walls.size.scale(0.5);
+
+
+        this.viewport.setBounds(0, 0, tilemapSize.x, tilemapSize.y);
 
 		// Add in the background image
-		this.bg1 = this.add.sprite("desert_road", "background");
-		this.bg2 = this.add.sprite("desert_road", "background");
-		this.bg1.scale.set(1.5, 1.5);
-		this.bg1.position.copy(this.viewport.getCenter());
+		// this.bg1 = this.add.sprite("desert_road", "background");
+		// this.bg2 = this.add.sprite("desert_road", "background");
+		// this.bg1.scale.set(1.5, 1.5);
+		// this.bg1.position.copy(this.viewport.getCenter());
 
-		this.bg2.scale.set(1.5, 1.5);
-		this.bg2.position = this.bg1.position.clone();
-		this.bg2.position.add(this.bg1.sizeWithZoom.scale(0, -2));
+		// this.bg2.scale.set(1.5, 1.5);
+		// this.bg2.position = this.bg1.position.clone();
+		// this.bg2.position.add(this.bg1.sizeWithZoom.scale(0, -2));
 
 		// Create a layer to serve as our main game - Feel free to use this for your own assets
 		// It is given a depth of 5 to be above our background
-		this.addLayer("primary", 5);
+		// this.addLayer("primary", 5);
 
-		// Initialize the player
-		this.initializePlayer();
+		// // Initialize the player
+		// this.initializePlayer();
 		
 		// Initialize the UI
 		// this.initializeUI();
@@ -158,25 +174,25 @@ export default class Homework3_Scene extends Scene {
 	/*
 	 * updateScene() is where the real work is done. This is where any custom behavior goes.
 	 */
-	updateScene(deltaT: number){
-		// Handle events we care about
-		this.handleEvents();
+	// updateScene(deltaT: number){
+	// 	// Handle events we care about
+	// 	// this.handleEvents();
 
-		this.moveBackgrounds(deltaT);
+	// 	// this.moveBackgrounds(deltaT);
 
-		// this.handleCollisions();
+	// 	// this.handleCollisions();
 
-		// this.handleTimers(deltaT);
+	// 	// this.handleTimers(deltaT);
 
-		// Get the viewport center and padded size
-		const viewportCenter = this.viewport.getCenter().clone();
-		const paddedViewportSize = this.viewport.getHalfSize().scaled(2).add(this.WORLD_PADDING.scaled(2));
-		const baseViewportSize = this.viewport.getHalfSize().scaled(2);
+	// 	// Get the viewport center and padded size
+	// 	// const viewportCenter = this.viewport.getCenter().clone();
+	// 	// const paddedViewportSize = this.viewport.getHalfSize().scaled(2).add(this.WORLD_PADDING.scaled(2));
+	// 	// const baseViewportSize = this.viewport.getHalfSize().scaled(2);
 
-		// Check the position of our player
-		this.lockPlayer(viewportCenter, baseViewportSize);
+	// 	// Check the position of our player
+	// 	// this.lockPlayer(viewportCenter, baseViewportSize);
 	
-	}
+	// }
 
 	/* #################### CUSTOM METHODS #################### */
 

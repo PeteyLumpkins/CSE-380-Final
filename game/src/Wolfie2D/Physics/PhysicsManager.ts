@@ -22,7 +22,7 @@ export default abstract class PhysicsManager implements Updateable {
 	protected groupNames: Array<string>;
 
 	/** The default group name */
-	protected static readonly DEFAULT_GROUP = "Default";
+	protected static readonly DEFAULT_GROUP: string = "Default";
 
 	constructor(){
 		this.receiver = new Receiver();

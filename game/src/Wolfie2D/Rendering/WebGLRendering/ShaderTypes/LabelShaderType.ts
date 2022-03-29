@@ -6,6 +6,7 @@ import Label from "../../../Nodes/UIElements/Label";
 import ResourceManager from "../../../ResourceManager/ResourceManager";
 import QuadShaderType from "./QuadShaderType";
 
+/** */
 export default class LabelShaderType extends QuadShaderType {
 
 	constructor(programKey: string){

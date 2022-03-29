@@ -12,6 +12,7 @@ import { GameEventType } from "../Events/GameEventType";
 export default class Input {
 	private static mousePressed: boolean;
 	private static mouseJustPressed: boolean;
+	private static mouseButtonPressed: number;
 
 	private static keyJustPressed: Map<boolean>;
 	private static keyPressed: Map<boolean>;
@@ -35,7 +36,7 @@ export default class Input {
 	 * Initializes the Input object
 	 * @param viewport A reference to the viewport of the game
 	 */
-	static initialize(viewport: Viewport, keyMap: Array<Record<string, any>>){
+	static initialize(viewport: Viewport, keyMap: Array<Record<string, any>>) {
 		Input.viewport = viewport;
 		Input.mousePressed = false;
 		Input.mouseJustPressed = false;
@@ -53,7 +54,7 @@ export default class Input {
 		Input.keyMap = new Map();
 
 		// Add all keys to the keymap
-		for(let entry in keyMap){
+		for (let entry in keyMap) {
 			let name = keyMap[entry].name;
 			let keys = keyMap[entry].keys;
 			Input.keyMap.add(name, keys);
@@ -62,7 +63,7 @@ export default class Input {
 		Input.eventQueue = EventQueue.getInstance();
 		// Subscribe to all input events
 		Input.eventQueue.subscribe(Input.receiver, [GameEventType.MOUSE_DOWN, GameEventType.MOUSE_UP, GameEventType.MOUSE_MOVE,
-			 GameEventType.KEY_DOWN, GameEventType.KEY_UP, GameEventType.CANVAS_BLUR, GameEventType.WHEEL_UP, GameEventType.WHEEL_DOWN]);
+		GameEventType.KEY_DOWN, GameEventType.KEY_UP, GameEventType.CANVAS_BLUR, GameEventType.WHEEL_UP, GameEventType.WHEEL_DOWN]);
 	}
 
 	static update(deltaT: number): void {
@@ -72,53 +73,54 @@ export default class Input {
 		Input.justScrolled = false;
 		Input.scrollDirection = 0;
 
-		while(Input.receiver.hasNextEvent()){			
+		while (Input.receiver.hasNextEvent()) {
 			let event = Input.receiver.getNextEvent();
-			
+
 			// Handle each event type
-			if(event.type === GameEventType.MOUSE_DOWN){
+			if (event.type === GameEventType.MOUSE_DOWN) {
 				Input.mouseJustPressed = true;
 				Input.mousePressed = true;
-				Input.mousePressPosition = event.data.get("position");	
+				Input.mousePressPosition = event.data.get("position");
+				Input.mouseButtonPressed = event.data.get("button");
 			}
 
-			if(event.type === GameEventType.MOUSE_UP){
+			if (event.type === GameEventType.MOUSE_UP) {
 				Input.mousePressed = false;
 			}
 
-			if(event.type === GameEventType.MOUSE_MOVE){
+			if (event.type === GameEventType.MOUSE_MOVE) {
 				Input.mousePosition = event.data.get("position");
 			}
 
-			if(event.type === GameEventType.KEY_DOWN){
+			if (event.type === GameEventType.KEY_DOWN) {
 				let key = event.data.get("key");
 				// Handle space bar
-				if(key === " "){
+				if (key === " ") {
 					key = "space";
 				}
-				if(!Input.keyPressed.get(key)){
+				if (!Input.keyPressed.get(key)) {
 					Input.keyJustPressed.set(key, true);
 					Input.keyPressed.set(key, true);
 				}
 			}
 
-			if(event.type === GameEventType.KEY_UP){
+			if (event.type === GameEventType.KEY_UP) {
 				let key = event.data.get("key");
 				// Handle space bar
-				if(key === " "){
+				if (key === " ") {
 					key = "space";
 				}
 				Input.keyPressed.set(key, false);
 			}
 
-			if(event.type === GameEventType.CANVAS_BLUR){
+			if (event.type === GameEventType.CANVAS_BLUR) {
 				Input.clearKeyPresses()
 			}
 
-			if(event.type === GameEventType.WHEEL_UP){
+			if (event.type === GameEventType.WHEEL_UP) {
 				Input.scrollDirection = -1;
 				Input.justScrolled = true;
-			} else if(event.type === GameEventType.WHEEL_DOWN){
+			} else if (event.type === GameEventType.WHEEL_DOWN) {
 				Input.scrollDirection = 1;
 				Input.justScrolled = true;
 			}
@@ -137,9 +139,9 @@ export default class Input {
 	 * @returns True if the key was just pressed, false otherwise
 	 */
 	static isKeyJustPressed(key: string): boolean {
-		if(Input.keysDisabled) return false;
+		if (Input.keysDisabled) return false;
 
-		if(Input.keyJustPressed.has(key)){
+		if (Input.keyJustPressed.has(key)) {
 			return Input.keyJustPressed.get(key)
 		} else {
 			return false;
@@ -152,11 +154,11 @@ export default class Input {
 	 * @returns An array of all of the newly pressed keys.
 	 */
 	static getKeysJustPressed(): Array<string> {
-		if(Input.keysDisabled) return [];
+		if (Input.keysDisabled) return [];
 
 		let keys = Array<string>();
 		Input.keyJustPressed.forEach(key => {
-			if(Input.keyJustPressed.get(key)){
+			if (Input.keyJustPressed.get(key)) {
 				keys.push(key);
 			}
 		});
@@ -169,9 +171,9 @@ export default class Input {
 	 * @returns True if the key is currently pressed, false otherwise
 	 */
 	static isKeyPressed(key: string): boolean {
-		if(Input.keysDisabled) return false;
+		if (Input.keysDisabled) return false;
 
-		if(Input.keyPressed.has(key)){
+		if (Input.keyPressed.has(key)) {
 			return Input.keyPressed.get(key)
 		} else {
 			return false;
@@ -200,20 +202,20 @@ export default class Input {
 	 * @returns True if the input was just pressed, false otherwise
 	 */
 	static isJustPressed(inputName: string): boolean {
-		if(Input.keysDisabled) return false;
+		if (Input.keysDisabled) return false;
 
-		if(Input.keyMap.has(inputName)){
+		if (Input.keyMap.has(inputName)) {
 			const keys = Input.keyMap.get(inputName);
 			let justPressed = false;
 
-			for(let key of keys){
+			for (let key of keys) {
 				justPressed = justPressed || Input.isKeyJustPressed(key);
 			}
 
 			return justPressed;
 		} else {
 			return false;
-		}	
+		}
 	}
 
 	/**
@@ -222,13 +224,13 @@ export default class Input {
 	 * @returns True if the input is pressed, false otherwise
 	 */
 	static isPressed(inputName: string): boolean {
-		if(Input.keysDisabled) return false;
+		if (Input.keysDisabled) return false;
 
-		if(Input.keyMap.has(inputName)){
+		if (Input.keyMap.has(inputName)) {
 			const keys = Input.keyMap.get(inputName);
 			let pressed = false;
 
-			for(let key of keys){
+			for (let key of keys) {
 				pressed = pressed || Input.isKeyPressed(key);
 			}
 
@@ -237,20 +239,30 @@ export default class Input {
 			return false;
 		}
 	}
-
 	/**
-	 * Returns whether or not the mouse was newly pressed Input frame
+	 * 
+	 * Returns whether or not the mouse was newly pressed Input frame.
+	 * @param mouseButton Optionally specify which mouse click you want to know was pressed. 
+	 * 0 for left click, 1 for middle click, 2 for right click.
 	 * @returns True if the mouse was just pressed, false otherwise
 	 */
-	static isMouseJustPressed(): boolean {
+	static isMouseJustPressed(mouseButton?: number): boolean {
+		if (mouseButton) {
+			return Input.mouseJustPressed && !Input.mouseDisabled && mouseButton == this.mouseButtonPressed;
+		}
 		return Input.mouseJustPressed && !Input.mouseDisabled;
 	}
 
 	/**
 	 * Returns whether or not the mouse is currently pressed
+	 * @param mouseButton Optionally specify which mouse click you want to know was pressed. 
+	 * 0 for left click, 1 for middle click, 2 for right click.
 	 * @returns True if the mouse is currently pressed, false otherwise
 	 */
-	static isMousePressed(): boolean {
+	static isMousePressed(mouseButton?: number): boolean {
+		if (mouseButton) {
+			return Input.mousePressed && !Input.mouseDisabled && mouseButton == this.mouseButtonPressed;
+		}
 		return Input.mousePressed && !Input.mouseDisabled;
 	}
 
@@ -275,7 +287,7 @@ export default class Input {
 	 * @returns The mouse position stored as a Vec2
 	 */
 	static getMousePosition(): Vec2 {
-		return Input.mousePosition.scaled(1/this.viewport.getZoomLevel());
+		return Input.mousePosition.scaled(1 / this.viewport.getZoomLevel());
 	}
 
 	/**
@@ -284,7 +296,7 @@ export default class Input {
 	 * @returns The mouse position stored as a Vec2
 	 */
 	static getGlobalMousePosition(): Vec2 {
-		return Input.mousePosition.clone().scale(1/this.viewport.getZoomLevel()).add(Input.viewport.getOrigin());
+		return Input.mousePosition.clone().scale(1 / this.viewport.getZoomLevel()).add(Input.viewport.getOrigin());
 	}
 
 	/**

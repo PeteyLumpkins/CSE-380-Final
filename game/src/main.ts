@@ -8,6 +8,7 @@ import Circle from "./Wolfie2D/DataTypes/Shapes/Circle";
 import Homework3_Scene from "./game/Scenes/HW3_Scene";
 import RegistryManager from "./Wolfie2D/Registry/RegistryManager";
 import LinearGradientCircleShaderType from "./game/LinearGradientCircleShaderType";
+import GameLevel from "./game/Scenes/GameLevel";
 
 // The main function is your entrypoint into Wolfie2D. Specify your first scene and any options here.
 (function main(){
@@ -25,26 +26,9 @@ import LinearGradientCircleShaderType from "./game/LinearGradientCircleShaderTyp
             { name: "right", keys: ["d"] },
             { name: "pause", keys: ["ESC"]}
         ],
-        useWebGL: true,                        // Tell the game we want to use webgl
+        useWebGL: false,                        // Tell the game we want to use webgl
         showDebug: false                       // Whether to show debug messages. You can change this to true if you want
     }
-
-    // We have a custom shader, so lets add it to the registry and preload it
-    // The registry essentially just ensures that we can locate items by name later, rather than needing
-    // the class constructor. Here, we additionally make sure to preload the data so our
-    // shader is available throughout the application
-    RegistryManager.shaders.registerAndPreloadItem(
-        Homework3Shaders.GRADIENT_CIRCLE,   // The key of the shader program
-        GradientCircleShaderType,           // The constructor of the shader program
-        "hw3_assets/shaders/gradient_circle.vshader",   // The path to the vertex shader
-        "hw3_assets/shaders/gradient_circle.fshader");  // the path to the fragment shader*/
-
-    // This is the custom shader that you'll implement, although currently it's exactly the same as our gradient circle shader
-    RegistryManager.shaders.registerAndPreloadItem(
-        Homework3Shaders.LINEAR_GRADIENT_CIRCLE,   // The key of the shader program
-        LinearGradientCircleShaderType,           // The constructor of the shader program
-        "hw3_assets/shaders/linear_gradient_circle.vshader",   // The path to the vertex shader
-        "hw3_assets/shaders/linear_gradient_circle.fshader");  // the path to the fragment shader*/
 
     // Create a game with the options specified
     const game = new Game(options);

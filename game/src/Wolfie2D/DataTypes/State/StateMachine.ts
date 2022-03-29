@@ -67,7 +67,7 @@ export default class StateMachine implements Updateable {
      * Initializes this state machine with an initial state and sets it running
      * @param initialState The name of initial state of the state machine
      */
-    initialize(initialState: string, options: Record<string, any> = {}): void {
+    initialize(initialState: string, options?: Record<string, any>): void {
         this.stack.push(this.stateMap.get(initialState));
         this.currentState = this.stack.peek();
         this.currentState.onEnter(options);

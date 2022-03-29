@@ -125,7 +125,7 @@ export default class Graph {
 		for(let i = 0; i < this.numVertices; i++){
 			let edge = this.edges[i];
 			let edgeStr = "";
-			while(edge !== null){
+			while(edge !== undefined && edge !== null){
 				edgeStr += edge.y.toString();
 				if(this.weighted){
 					edgeStr += " (" + edge.weight + ")";

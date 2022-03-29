@@ -1,6 +1,7 @@
 import Actor from "../DataTypes/Interfaces/Actor";
 import Updateable from "../DataTypes/Interfaces/Updateable";
 import AI from "../DataTypes/Interfaces/AI";
+import GoapAI from "../DataTypes/Interfaces/GoapAI"
 import Map from "../DataTypes/Map";
 
 /**
@@ -39,7 +40,7 @@ export default class AIManager implements Updateable {
 	 * @param name The name of the AI to register
 	 * @param constr The constructor for the AI
 	 */
-	registerAI(name: string, constr: new <T extends AI>() => T ): void {
+	registerAI(name: string, constr: new <T extends AI | GoapAI>() => T ): void {
 		this.registeredAI.add(name, constr);
 	}
 
@@ -48,7 +49,7 @@ export default class AIManager implements Updateable {
 	 * @param name The name of the AI to add
 	 * @returns A new AI instance
 	 */
-	generateAI(name: string): AI {
+	generateAI(name: string): AI | GoapAI {
 		if(this.registeredAI.has(name)){
 			return new (this.registeredAI.get(name))();
 		} else {
