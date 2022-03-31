@@ -9,6 +9,7 @@ import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import MainMenu from "./MainMenu";
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 
 import PlayerController from "../AI/Player/PlayerController";
 
@@ -35,6 +36,9 @@ export default class GameLevel extends Scene {
     protected playerSpawn: Vec2;
     protected playerHealthLabel: Label;
     protected player: AnimatedSprite;
+
+    // Store Node
+    protected store: Sprite;
     
     // Buttons in the UI
     protected pauseButton: Button;
@@ -242,21 +246,6 @@ export default class GameLevel extends Scene {
      * PLAYER CONTROLLER - sets up the AI and controls for the player. We should 
      * have that for the most part via the player controller
      */
-    protected initPlayer(){
-        this.player = this.add.animatedSprite("player", "primary");
-		
-		// Set the player's position to the middle of the screen, and scale it down
-		this.player.position.set(this.viewport.getCenter().x, this.viewport.getCenter().y);
-		this.player.scale.set(0.4, 0.4);
-
-		// Give the player a smaller hitbox
-		console.log(this.player.sizeWithZoom.toString());
-		console.log(this.player.size.toString());
-		let playerCollider = new AABB(Vec2.ZERO, this.player.sizeWithZoom);
-		this.player.setCollisionShape(playerCollider)
-
-		// Add a playerController to the player
-		this.player.addAI(PlayerController);
-    }
+    
 
 }

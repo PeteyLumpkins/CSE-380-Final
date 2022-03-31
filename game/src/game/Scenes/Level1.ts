@@ -24,6 +24,7 @@ import Input from "../../Wolfie2D/Input/Input";
 import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 
 import GameLevel from "./GameLevel";
+import PlayerController from "../AI/Player/PlayerController";
 
 export default class Level1 extends GameLevel {
 
@@ -59,6 +60,25 @@ export default class Level1 extends GameLevel {
 
         this.addLayer("primary", 5);
 
+        this.initPlayer();
+
+    }
+
+    protected initPlayer(){
+        this.player = this.add.animatedSprite("player", "primary");
+		
+		// Set the player's position to the middle of the screen, and scale it down
+		this.player.position.set(this.viewport.getCenter().x, this.viewport.getCenter().y);
+		this.player.scale.set(0.4, 0.4);
+
+		// Give the player a smaller hitbox
+		console.log(this.player.sizeWithZoom.toString());
+		console.log(this.player.size.toString());
+		let playerCollider = new AABB(Vec2.ZERO, this.player.sizeWithZoom);
+		this.player.setCollisionShape(playerCollider)
+
+		// Add a playerController to the player
+		this.player.addAI(PlayerController);
     }
 
     
