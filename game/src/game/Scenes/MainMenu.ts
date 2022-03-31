@@ -16,19 +16,21 @@ export default class MainMenu extends Scene {
     private controls: Layer;
     private about: Layer;
     private levels: Layer;
+    private logo: Layer;
     private background: Layer;
 
     // This is the background image of the tunnels
     private background_image: Sprite;
 
     // This will be our games logo image
-    private logo: Sprite;
+    private logo_image: Sprite;
 
     // Preview images of the levels
     private level1_preview: Sprite;
 
     loadScene(){
-        this.load.image(MenuImages.BACKGROUND, "hw3_assets/IMG_0551.jpeg");
+        this.load.image(MenuImages.BACKGROUND, "assets/images/background.jpeg");
+        this.load.image(MenuImages.LOGO, "assets/images/logo_no_white.png");
     }
 
     startScene(){
@@ -39,6 +41,12 @@ export default class MainMenu extends Scene {
         this.background_image = this.add.sprite(MenuImages.BACKGROUND, MenuLayers.BACKGROUND);
 		this.background_image.scale.set(.5, .5);
 		this.background_image.position.copy(this.viewport.getCenter());
+
+        // The logo layer?
+        this.logo = this.addLayer(MenuLayers.LOGO, 1);
+        this.logo_image = this.add.sprite(MenuImages.LOGO, MenuLayers.LOGO);
+        this.logo_image.scale.set(.25, .25);
+        this.logo_image.position.copy(this.viewport.getCenter());
 
         // Splash Screen
         this.initSplash();
@@ -283,7 +291,8 @@ export enum MenuLayers {
     CONTROLS= "CONTROLS_LAYER",
     HELP = "HELP_SCREEN",
     LEVELS = "LEVELS_LAYER",
-    BACKGROUND = "BACKGROUND_LAYER"
+    BACKGROUND = "BACKGROUND_LAYER",
+    LOGO = "LOGO_LAYER"
 }
 
 export enum MenuImages {

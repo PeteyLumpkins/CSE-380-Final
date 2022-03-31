@@ -6,29 +6,45 @@ import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
+import MainMenu from "./MainMenu";
+import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
+import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+
+import PlayerController from "../AI/Player/PlayerController";
 
 export enum GameLayers {
-    PRIMARY = "primary",
-    UI = "ui",
-    LEVEL = "level", 
-    PAUSED = "paused",
-    CONTROLS = "controls"
+    PRIMARY = "PRIMARY_LAYER",
+    UI = "UI_LAYER",
+    LEVEL = "LEVEL_LAYER", 
+    PAUSED = "PAUSEED_LAYER",
+    CONTROLS = "CONTROLS_LAYER"
 }
 
 export enum GameEvents {
-    PAUSE = "pause"
+    PAUSE = "PAUSE_EVENT",
+    RESUME = "RESUME_EVENT",
+    CONTROLS = "CONTROLS_EVENT",
+    MAIN_MENU = "MAIN_MENU_EVENT"
 }
 
 export default class GameLevel extends Scene {
 
-    // Player stuff
+    // Player stuff?
     protected MAX_PLAYER_HEALTH: number = 20;
     protected playerHealth: number;
     protected playerSpawn: Vec2;
     protected playerHealthLabel: Label;
+    protected player: AnimatedSprite;
     
-    // Pause button
+    // Buttons in the UI
     protected pauseButton: Button;
+    protected resumeButton: Button;
+    protected controlsButton: Button;
+    protected mainMenuButton: Button;
+
+    // Paused background
+    protected pausedBackground: Label;
+
 
     /**
      * The "Scene" class has an options parameter that we'll use to pass the players
@@ -38,10 +54,13 @@ export default class GameLevel extends Scene {
 
         // Initialize layers
         this.initUILayer();
-
+        this.initPausedLayer();
 
         // Subscribe to Events
         this.receiver.subscribe(GameEvents.PAUSE);
+        this.receiver.subscribe(GameEvents.RESUME);
+        this.receiver.subscribe(GameEvents.CONTROLS);
+        this.receiver.subscribe(GameEvents.MAIN_MENU);
     }
 
 
@@ -56,7 +75,23 @@ export default class GameLevel extends Scene {
         switch(event.type) {
             case GameEvents.PAUSE: {
                 console.log("Pause event caught!");
+                this.handlePauseEvent(event);
                 break;
+            }
+            case GameEvents.RESUME: {
+                console.log("Resume event caught!");
+                this.handleResumeEvent(event);
+                break;
+            }
+            case GameEvents.CONTROLS: {
+                console.log("Control event caught!");
+                this.handleControlsEvent(event);
+                break;
+            }
+            case GameEvents.MAIN_MENU: {
+                console.log("Main menu event caught!");
+                this.handleMainMenuEvent(event);
+                break;  
             }
 
             default: {
@@ -66,8 +101,27 @@ export default class GameLevel extends Scene {
         }
     }
 
-    protected handlePauseEvent() {
+    // TODO: This handler should freeze the game
+    protected handlePauseEvent(ev: GameEvent) {
+        this.getLayer(GameLayers.PAUSED).setHidden(false);
+        // Need to freeze the AI and tiled layer?
+    }
 
+    // TODO: This handler should unfreeze the game
+    protected handleResumeEvent(ev: GameEvent) {
+        this.getLayer(GameLayers.PAUSED).setHidden(true);
+        // Need to unfreeze the AI and stuff?
+    }
+
+    // TODO: This handler should bring up with controls for the game
+    protected handleControlsEvent(ev: GameEvent) {
+
+    }
+
+    // TODO: This method should bring us back to the main menu. We might be passing some
+    // data back to the main menu via the second param. Stuff about levels unlocked maybe?
+    protected handleMainMenuEvent(ev: GameEvent) {
+        this.sceneManager.changeToScene(MainMenu, {});
     }
 
     /**
@@ -105,11 +159,59 @@ export default class GameLevel extends Scene {
      *  1.) Resume - a button to resume the game
      *  2.) Controls - a button to view the controls for the game (seperate later)
      *  3.) Main Menu - a button to bring the player back to the main menu
+     *  4.) Background - basically the background where all the buttons are
+     * 
+     * 
+     *  |----------------------------------------------------------------|
+     *  |                                                                |
+     *  |                   |-------------|                              |
+     *  |                   |   Resume    |                              |
+     *  |                   |-------------|                              |
+     *  |                                                                |
+     *  |                   |-------------|                              |
+     *  |                   |   Controls  |                              |
+     *  |                   |-------------|                              |
+     *  |                                                                |
+     *  |                   |-------------|                              |
+     *  |                   |  Main Menu  |                              |
+     *  |                   |-------------|          background          |
+     *  |                                                                |
+     *  |----------------------------------------------------------------|
      */
-    initPausedLayer() {
+    protected initPausedLayer() {
 
         const pauseLayer = this.addLayer(GameLayers.PAUSED);
+        let center = this.viewport.getCenter();
 
+        this.pausedBackground = <Label>this.add.uiElement(UIElementType.LABEL, GameLayers.PAUSED, {position: new Vec2(center.x, center.y), text: ""});
+        this.pausedBackground.size.set(200, 200);
+        this.pausedBackground.backgroundColor = Color.TRANSPARENT;
+        this.pausedBackground.borderWidth = 2;
+        this.pausedBackground.borderColor = Color.BLACK;
+
+        // Resume button
+        this.resumeButton = <Button>this.add.uiElement(UIElementType.BUTTON, GameLayers.PAUSED, {position: new Vec2(center.x, center.y - 50), text: "Resume"});
+        this.resumeButton.size.set(100, 25);
+        this.resumeButton.borderWidth = 2;
+        this.resumeButton.fontSize = 16;
+        this.resumeButton.backgroundColor = Color.BLACK;
+        this.resumeButton.onClickEventId = GameEvents.RESUME;
+
+        // Controls button
+        this.controlsButton = <Button>this.add.uiElement(UIElementType.BUTTON, GameLayers.PAUSED, {position: new Vec2(center.x, center.y), text: "Controls"});
+        this.controlsButton.size.set(100, 25);
+        this.controlsButton.borderWidth = 2;
+        this.controlsButton.fontSize = 16;
+        this.controlsButton.backgroundColor = Color.BLACK;
+        this.controlsButton.onClickEventId = GameEvents.CONTROLS;
+
+        // Main Menu button
+        this.mainMenuButton = <Button>this.add.uiElement(UIElementType.BUTTON, GameLayers.PAUSED, {position: new Vec2(center.x, center.y + 50), text: "Main Menu"});
+        this.mainMenuButton.size.set(100, 25);
+        this.mainMenuButton.borderWidth = 2;
+        this.mainMenuButton.fontSize = 16;
+        this.mainMenuButton.backgroundColor = Color.BLACK;
+        this.mainMenuButton.onClickEventId = GameEvents.MAIN_MENU;
 
         // Initially we hide the pause layer
         pauseLayer.setHidden(true);
@@ -140,8 +242,21 @@ export default class GameLevel extends Scene {
      * PLAYER CONTROLLER - sets up the AI and controls for the player. We should 
      * have that for the most part via the player controller
      */
-    initPlayer(){
+    protected initPlayer(){
+        this.player = this.add.animatedSprite("player", "primary");
+		
+		// Set the player's position to the middle of the screen, and scale it down
+		this.player.position.set(this.viewport.getCenter().x, this.viewport.getCenter().y);
+		this.player.scale.set(0.4, 0.4);
 
+		// Give the player a smaller hitbox
+		console.log(this.player.sizeWithZoom.toString());
+		console.log(this.player.size.toString());
+		let playerCollider = new AABB(Vec2.ZERO, this.player.sizeWithZoom);
+		this.player.setCollisionShape(playerCollider)
+
+		// Add a playerController to the player
+		this.player.addAI(PlayerController);
     }
 
 }

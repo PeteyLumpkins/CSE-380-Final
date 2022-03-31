@@ -12,7 +12,7 @@ import RandUtils from "../../Wolfie2D/Utils/RandUtils";
 import RockAI from "../AI/RockAI";
 import BulletBehavior from "../AI/BulletAI";
 import { Homework3Animations, Homework3Event, Homework3Shaders } from "../HW3_Enums";
-import CarPlayerController from "../AI/CarPlayerController";
+import CarPlayerController from "../AI/Player/PlayerController";
 import Circle from "../../Wolfie2D/DataTypes/Shapes/Circle";
 import GameOver from "./GameOver";
 import ShaderType from "../../Wolfie2D/Rendering/WebGLRendering/ShaderType";

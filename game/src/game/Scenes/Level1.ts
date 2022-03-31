@@ -12,7 +12,7 @@ import RandUtils from "../../Wolfie2D/Utils/RandUtils";
 import RockAI from "../AI/RockAI";
 import BulletBehavior from "../AI/BulletAI";
 import { Homework3Animations, Homework3Event, Homework3Shaders } from "../HW3_Enums";
-import CarPlayerController from "../AI/CarPlayerController";
+import CarPlayerController from "../AI/Player/PlayerController";
 import Circle from "../../Wolfie2D/DataTypes/Shapes/Circle";
 import GameOver from "./GameOver";
 import ShaderType from "../../Wolfie2D/Rendering/WebGLRendering/ShaderType";
@@ -32,7 +32,8 @@ export default class Level1 extends GameLevel {
 
     loadScene(){
 
-        this.load.tilemap("level", "hw3_assets/MyMap.json");
+        this.load.tilemap("level", "assets/dummyMap.json");
+        this.load.spritesheet("player", "assets/spritesheets/cars.json");
     }
 
     /**
@@ -44,7 +45,7 @@ export default class Level1 extends GameLevel {
         super.startScene();
 
         //Uncomment this code and comment the above code when you're using your tilemap
-        let tilemapLayers = this.add.tilemap("level");
+        let tilemapLayers = this.add.tilemap("level", new Vec2(0.5, 0.5));
 
          // Get the wall layer
         this.walls = <OrthogonalTilemap>tilemapLayers[1].getItems()[0];
@@ -56,6 +57,9 @@ export default class Level1 extends GameLevel {
 
         console.log(this);
 
+        this.addLayer("primary", 5);
+
     }
+
     
 }
