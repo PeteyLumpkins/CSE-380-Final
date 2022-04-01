@@ -1,0 +1,28 @@
+{
+    "name": "store_layer",
+    "spriteSheetImage": "store_layer.png",
+    "spriteWidth": 512,
+    "spriteHeight": 512,
+    "leftBuffer": 0,
+    "rightBuffer": 0,
+    "topBuffer": 0,
+    "bottomBuffer": 0,
+    "columns": 1,
+    "rows": 2,
+    "animations": [
+        {
+            "name": "idle",
+            "repeat": true,
+            "frames": [
+                {
+                    "index": 0,
+                    "duration": 50
+                },
+                {
+                    "index": 1,
+                    "duration": 50
+                }
+            ]
+        }
+    ]
+}
