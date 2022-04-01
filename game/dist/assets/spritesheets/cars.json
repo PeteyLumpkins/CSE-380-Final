@@ -1,0 +1,118 @@
+{
+    "name": "batmobile",
+    "spriteSheetImage": "cars.png",
+    "spriteWidth": 256,
+    "spriteHeight": 256,
+    "leftBuffer": 0,
+    "rightBuffer": 0,
+    "topBuffer": 0,
+    "bottomBuffer": 0,
+    "columns": 4,
+    "rows": 4,
+    "animations": [
+        {
+            "name": "idle",
+            "repeat": true,
+            "frames": [
+                {
+                    "index": 0,
+                    "duration": 10
+                }
+            ]
+        },
+        {
+            "name": "driving",
+            "repeat": true,
+            "frames": [
+                {
+                    "index": 1,
+                    "duration": 10
+                },
+                {
+                    "index": 2,
+                    "duration": 10
+                },
+                {
+                    "index": 3,
+                    "duration": 10
+                }
+            ]
+        },
+        {
+            "name": "firing",
+            "repeat": false,
+            "frames": [
+                {
+                    "index": 4,
+                    "duration": 10
+                },
+                {
+                    "index": 5,
+                    "duration": 10
+                },
+                {
+                    "index": 6,
+                    "duration": 10
+                }
+            ]
+        },
+        {
+            "name": "damage",
+            "repeat": false,
+            "frames": [
+                {
+                    "index": 7,
+                    "duration": 10
+                },
+                {
+                    "index": 8,
+                    "duration": 10
+                }
+            ]
+        },
+        {
+            "name": "dying",
+            "repeat": false,
+            "frames": [
+                {
+                    "index": 9,
+                    "duration": 10
+                },
+                {
+                    "index": 10,
+                    "duration": 10
+                },
+                {
+                    "index": 11,
+                    "duration": 10
+                },
+                {
+                    "index": 12,
+                    "duration": 10
+                },
+                {
+                    "index": 13,
+                    "duration": 10
+                },
+                {
+                    "index": 14,
+                    "duration": 10
+                },
+                {
+                    "index": 15,
+                    "duration": 10
+                }
+            ]
+        },
+        {
+            "name": "dead",
+            "repeat": true,
+            "frames": [
+                {
+                    "index": 15,
+                    "duration": 10
+                }
+            ]
+        }
+    ]
+}

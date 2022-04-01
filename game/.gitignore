@@ -11,7 +11,7 @@ dist/*
 !dist/builtin/
 
 # Include the hw1 assets
-!dist/hw3_assets/
+!dist/assets/
 
 ### IF YOU ARE MAKING A PROJECT, YOU MAY WANT TO UNCOMMENT THIS LINE ###
 # !dist/assets/
