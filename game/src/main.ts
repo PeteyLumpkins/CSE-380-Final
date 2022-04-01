@@ -24,7 +24,8 @@ import GameLevel from "./game/Scenes/GameLevel";
             { name: "backward", keys: ["s"] },  // and so on...
             { name: "left", keys: ["a"] },
             { name: "right", keys: ["d"] },
-            { name: "pause", keys: ["ESC"]}
+            { name: "pause", keys: ["ESC"]},
+            { name: "open", keys: ["1"]}
         ],
         useWebGL: false,                        // Tell the game we want to use webgl
         showDebug: false                       // Whether to show debug messages. You can change this to true if you want
