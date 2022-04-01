@@ -63,12 +63,6 @@ export default class PlayerController extends StateMachineAI {
 			this.handleEvent(this.receiver.getNextEvent());
 		}
 
-		if (this.currentState instanceof Idle){
-			console.log("Idling");
-		} else if (this.currentState instanceof Moving){
-            console.log("Moving");
-        }
-
 		// We need to handle player input for movement
 		// let forwardAxis = (Input.isPressed('forward') ? 1 : 0) + (Input.isPressed('backward') ? -1 : 0);
 		// let horizontalAxis = (Input.isPressed('left') ? -1 : 0) + (Input.isPressed('right') ? 1 : 0);

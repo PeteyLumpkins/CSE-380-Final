@@ -17,7 +17,6 @@ export default abstract class PlayerState extends State {
     protected owner: AnimatedSprite;
     protected invincibleTimer: Timer;
 
-
     protected speedScale: number;
     protected healthScale: number;
     protected attackScale: number;
@@ -25,18 +24,9 @@ export default abstract class PlayerState extends State {
 	constructor(parent: StateMachine, owner: AnimatedSprite){
 		super(parent);
 		this.owner = owner;
-
 	}
 
-	// 
-	handleInput(event: GameEvent): void {
-		switch(event.type) {
-
-            // Handles a player attack event
-
-            // Handles an enemy attack event
-        }
-	}
+    handleInput(event: GameEvent): void {}
 
 	/** 
 	 * Get the inputs from the keyboard, or Vec2.Zero if nothing is being pressed

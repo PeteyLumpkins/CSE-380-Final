@@ -38,7 +38,7 @@ export default class GameLevel extends Scene {
     protected player: AnimatedSprite;
 
     // Store Node
-    protected store: Sprite;
+    protected store: AnimatedSprite;
     
     // Buttons in the UI
     protected pauseButton: Button;

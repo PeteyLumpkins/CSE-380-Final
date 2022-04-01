@@ -24,7 +24,6 @@ export default class Idle extends PlayerState {
 		super.update(deltaT);
 
 		let dir = this.getInputDirection();
-        console.log(dir);
 		if(!dir.isZero()){
 			this.finished(PlayerStates.MOVING);
 		}

@@ -25,6 +25,7 @@ import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 
 import GameLevel from "./GameLevel";
 import PlayerController from "../AI/Player/PlayerController";
+import StoreController from "../AI/Store/StoreController";
 
 export default class Level1 extends GameLevel {
 
@@ -35,6 +36,7 @@ export default class Level1 extends GameLevel {
 
         this.load.tilemap("level", "assets/dummyMap.json");
         this.load.spritesheet("player", "assets/spritesheets/cars.json");
+        this.load.spritesheet("store_terminal", "assets/spritesheets/store_terminal.json")
     }
 
     /**
@@ -62,6 +64,11 @@ export default class Level1 extends GameLevel {
 
         this.initPlayer();
 
+        this.store = this.add.animatedSprite("store_terminal", "primary");
+
+        this.store.position.set(this.viewport.getCenter().x, this.viewport.getCenter().y);
+        // this.store.scale.set(0.4, 0.4);
+        this.store.addAI(StoreController, {radius: 100, player: this.player});
     }
 
     protected initPlayer(){
