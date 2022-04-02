@@ -17,7 +17,7 @@ export default class Idle extends PlayerState {
      * TODO: Start playing our characters idling animation
      */
     onEnter(options: Record<string, any>): void {
-		this.owner.animation.play("idle");
+		this.owner.animation.play("IDLE");
 	}
 
     update(deltaT: number): void {

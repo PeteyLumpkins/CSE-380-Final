@@ -48,7 +48,7 @@ export default class GameLevel extends Scene {
         // Initialize layers
         this.initUILayer();
         this.initPausedLayer();
-        this.initStoreLayer();
+        // this.initStoreLayer();
 
         // Subscribe to Events
         this.receiver.subscribe(GameEvents.PAUSE);
@@ -144,18 +144,13 @@ export default class GameLevel extends Scene {
     }
 
     /**
-     * Initializes the UI layer of the game. We'll need labels for a few different labels
-     * andd we'll probably add more later.
-     * 
-     * PLAYER_HEALTH - a label to keep track of the players health
-     * 
-     * PAUSE_BUTTON - a simple pause button that will freeze the scene and pull up the
-     * pause layer.
+     * FIXME: The controls and displays on the UI layer need to be adjusted to fit the screen. Right now
+     * they're a little messed up and the pause button is off the screen 
      * 
      */
     protected initUILayer() {
 
-        const uilayer = this.addLayer(GameLayers.UI);
+        const uilayer = this.addUILayer(GameLayers.UI);
 
         this.playerHealthLabel = <Label>this.add.uiElement(UIElementType.LABEL, GameLayers.UI, {position: new Vec2(120, 30), text: "Peter's Health: " + (this.playerHealth)});
         this.playerHealthLabel.textColor = Color.WHITE;

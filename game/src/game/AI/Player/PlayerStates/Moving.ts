@@ -21,7 +21,7 @@ export default class Moving extends PlayerState {
      * TODO: When we start the moving animation we should play the sprites "move/run" animation
      */
     onEnter(options: Record<string, any>): void {
-		this.owner.animation.play("driving");
+		this.owner.animation.play("WALK");
 	}
 
     update(deltaT: number): void {

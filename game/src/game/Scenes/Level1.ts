@@ -11,10 +11,12 @@ export default class Level1 extends GameLevel {
     // The wall layer of the tilemap to use for bullet visualization
     private walls: OrthogonalTilemap;
 
+    private PLAYER_SPAWN: Vec2 = new Vec2(240, 256);
+
     loadScene(){
         super.loadScene();
-        this.load.tilemap("level", "assets/dummyMap.json");
-        this.load.spritesheet("player", "assets/spritesheets/cars.json");
+        this.load.tilemap("level", "assets/tilemaps/prototypeMap.json");
+        this.load.spritesheet("player", "assets/spritesheets/player.json");
         this.load.spritesheet("store_terminal", "assets/spritesheets/store_terminal.json");
     }
 
@@ -27,15 +29,24 @@ export default class Level1 extends GameLevel {
         super.startScene();
 
         //Uncomment this code and comment the above code when you're using your tilemap
-        let tilemapLayers = this.add.tilemap("level", new Vec2(0.5, 0.5));
+        let tilemapLayers = this.add.tilemap("level");
 
+        // FIXME: the player should be able to move under the pipes but for some reason it doesn't work,
+        // I'm not sure what's up with the layering.
+
+        
          // Get the wall layer
         this.walls = <OrthogonalTilemap>tilemapLayers[1].getItems()[0];
 
         // Set the viewport bounds to the tilemap
-        let tilemapSize: Vec2 = this.walls.size.scale(.5);
+        let tilemapSize: Vec2 = this.walls.size;
 
         this.viewport.setBounds(0, 0, tilemapSize.x, tilemapSize.y);
+        this.viewport.follow(this.player);
+        this.viewport.setZoomLevel(2);
+
+        console.log("Map x: " + tilemapSize.x);
+        console.log("Map y: " + tilemapSize.y);
 
         console.log(this);
 
@@ -43,18 +54,18 @@ export default class Level1 extends GameLevel {
 
         this.initPlayer();
 
-        this.store = this.add.animatedSprite("store_terminal", "primary");
+        // this.store = this.add.animatedSprite("store_terminal", "primary");
 
-        this.store.position.set(this.viewport.getCenter().x, this.viewport.getCenter().y);
-        // this.store.scale.set(0.4, 0.4);
-        this.store.addAI(StoreController, {radius: 100, player: this.player});
+        // this.store.position.set(this.viewport.getCenter().x, this.viewport.getCenter().y);
+        // // this.store.scale.set(0.4, 0.4);
+        // this.store.addAI(StoreController, {radius: 100, player: this.player});
     }
 
     protected initPlayer(){
         this.player = this.add.animatedSprite("player", "primary");
 		
 		// Set the player's position to the middle of the screen, and scale it down
-		this.player.position.set(this.viewport.getCenter().x, this.viewport.getCenter().y);
+		this.player.position.set(256, 240);
 		this.player.scale.set(0.4, 0.4);
 
 		// Give the player a smaller hitbox
@@ -65,6 +76,7 @@ export default class Level1 extends GameLevel {
 
 		// Add a playerController to the player
 		this.player.addAI(PlayerController);
+        this.viewport.follow(this.player);
     }
 
     
