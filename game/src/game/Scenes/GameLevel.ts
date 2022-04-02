@@ -1,32 +1,15 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import Scene from "../../Wolfie2D/Scene/Scene";
-import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 import Color from "../../Wolfie2D/Utils/Color";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import MainMenu from "./MainMenu";
-import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
-import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 
 import PlayerController from "../AI/Player/PlayerController";
-
-export enum GameLayers {
-    PRIMARY = "PRIMARY_LAYER",
-    UI = "UI_LAYER",
-    LEVEL = "LEVEL_LAYER", 
-    PAUSED = "PAUSEED_LAYER",
-    CONTROLS = "CONTROLS_LAYER"
-}
-
-export enum GameEvents {
-    PAUSE = "PAUSE_EVENT",
-    RESUME = "RESUME_EVENT",
-    CONTROLS = "CONTROLS_EVENT",
-    MAIN_MENU = "MAIN_MENU_EVENT"
-}
+import { GameEvents, GameLayers, GameSprites } from "../GameEnums";
 
 export default class GameLevel extends Scene {
 
@@ -37,8 +20,11 @@ export default class GameLevel extends Scene {
     protected playerHealthLabel: Label;
     protected player: AnimatedSprite;
 
-    // Store Node
+    // Store Sprite (enabled/disabled sprite)
     protected store: AnimatedSprite;
+
+    // Main store background
+    protected storeBackground: AnimatedSprite;
     
     // Buttons in the UI
     protected pauseButton: Button;
@@ -49,6 +35,9 @@ export default class GameLevel extends Scene {
     // Paused background
     protected pausedBackground: Label;
 
+    loadScene() {
+        this.load.spritesheet(GameSprites.STORE_BG, "assets/spritesheets/store_layer.json");
+    }
 
     /**
      * The "Scene" class has an options parameter that we'll use to pass the players
@@ -59,12 +48,15 @@ export default class GameLevel extends Scene {
         // Initialize layers
         this.initUILayer();
         this.initPausedLayer();
+        this.initStoreLayer();
 
         // Subscribe to Events
         this.receiver.subscribe(GameEvents.PAUSE);
         this.receiver.subscribe(GameEvents.RESUME);
         this.receiver.subscribe(GameEvents.CONTROLS);
         this.receiver.subscribe(GameEvents.MAIN_MENU);
+        this.receiver.subscribe(GameEvents.OPEN_STORE);
+        this.receiver.subscribe(GameEvents.CLOSE_STORE);
     }
 
 
@@ -97,7 +89,16 @@ export default class GameLevel extends Scene {
                 this.handleMainMenuEvent(event);
                 break;  
             }
-
+            case GameEvents.OPEN_STORE: {
+                console.log("Open store event caught!");
+                this.handleOpenStoreEvent(event);
+                break;
+            }
+            case GameEvents.CLOSE_STORE: {
+                console.log("Close store event caught!");
+                this.handleCloseStoreEvent(event);
+                break;
+            }
             default: {
                 console.log("Unknown event caught in GameLevel reciever. Did you add a case in the switch statement and a handler for your event?");
                 break;
@@ -126,6 +127,20 @@ export default class GameLevel extends Scene {
     // data back to the main menu via the second param. Stuff about levels unlocked maybe?
     protected handleMainMenuEvent(ev: GameEvent) {
         this.sceneManager.changeToScene(MainMenu, {});
+    }
+
+    // TODO: Handles opening up the game store - should pause the rest of the game
+    protected handleOpenStoreEvent(ev: GameEvent) {
+        this.getLayer(GameLayers.STORE_BG).setHidden(false);
+        this.getLayer(GameLayers.STORE_CONTROLS).setHidden(false);
+        this.getLayer(GameLayers.STORE_ITEMS).setHidden(false);
+    }
+
+    // TODO: Handles closing the games store
+    protected handleCloseStoreEvent(ev: GameEvent) {
+        this.getLayer(GameLayers.STORE_BG).setHidden(true);
+        this.getLayer(GameLayers.STORE_CONTROLS).setHidden(true);
+        this.getLayer(GameLayers.STORE_ITEMS).setHidden(true);
     }
 
     /**
@@ -182,7 +197,7 @@ export default class GameLevel extends Scene {
      *  |                                                                |
      *  |----------------------------------------------------------------|
      */
-    protected initPausedLayer() {
+    private initPausedLayer() {
 
         const pauseLayer = this.addLayer(GameLayers.PAUSED);
         let center = this.viewport.getCenter();
@@ -230,22 +245,21 @@ export default class GameLevel extends Scene {
      *      layer should become invisible and the game should resume. (ie game shouldn't be 
      *      player with controls layer still visible).
      */
-    initControlsLayer() {
+    private initControlsLayer() {
 
     }
 
     /**
-     * Initializes our player. 
-     * 
-     * PLAYER SPAWN - should spawn the player at the passed down spawn point or
-     * spawn the player at (0, 0) if the spawn is not given
-     * 
-     * PLAYER SPRITE - should set the player node to be the player sprite. The 
-     * name of the sprite will be specified in an enum somewhere...
-     * 
-     * PLAYER CONTROLLER - sets up the AI and controls for the player. We should 
-     * have that for the most part via the player controller
+     * TODO: This method will initialize the store layer of our game
      */
+    private initStoreLayer() {
+        const storeBgLayer = this.addLayer(GameLayers.STORE_BG);
+        this.storeBackground = this.add.animatedSprite(GameSprites.STORE_BG, GameLayers.STORE_BG);
+        this.storeBackground.position.set(this.viewport.getCenter().x, this.viewport.getCenter().y);
+
+       const storeControlsLayer = this.addLayer(GameLayers.STORE_CONTROLS);
+       const storeItemsLayer = this.addLayer(GameLayers.STORE_ITEMS);
+    }
     
 
 }

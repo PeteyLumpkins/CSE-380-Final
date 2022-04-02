@@ -4,8 +4,7 @@ import Layer from "../../Wolfie2D/Scene/Layer";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
-import { Homework3Event } from "../HW3_Enums";
-import Homework1_Scene from "./HW3_Scene";
+import { MenuImages, MenuEvents, MenuLayers } from "../GameEnums";
 import Level1 from "./Level1";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 
@@ -283,28 +282,4 @@ export default class MainMenu extends Scene {
         levelsBack.backgroundColor = Color.TRANSPARENT;
         levelsBack.onClickEventId = MenuEvents.MAIN_MENU;
     }
-}
-
-export enum MenuLayers {
-    SPLASH = "SPLASH_LAYER", 
-    MAIN_MENU = "MAIN_MENU_LAYER",
-    CONTROLS= "CONTROLS_LAYER",
-    HELP = "HELP_SCREEN",
-    LEVELS = "LEVELS_LAYER",
-    BACKGROUND = "BACKGROUND_LAYER",
-    LOGO = "LOGO_LAYER"
-}
-
-export enum MenuImages {
-    BACKGROUND = "BACKGROUND_IMAGE",
-    LOGO = "LOGO_IMAGE"
-}
-
-export enum MenuEvents {
-    PLAY_GAME = "PLAY_GAME_EVENT",
-    SPLASH = "SPLASH_EVENT", 
-    MAIN_MENU = "MAIN_MENU_EVENT",
-    CONTROLS = "CONTROLS_EVENT",
-    HELP = "HELP_EVENT",
-    LEVELS = "LEVELS_EVENT"
 }

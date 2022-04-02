@@ -8,7 +8,7 @@ import Input from "../../../Wolfie2D/Input/Input";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import StateMachineAI from "../../../Wolfie2D/AI/StateMachineAI";
 import MathUtils from "../../../Wolfie2D/Utils/MathUtils";
-import { Homework3Animations, Homework3Event } from "../../HW3_Enums";
+import { Homework3Animations } from "../../GameEnums";
 
 import Idle from "./PlayerStates/Idle";
 import Moving from "./PlayerStates/Moving";

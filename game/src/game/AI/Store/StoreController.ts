@@ -2,7 +2,6 @@ import StateMachineAI from "../../../Wolfie2D/AI/StateMachineAI";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import GameNode from "../../../Wolfie2D/Nodes/GameNode";
-import Receiver from "../../../Wolfie2D/Events/Receiver";
 import Circle from "../../../Wolfie2D/DataTypes/Shapes/Circle";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 

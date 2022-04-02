@@ -9,18 +9,12 @@ import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
 import RandUtils from "../../Wolfie2D/Utils/RandUtils";
-import RockAI from "../AI/RockAI";
-import BulletBehavior from "../AI/BulletAI";
-import { Homework3Animations, Homework3Event, Homework3Shaders } from "../HW3_Enums";
+import { Homework3Animations } from "../GameEnums";
 import CarPlayerController from "../AI/Player/PlayerController";
 import Circle from "../../Wolfie2D/DataTypes/Shapes/Circle";
 import GameOver from "./GameOver";
 import ShaderType from "../../Wolfie2D/Rendering/WebGLRendering/ShaderType";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
-import CanvasNode from "../../Wolfie2D/Nodes/CanvasNode";
-import Shape from "../../Wolfie2D/DataTypes/Shapes/Shape";
-import Timer from "../../Wolfie2D/Timing/Timer";
-import Input from "../../Wolfie2D/Input/Input";
 import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 
 /**
