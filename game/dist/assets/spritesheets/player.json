@@ -1,0 +1,19 @@
+{
+    "name": "TopdownPlayer",
+    "spriteSheetImage": "player.png",
+    "spriteWidth": 32,
+    "spriteHeight": 48,
+    "columns": 8,
+    "rows": 1,
+    "durationType": "time",
+    "animations": [
+        { 
+            "name": "IDLE",
+            "frames": [ {"index": 1, "duration": 16}, {"index": 2, "duration": 16}, {"index": 3, "duration": 16}, {"index": 4, "duration": 16}, {"index": 5, "duration": 16}, {"index": 6, "duration": 16}, {"index": 7, "duration": 16}, {"index": 8, "duration": 16} ]
+        },
+        {
+            "name": "WALK",
+            "frames": [ {"index": 1, "duration": 16}, {"index": 2, "duration": 16}, {"index": 3, "duration": 16}, {"index": 4, "duration": 16} ]
+        }
+    ]
+}
