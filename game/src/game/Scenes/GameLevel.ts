@@ -11,10 +11,12 @@ import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import PlayerController from "../AI/Player/PlayerController";
 import { GameEvents, GameLayers, GameSprites } from "../GameEnums";
 
-export default class GameLevel extends Scene {
+export default abstract class GameLevel extends Scene {
 
     // Player stuff?
-    protected MAX_PLAYER_HEALTH: number = 20;
+    private DEFAULT_PLAYER_HEALTH: number = 20;
+    private DEFAULT_PLAYER_SPAWN: Vec2 = new Vec2(0, 0);
+
     protected playerHealth: number;
     protected playerSpawn: Vec2;
     protected playerHealthLabel: Label;
@@ -35,15 +37,9 @@ export default class GameLevel extends Scene {
     // Paused background
     protected pausedBackground: Label;
 
-    loadScene() {
-        this.load.spritesheet(GameSprites.STORE_BG, "assets/spritesheets/store_layer.json");
-    }
+    loadScene(): void {}
 
-    /**
-     * The "Scene" class has an options parameter that we'll use to pass the players
-     * health and buffs through the game levels.
-     */
-    startScene(){
+    startScene(): void {
 
         // Initialize layers
         this.initUILayer();
@@ -146,7 +142,6 @@ export default class GameLevel extends Scene {
     /**
      * FIXME: The controls and displays on the UI layer need to be adjusted to fit the screen. Right now
      * they're a little messed up and the pause button is off the screen 
-     * 
      */
     protected initUILayer() {
 
@@ -245,7 +240,8 @@ export default class GameLevel extends Scene {
     }
 
     /**
-     * TODO: This method will initialize the store layer of our game
+     * TODO: This method will initialize the store layer of our game. It should be called
+     * after the level has been loaded, I'm pretty sure.
      */
     private initStoreLayer() {
         const storeBgLayer = this.addLayer(GameLayers.STORE_BG);

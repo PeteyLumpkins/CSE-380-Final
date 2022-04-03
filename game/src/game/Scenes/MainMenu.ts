@@ -8,6 +8,10 @@ import { MenuImages, MenuEvents, MenuLayers } from "../GameEnums";
 import Level1 from "./Level1";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 
+/** 
+ * TODO: The position of the logo should be moved on each of the screens so that it 
+ * doesn't overlap any of the buttons or text on the screens.
+*/
 export default class MainMenu extends Scene {
     // Layers, for multiple main menu screens
     private splash: Layer; //added, we need a new layer for the splash screen

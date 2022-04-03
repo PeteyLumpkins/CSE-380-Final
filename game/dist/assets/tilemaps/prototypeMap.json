@@ -31,7 +31,13 @@
                "name":"Collidable",
                "type":"bool",
                "value":true
-              }],
+              },
+              {
+               "name":"Depth",
+               "type":"int",
+               "value":1
+              }
+          ],
          "type":"tilelayer",
          "visible":true,
          "width":100,

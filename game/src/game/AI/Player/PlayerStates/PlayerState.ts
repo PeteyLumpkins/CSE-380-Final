@@ -17,9 +17,10 @@ export default abstract class PlayerState extends State {
     protected owner: AnimatedSprite;
     protected invincibleTimer: Timer;
 
-    protected speedScale: number;
-    protected healthScale: number;
-    protected attackScale: number;
+	// These values will scale the players stats
+    protected speedScale: number = 2;
+    protected healthScale: number = 1;
+    protected attackScale: number = 1;
 
 	constructor(parent: StateMachine, owner: AnimatedSprite){
 		super(parent);
@@ -35,6 +36,7 @@ export default abstract class PlayerState extends State {
 		let direction = Vec2.ZERO;
 		direction.x = (Input.isPressed("left") ? -1 : 0) + (Input.isPressed("right") ? 1 : 0);
 		direction.y = (Input.isPressed("forward") ? -1 : 0) + (Input.isPressed("backward") ? 1: 0);
+
 		return direction;
 	}
 

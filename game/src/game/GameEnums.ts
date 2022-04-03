@@ -11,7 +11,8 @@ export enum GameLayers {
 
 export enum GameSprites {
     PLAYER = "GAME_SPRITE_PLAYER",
-    STORE_BG = "GAME_SPRITE_STORE_BG"
+    STORE_BG = "GAME_SPRITE_STORE_BG",
+    STORE = "GAME_SPRITE_STORE"
 }
 
 export enum GameEvents {

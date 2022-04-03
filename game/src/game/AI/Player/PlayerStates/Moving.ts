@@ -24,7 +24,7 @@ export default class Moving extends PlayerState {
 		this.owner.animation.play("WALK");
 	}
 
-    update(deltaT: number): void {
+  update(deltaT: number): void {
 		super.update(deltaT);
 
 		let dir = this.getInputDirection();
@@ -33,13 +33,14 @@ export default class Moving extends PlayerState {
 			this.finished(PlayerStates.IDLE);
 		} else {
             // TODO: the movement should be affected by the players default speed and speedScale
-            this.owner.position.add(dir);
+
+            this.owner.move(dir.mult(new Vec2(this.speedScale, this.speedScale)));
             this.emitter.fireEvent(PlayerStates.MOVING, {position: this.owner.position})
         }
 		
 	}
 
-    onExit(): Record<string, any> {
-		return {};
-	}
+  onExit(): Record<string, any> {
+    return {};
+  }
 }
