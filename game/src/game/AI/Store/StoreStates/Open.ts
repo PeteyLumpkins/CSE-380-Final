@@ -1,5 +1,6 @@
 import StoreState from "./StoreState";
 import { StoreStates } from "../StoreController";
+import { GameEvents } from "../../../GameEnums";
 import Input from "../../../../Wolfie2D/Input/Input";
 
 export default class Open extends StoreState {
@@ -11,12 +12,12 @@ export default class Open extends StoreState {
      */
     onEnter(options: Record<string, any>): void {
         console.log("Started open store state");
-        // this.emitter.fireEvent("openingstore");
+        this.emitter.fireEvent(GameEvents.OPEN_STORE);
     }
 
     // FIXME: also needs to be fixed so that the store closes properly
     update(deltaT: number): void {
-        if (Input.isKeyJustPressed("open")) {
+        if (Input.isPressed("close")) {
             this.finished(StoreStates.ENABLED);
         }
     }
@@ -26,7 +27,7 @@ export default class Open extends StoreState {
      */
     onExit(): Record<string, any> { 
         console.log("Closing the store");
-        // this.emitter.fireEvent("closingstore");
+        this.emitter.fireEvent(GameEvents.CLOSE_STORE);
         return {}; 
     }
 }

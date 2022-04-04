@@ -27,8 +27,6 @@ export default class Level1 extends GameLevel {
      */
     startScene(){
 
-        super.startScene();
-
         //Uncomment this code and comment the above code when you're using your tilemap
         let tilemapLayers = this.add.tilemap("level");
         // FIXME: the player should be able to move under the pipes but for some reason it doesn't work,
@@ -44,18 +42,20 @@ export default class Level1 extends GameLevel {
 
         this.viewport.setBounds(0, 0, tilemapSize.x, tilemapSize.y);
         this.viewport.follow(this.player);
-        this.viewport.setZoomLevel(4);
+        this.viewport.setZoomLevel(1);
 
 
         this.addLayer("primary", 5);
 
         this.initPlayer();
 
-        // this.store = this.add.animatedSprite("store_terminal", "primary");
+        this.store = this.add.animatedSprite("store_terminal", "primary");
 
-        // this.store.position.set(this.viewport.getCenter().x, this.viewport.getCenter().y);
-        // // this.store.scale.set(0.4, 0.4);
-        // this.store.addAI(StoreController, {radius: 100, player: this.player});
+        this.store.position.set(this.viewport.getCenter().clone().x + 64, this.viewport.getCenter().clone().y - 32);
+        this.store.scale.set(0.4, 0.4);
+        this.store.addAI(StoreController, {radius: 100, player: this.player});
+
+        super.startScene();
     }
 
     protected initPlayer(){
@@ -64,7 +64,7 @@ export default class Level1 extends GameLevel {
 		this.player.position.set(256, 240);
         this.player.scale.set(.75, .75);
 
-		let playerCollider = new AABB(Vec2.ZERO, new Vec2(this.player.sizeWithZoom.x / 2, this.player.sizeWithZoom.y / 8));
+		let playerCollider = new AABB(Vec2.ZERO, new Vec2(this.player.sizeWithZoom.x / 4, this.player.sizeWithZoom.y / 8));
         this.player.addPhysics();
 		this.player.setCollisionShape(playerCollider);
         

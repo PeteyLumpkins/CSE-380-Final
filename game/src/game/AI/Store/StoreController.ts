@@ -43,7 +43,6 @@ export default class StoreController extends StateMachineAI {
 
     handleEvent(event: GameEvent) {
         super.handleEvent(event);
-
     }
 
     update(deltaT: number): void {

@@ -44,7 +44,7 @@ export default abstract class GameLevel extends Scene {
         // Initialize layers
         this.initUILayer();
         this.initPausedLayer();
-        // this.initStoreLayer();
+        this.initStoreLayer();
 
         // Subscribe to Events
         this.receiver.subscribe(GameEvents.PAUSE);
@@ -189,7 +189,7 @@ export default abstract class GameLevel extends Scene {
      */
     private initPausedLayer() {
 
-        const pauseLayer = this.addLayer(GameLayers.PAUSED);
+        const pauseLayer = this.addLayer(GameLayers.PAUSED, 10);
         let center = this.viewport.getCenter();
 
         this.pausedBackground = <Label>this.add.uiElement(UIElementType.LABEL, GameLayers.PAUSED, {position: new Vec2(center.x, center.y), text: ""});
@@ -244,12 +244,14 @@ export default abstract class GameLevel extends Scene {
      * after the level has been loaded, I'm pretty sure.
      */
     private initStoreLayer() {
-        const storeBgLayer = this.addLayer(GameLayers.STORE_BG);
+        const storeBgLayer = this.addUILayer(GameLayers.STORE_BG);
         this.storeBackground = this.add.animatedSprite(GameSprites.STORE_BG, GameLayers.STORE_BG);
         this.storeBackground.position.set(this.viewport.getCenter().x, this.viewport.getCenter().y);
+        this.storeBackground.animation.play("idle");
 
-       const storeControlsLayer = this.addLayer(GameLayers.STORE_CONTROLS);
-       const storeItemsLayer = this.addLayer(GameLayers.STORE_ITEMS);
+       const storeControlsLayer = this.addUILayer(GameLayers.STORE_CONTROLS);
+       const storeItemsLayer = this.addUILayer(GameLayers.STORE_ITEMS);
+       storeBgLayer.setHidden(true);
     }
     
 
