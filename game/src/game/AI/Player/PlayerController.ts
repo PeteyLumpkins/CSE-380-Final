@@ -9,7 +9,6 @@ import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import StateMachineAI from "../../../Wolfie2D/AI/StateMachineAI";
 import OrthogonalTilemap from "../../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 import MathUtils from "../../../Wolfie2D/Utils/MathUtils";
-import { Homework3Animations } from "../../GameEnums";
 
 import Idle from "./PlayerStates/Idle";
 import Moving from "./PlayerStates/Moving";
@@ -40,11 +39,9 @@ export default class PlayerController extends StateMachineAI {
         this.initialize(PlayerStates.IDLE);
 	}
 
-	activate(options: Record<string, any>){};
+	activate(options: Record<string, any>): void {};
 
-	handleEvent(event: GameEvent): void {
-		
-	}
+	handleEvent(event: GameEvent): void {};
 
 	update(deltaT: number): void {
 

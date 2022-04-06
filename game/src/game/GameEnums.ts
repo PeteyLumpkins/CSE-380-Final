@@ -6,7 +6,8 @@ export enum GameLayers {
     CONTROLS = "CONTROLS_LAYER",
     STORE_BG = "STORE_BG_LAYER",
     STORE_CONTROLS = "STORE_CONTROLS_LAYER",
-    STORE_ITEMS = "STORE_ITEMS_LAYER"
+    STORE_ITEMS = "STORE_ITEMS_LAYER",
+    NAVMESH_GRAPH = "NAVMESH_GRAPH_LAYER",
 }
 
 export enum GameSprites {
@@ -24,14 +25,32 @@ export enum GameEvents {
     CLOSE_STORE = "CLOSE_STORE_EVENT"
 }
 
+/* Any JSON objects floating around in the game */
+export enum GameData {
+    NAVMESH = "NAVMESH_GAME_DATA",
+}
 
-export enum Homework3Animations {
-	CAR_IDLE = "idle",
-	CAR_DRIVE = "driving",
-	CAR_DAMAGE = "damage",
-	CAR_DYRING = "dying", 
-	CAR_DEAD = "dead", 
-	CAR_FIRING = "firing"
+export enum StoreEvents {
+    REQUEST_PURCHASE = "PURCHASE_REQUEST_STORE_EVENT",
+    INVALID_PURCHASE = "PURCHASE_INVALID_STORE_EVENT",
+    VALID_PURCHASE = "VALID_PURCHASE"
+}
+
+export enum EnemyStates {
+    ACTIVE = "ACTIVE_ENEMY_STATE",
+    PATROL = "PATROL_ENEMY_STATE",
+    GUARD = "GUARD_ENEMY_STATE"
+}
+
+export enum EnemyStatuses {
+    GOAL_REACHED = "ENEMY_STATUS_GOAL_REACHED",
+    PLAYER_SEEN = "ENEMY_STATUS_PLAYER_SEEN",
+    IN_RANGE = "ENEMY_STATUS_IN_RANGE",
+}
+
+export enum EnemyActions {
+    ATTACK = "ENEMY_ACTION_ATTACK",
+    MOVE = "ENEMY_ACTION_MOVE"
 }
 
 export enum MenuLayers {

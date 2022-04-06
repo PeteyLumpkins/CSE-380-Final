@@ -1,5 +1,8 @@
 import Game from "./Wolfie2D/Loop/Game";
-import MainMenu from "./game/Scenes/MainMenu";
+import MainMenu from "./game/Scenes/GameLevels/MainMenu";
+import Level1 from "./game/Scenes/GameLevels/Level1";
+import GameLevel from "./game/Scenes/GameLevel";
+import AITest from "./game/Scenes/TestLevels/AITest";
 
 // The main function is your entrypoint into Wolfie2D. Specify your first scene and any options here.
 (function main(){
@@ -15,7 +18,7 @@ import MainMenu from "./game/Scenes/MainMenu";
             { name: "backward", keys: ["s"] },  // and so on...
             { name: "left", keys: ["a"] },
             { name: "right", keys: ["d"] },
-            { name: "pause", keys: ["ESC"]},
+            { name: "pause", keys: ["escape"]},
             { name: "open", keys: ["1"]},
             { name: "close", keys: ["2"]}
         ],
