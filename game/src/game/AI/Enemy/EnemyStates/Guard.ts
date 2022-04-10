@@ -1,6 +1,6 @@
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
-import GameNode from "../../../../Wolfie2D/Nodes/GameNode";
+import AnimatedSprite from "../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import NavigationPath from "../../../../Wolfie2D/Pathfinding/NavigationPath";
 import EnemyAI from "../EnemyAI";
 import EnemyState from "./EnemyState";
@@ -14,20 +14,24 @@ export default class Guard extends EnemyState {
 
     private retObj: Record<string, any>;
     
-    constructor(parent: EnemyAI, owner: GameNode, guardPosition: Vec2){
+    constructor(parent: EnemyAI, owner: AnimatedSprite, guardPosition: Vec2){
         super(parent, owner);
 
         this.guardPosition = guardPosition;
     }
 
     onEnter(options: Record<string, any>): void {
-        
+        this.owner.animation.play("IDLE");
     }
 
     handleInput(event: GameEvent): void { }
 
     update(deltaT: number): void {
         
+        if (this.owner.position.distanceTo(this.parent.player.position) < this.parent.inRange) {
+            this.finished(EnemyStates.ACTIVE);
+        }
+
     }
 
     onExit(): Record<string, any> {

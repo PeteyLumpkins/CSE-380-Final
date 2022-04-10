@@ -9,8 +9,18 @@ import StoreController from "../../AI/Store/StoreController";
 
 import {GameSprites, GameData, GameLayers } from "../../GameEnums";
 import Input from "../../../Wolfie2D/Input/Input";
+import GameNode from "../../../Wolfie2D/Nodes/GameNode";
+import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+
+import EnemyAI from "../../AI/Enemy/EnemyAI";
+
+import Attack  from "../../AI/Enemy/EnemyActions/Attack";
+import Move from "../../AI/Enemy/EnemyActions/Move";
+import { EnemyStatuses } from "../../GameEnums";
 
 export default class AITest extends GameLevel {
+
+    private enemy: AnimatedSprite;
 
 
     loadScene(){
@@ -36,7 +46,7 @@ export default class AITest extends GameLevel {
         this.walls = <OrthogonalTilemap>tilemapLayers[1].getItems()[0];
 
         // Set the viewport bounds to the tilemap
-        let tilemapSize: Vec2 = this.walls.size;
+        let tilemapSize: Vec2 = this.walls.size.scale(.5, .5);
 
         this.viewport.setBounds(0, 0, tilemapSize.x, tilemapSize.y);
 
@@ -44,6 +54,22 @@ export default class AITest extends GameLevel {
         this.playerSpawn = new Vec2(256, 240);
 
         super.startScene();
+
+        this.enemy = this.add.animatedSprite(GameSprites.PLAYER, GameLayers.PRIMARY);
+        this.enemy.position.set(this.viewport.getCenter().x, this.viewport.getCenter().y);
+
+        let possibleActions = [
+            new Attack(4, [EnemyStatuses.IN_RANGE], [EnemyStatuses.GOAL_REACHED]),
+            new Move(3, [], [EnemyStatuses.IN_RANGE], {inRange: 100}),
+        ]
+        let enemyOptions = {
+            health: 20,
+            player: this.player,
+            goal: EnemyStatuses.GOAL_REACHED,
+            actions: possibleActions,
+            inRange: 100
+        }
+        this.enemy.addAI(EnemyAI, enemyOptions);
     }
 
     updateScene(deltaT: number): void {

@@ -12,6 +12,9 @@ import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import OrthogonalTilemap from "../../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 import NavigationPath from "../../../Wolfie2D/Pathfinding/NavigationPath";
 
+import Guard from "./EnemyStates/Guard";
+import Active from "./EnemyStates/Active";
+
 import { EnemyStates, EnemyStatuses } from "../../GameEnums";
 
 export default class EnemyAI extends StateMachineGoapAI {
@@ -27,17 +30,10 @@ export default class EnemyAI extends StateMachineGoapAI {
     /** The default movement speed of this AI */
     speed: number = 20;
 
-    /** A reference to the player object */
-    player1: GameNode;
-
-    /** A reference to the player object */
-    player2: GameNode;
+    player: GameNode;
 
     // The current known position of the player
     playerPos: Vec2;
-
-    // The last known position of the player
-    lastPlayerPos: Vec2;
 
     // Attack range
     inRange: number;
@@ -45,68 +41,32 @@ export default class EnemyAI extends StateMachineGoapAI {
     // Path to player
     path: NavigationPath;
 
-    // Path away from player
-    retreatPath: NavigationPath;
-
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         this.owner = owner;
 
+        /* Setting up the states */
 
-        this.addState(EnemyStates.ACTIVE, new Alert(this, owner));
-        this.addState(EnemyStates.GUARD, new Active(this, owner));
+        this.addState(EnemyStates.ACTIVE, new Active(this, this.owner));
+        this.addState(EnemyStates.GUARD, new Guard(this, this.owner, this.owner.position));
+        this.initialize(EnemyStates.GUARD);
+
+        /* Custom Attributes */
 
         this.maxHealth = options.health;
-
         this.health = options.health;
-
-        this.player1 = options.player1;
-
-        this.player2 = options.player2;
-
+        this.player = options.player;
         this.inRange = options.inRange;
 
+        /* Attributes of the GOAP AI */
+
         this.goal = options.goal;
-
-        this.currentStatus = options.status;
-
+        this.currentStatus = [];
         this.possibleActions = options.actions;
-
         this.plan = new Stack<GoapAction>();
-
         this.planner = new GoapActionPlanner();
-
-        // Initialize to the default state
-        this.initialize(EnemyStates.DEFAULT);
-
-        this.getPlayerPosition();
     }
 
     activate(options: Record<string, any>): void { }
-
-    damage(damage: number): void {
-        this.health -= damage;
-
-        // If we're low enough, add Low Health status to enemy
-        if (this.health <= Math.floor(this.maxHealth/2)) {
-            if (this.currentStatus.indexOf(hw4_Statuses.LOW_HEALTH) === -1){
-                this.currentStatus.push(hw4_Statuses.LOW_HEALTH);
-            }
-        }
-
-        // If health goes below 0, disable AI and fire enemyDied event
-        if (this.health <= 0) {
-            this.owner.setAIActive(false, {});
-            this.owner.isCollidable = false;
-            this.owner.visible = false;
-
-            this.emitter.fireEvent("enemyDied", {enemy: this.owner})
-
-            if (Math.random() < 0.2) {
-                // Spawn a healthpack
-                this.emitter.fireEvent("healthpack", { position: this.owner.position });
-            }
-        }
-    }
 
     isPlayerVisible(pos: Vec2): Vec2{
         //Check if one player is visible, taking into account walls

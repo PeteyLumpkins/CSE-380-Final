@@ -38,7 +38,7 @@ export default abstract class GameLevel extends Scene {
     protected player: AnimatedSprite;
 
     /* ENEMIES LIST */
-    private enemies: Array<AnimatedSprite>;
+    protected enemies: Array<AnimatedSprite>;
 
     /* THE GAMES LEVEL */
     protected walls: OrthogonalTilemap;
