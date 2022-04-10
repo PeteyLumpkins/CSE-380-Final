@@ -4,18 +4,22 @@ import OrthogonalTilemap from "../../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilema
 
 import GameLevel from "../GameLevel";
 
+import GameNode from "../../../Wolfie2D/Nodes/GameNode";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import PlayerController from "../../AI/Player/PlayerController";
 import StoreController from "../../AI/Store/StoreController";
-import Attack from "../../Ai/Enemy/EnemyActions/Attack";
-// import Move from "../../AI/Enemy/EnemyActions/Move";
+import PickupAI from "../../AI/Pickup/PickupAI";
 
-import {GameSprites, GameData, GameLayers } from "../../GameEnums";
+import Attack from "../../Ai/Enemy/EnemyActions/Attack";
+import LevelEndAI from "../../AI/LevelEnd/LevelEndAI";
+
+import {GameSprites, GameData, GameLayers, ItemSprites } from "../../GameEnums";
 
 
 export default class Level1 extends GameLevel {
 
     private PLAYER_SPAWN: Vec2 = new Vec2(240, 256);
+    private coin: AnimatedSprite;
 
     loadScene(){
         this.load.tilemap("level", "assets/tilemaps/prototypeMap.json");
@@ -23,6 +27,13 @@ export default class Level1 extends GameLevel {
         this.load.spritesheet(GameSprites.STORE, "assets/spritesheets/store_terminal.json");
         this.load.spritesheet(GameSprites.STORE_BG, "assets/spritesheets/store_layer.json");
         this.load.object(GameData.NAVMESH, "assets/data/navmesh.json");
+        this.load.spritesheet(GameSprites.COIN, "assets/spritesheets/coin.json");
+
+        this.load.object(GameData.STORE_ITEMS, "assets/data/items.json");
+        this.load.image(ItemSprites.MOLD_BREAD, "assets/itemsprites/moldBread.png");
+        this.load.image(ItemSprites.OLD_BOOT, "assets/itemsprites/oldBoot.png");
+        this.load.image("endlevel", "assets/sprites/EndOfLevel.png");
+
     }
 
     /**
@@ -53,12 +64,13 @@ export default class Level1 extends GameLevel {
 
         super.startScene();
 
-        this.store = this.add.animatedSprite(GameSprites.STORE, GameLayers.PRIMARY);
+        this.coin = this.add.animatedSprite(GameSprites.COIN, GameLayers.PRIMARY);
+        this.coin.position.set(this.viewport.getCenter().clone().x , this.viewport.getCenter().clone().y - 32*2);
+        this.coin.addAI(PickupAI, {range: 50, player: this.player});
 
-        this.store.position.set(this.viewport.getCenter().clone().x , this.viewport.getCenter().clone().y - 32*8);
-        this.store.scale.set(0.4, 0.4);
-        this.store.addAI(StoreController, {radius: 100, player: this.player});
-
+        this.nextLevel = this.add.sprite("endlevel", GameLayers.PRIMARY)
+        this.nextLevel.position.set(this.viewport.getCenter().clone().x , this.viewport.getCenter().clone().y);
+        this.nextLevel.addAI(LevelEndAI, {range: 50, player: this.player, nextLevel: Level1});
     }
 
     // initializeEnemies(){

@@ -20,8 +20,11 @@ import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import Input from "../../Wolfie2D/Input/Input";
 
 import PlayerController from "../AI/Player/PlayerController";
-import { GameEvents, GameLayers, GameSprites, GameData, StoreEvents } from "../GameEnums";
+import StoreController from "../AI/Store/StoreController";
+
+import { GameEvents, GameLayers, GameSprites, GameData, StoreEvents, ItemSprites } from "../GameEnums";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
+import GameStore from "../Entities/GameStore";
 
 export default abstract class GameLevel extends Scene {
 
@@ -37,6 +40,13 @@ export default abstract class GameLevel extends Scene {
     protected playerHealthLabel: Label;
     protected player: AnimatedSprite;
 
+    /* NEXT AND PREV LEVELS */
+    protected nextLevel: Sprite;
+    protected prevLevel: Sprite;
+
+    protected playerMoney: number = 0;
+    protected playerMoneyLabel: Label;
+
     /* ENEMIES LIST */
     protected enemies: Array<AnimatedSprite>;
 
@@ -44,17 +54,15 @@ export default abstract class GameLevel extends Scene {
     protected walls: OrthogonalTilemap;
     protected navmeshGraph: PositionGraph;
 
-    /* THE STORE STUFF */
-    protected store: AnimatedSprite;
+    /* GAME STORE */
+    protected store: GameStore;
+    
+    /* STORE UI COMPONENTS */
     protected storeBackground: AnimatedSprite;
-
     protected storeItems: Array<Sprite>;
-
-    // TODO: I'd like to move all the store buttons into an array
+    protected storeItemNameLabels: Array<Label>;
+    protected storeItemCostLabels: Array<Label>;
     protected storeButtons: Array<Button>; 
-    protected storeBuyItem1: Button;
-    protected storeBuyItem2: Button;
-    protected storeBuyItem3: Button;
     
     /* PAUSE AND UNPAUSE BUTTONS */
     protected pauseButton: Button;
@@ -78,6 +86,7 @@ export default abstract class GameLevel extends Scene {
         this.initUILayer();
         this.initPausedLayer();
 
+        this.initStore();
         this.initStoreLayer();
 
         // Subscribe to Events
@@ -88,6 +97,7 @@ export default abstract class GameLevel extends Scene {
         while(this.receiver.hasNextEvent()) {
             this.handleGameEvent(this.receiver.getNextEvent());
         }
+        this.store.update(deltaT);
     }
 
     protected addLayers(): void {
@@ -95,11 +105,14 @@ export default abstract class GameLevel extends Scene {
         this.addUILayer(GameLayers.UI);
 
         this.addUILayer(GameLayers.PAUSED);
+        this.getLayer(GameLayers.PAUSED).setDepth(2);
 
         this.addUILayer(GameLayers.STORE_CONTROLS);
         this.getLayer(GameLayers.STORE_CONTROLS).setDepth(1);
 
         this.addUILayer(GameLayers.STORE_ITEMS);
+        this.getLayer(GameLayers.STORE_ITEMS).setDepth(1);
+
         this.addUILayer(GameLayers.STORE_BG);
 
         this.addLayer(GameLayers.PRIMARY, 5);
@@ -113,6 +126,10 @@ export default abstract class GameLevel extends Scene {
         this.receiver.subscribe(GameEvents.MAIN_MENU);
         this.receiver.subscribe(GameEvents.OPEN_STORE);
         this.receiver.subscribe(GameEvents.CLOSE_STORE);
+        this.receiver.subscribe(GameEvents.CHANGE_LEVEL);
+
+        this.receiver.subscribe(StoreEvents.INVALID_PURCHASE);
+        this.receiver.subscribe(StoreEvents.VALID_PURCHASE);
         // this.receiver.subscribe(GameEventType.KEY_DOWN);
     }
 
@@ -149,6 +166,19 @@ export default abstract class GameLevel extends Scene {
                 this.handleCloseStoreEvent(event);
                 break;
             }
+            case StoreEvents.VALID_PURCHASE: {
+                console.log("Valid store purchasee caught in GameLevel!");
+                break;
+            }
+            case StoreEvents.INVALID_PURCHASE: {
+                console.log("Invalid store purchase caught in GameLevel!");
+                break;
+            }
+            case GameEvents.CHANGE_LEVEL: {
+                console.log("Change Level caught in GameLevel!");
+                this.handleChangeLevelEvent(event);
+                break;
+            }
             case GameEventType.KEY_DOWN: {
                 switch(event.data.get("key")) {
                     case "escape": {
@@ -163,6 +193,11 @@ export default abstract class GameLevel extends Scene {
                 break;
             }
         }
+    }
+
+    protected handleChangeLevelEvent(ev: GameEvent) {
+        console.log(ev.data.get("level"));
+        this.sceneManager.changeToScene(ev.data.get("level"));
     }
 
     // TODO: This handler should freeze the game
@@ -245,6 +280,12 @@ export default abstract class GameLevel extends Scene {
         this.playerHealthLabel.textColor = Color.WHITE;
         this.playerHealthLabel.fontSize = 20;
         this.playerHealthLabel.font = "PixelSimple";
+
+        this.playerMoneyLabel = <Label>this.add.uiElement(UIElementType.LABEL, GameLayers.UI, {position: new Vec2(500, 30).div(scalar), text: "Peter's Money: " + (this.playerMoney)});
+        this.playerMoneyLabel.size.set(100/scale, 50/scale);
+        this.playerMoneyLabel.textColor = Color.WHITE;
+        this.playerMoneyLabel.fontSize = 20;
+        this.playerMoneyLabel.font = "PixelSimple";
 
         this.pauseButton = <Button>this.add.uiElement(UIElementType.BUTTON, GameLayers.UI, {position: new Vec2(950, 30).div(scalar), text: "Pause"});
         this.pauseButton.size.set(100/scale, 50/scale);
@@ -335,50 +376,79 @@ export default abstract class GameLevel extends Scene {
 
         this.storeBackground = this.add.animatedSprite(GameSprites.STORE_BG, GameLayers.STORE_BG);
         this.storeBackground.position.set(this.viewport.getCenter().x/scale, this.viewport.getCenter().y/scale);
-        // this.storeBackground.scale.set(.5, .5);
         this.storeBackground.animation.play("idle");
 
-        this.storeBuyItem1 = <Button>this.add.uiElement(UIElementType.BUTTON, GameLayers.STORE_CONTROLS, {position: new Vec2(center.x - 150, center.y + 100).scale(scale), text: "Buy Item 1"});
-        this.storeBuyItem1.size.set(100/scale, 25/scale);
-        this.storeBuyItem1.borderWidth = 2;
-        this.storeBuyItem1.fontSize = 16;
-        this.storeBuyItem1.backgroundColor = Color.BLACK;
-        this.storeBuyItem1.onClick = () => {
-            this.emitter.fireEvent(StoreEvents.REQUEST_PURCHASE, { 
-                id: 0,
-                cost: 1
-            });
-        };
+        let storeItems = this.store.items;
+        if (storeItems === undefined || storeItems.length === 0) {
+            throw new Error("No items in the store. There should be at least 1 item.");
+        }
 
-        this.storeBuyItem2 = <Button>this.add.uiElement(UIElementType.BUTTON, GameLayers.STORE_CONTROLS, {position: new Vec2(center.x, center.y + 100).scale(scale), text: "Buy item 2"});
-        this.storeBuyItem2.size.set(100/scale, 25/scale);
-        this.storeBuyItem2.borderWidth = 2;
-        this.storeBuyItem2.fontSize = 16;
-        this.storeBuyItem2.backgroundColor = Color.BLACK;
-        this.storeBuyItem2.onClick = () => {
-            this.emitter.fireEvent(StoreEvents.REQUEST_PURCHASE, { 
-                id: 1,
-                cost: 1,
-            });
-        };
+        /* STORE BUTTONS */
+        this.storeButtons = new Array<Button>();
+        let startX = center.x - 150;
+        let startY = center.y + 100;
+        let spaceX = 150;
 
-        this.storeBuyItem3 = <Button>this.add.uiElement(UIElementType.BUTTON, GameLayers.STORE_CONTROLS, {position: new Vec2(center.x + 150, center.y + 100).scale(scale), text: "Buy item 3"});
-        this.storeBuyItem3.size.set(100/scale, 25/scale);
-        this.storeBuyItem3.borderWidth = 2;
-        this.storeBuyItem3.fontSize = 16;
-        this.storeBuyItem3.backgroundColor = Color.BLACK;
-        this.storeBuyItem3.onClick = () => {
-            this.emitter.fireEvent(StoreEvents.REQUEST_PURCHASE, { 
-                id: 2,
-                cost: 1,
-            });
-        };
+        for (let i = 0; i < storeItems.length; i++) {
+            this.storeButtons[i] = <Button>this.add.uiElement(UIElementType.BUTTON, GameLayers.STORE_CONTROLS, {position: new Vec2(startX, startY).scale(scale), text: "Buy Item " + (i + 1)});
+            this.storeButtons[i].size.set(100/scale, 25/scale);
+            this.storeButtons[i].borderWidth = 2;
+            this.storeButtons[i].fontSize = 16;
+            this.storeButtons[i].backgroundColor = Color.BLACK;
+            this.storeButtons[i].onClick = () => {
+                this.emitter.fireEvent(StoreEvents.REQUEST_PURCHASE, { 
+                    id: i,
+                    amount: this.playerMoney
+                });
+            };
+            startX += spaceX;
+        }
+
+        /* STORE ITEMS */
+        this.storeItems = new Array<Sprite>();
+        
+        startX = center.x - 150;
+        startY = center.y - 100;
+        spaceX = 150;
+
+        for (let i = 0; i < storeItems.length; i += 1, startX += spaceX) {
+            this.storeItems[i] = this.add.sprite(ItemSprites.MOLD_BREAD, GameLayers.STORE_ITEMS);
+            this.storeItems[i].position.set(startX, startY);
+            this.storeItems[i].scale.set(5, 5);
+        }
+
+        /* STORE ITEM NAME LABELS */
+        this.storeItemNameLabels = new Array<Label>();
+
+        startX = center.x - 150;
+        startY = center.y - 175;
+        spaceX = 150;
+
+        for (let i = 0; i < storeItems.length; i += 1, startX += spaceX) {
+            this.storeItemNameLabels[i] = <Label>this.add.uiElement(UIElementType.LABEL, GameLayers.STORE_ITEMS, {position: new Vec2(startX, startY), text: storeItems[i].name});
+            this.storeItemNameLabels[i].fontSize = 18;
+            this.storeItemNameLabels[i].textColor = Color.WHITE;
+        }
+
+        /* STORE ITEM COST LABELS */
+        this.storeItemCostLabels = new Array<Label>();
+
+        startX = center.x - 150;
+        startY = center.y - 25;
+        spaceX = 150;
+
+        for (let i = 0; i < storeItems.length; i += 1, startX += spaceX) {
+            this.storeItemCostLabels[i] = <Label>this.add.uiElement(UIElementType.LABEL, GameLayers.STORE_ITEMS, {position: new Vec2(startX, startY), text: `Cost: ${storeItems[i].cost}`});
+            this.storeItemCostLabels[i].fontSize = 18;
+            this.storeItemCostLabels[i].textColor = Color.WHITE;
+        }
 
         this.getLayer(GameLayers.STORE_BG).setHidden(true);
         this.getLayer(GameLayers.STORE_CONTROLS).setHidden(true);
+        this.getLayer(GameLayers.STORE_ITEMS).setHidden(true);
     }
 
-    protected initPlayer(){
+    protected initPlayer() {
         this.player = this.add.animatedSprite(GameSprites.PLAYER, GameLayers.PRIMARY);
 		
 		this.player.position.set(this.playerSpawn.x, this.playerSpawn.y);
@@ -388,10 +458,20 @@ export default abstract class GameLevel extends Scene {
         this.player.addPhysics();
 		this.player.setCollisionShape(playerCollider);
         
-		// Add a playerController to the player
 		this.player.addAI(PlayerController);
 
         this.viewport.follow(this.player);
+    }
+
+    protected initStore() {
+        this.store = new GameStore();
+
+        this.store.node = this.add.animatedSprite(GameSprites.STORE, GameLayers.PRIMARY);
+        this.store.node.position.set(this.viewport.getCenter().clone().x , this.viewport.getCenter().clone().y - 32*4);
+        (<AnimatedSprite>this.store.node).scale.set(0.4, 0.4);
+        this.store.node.addAI(StoreController, {radius: 100, player: this.player});
+
+        this.store.items = this.load.getObject(GameData.STORE_ITEMS);
     }
     
 

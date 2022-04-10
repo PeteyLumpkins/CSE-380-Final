@@ -13,20 +13,26 @@ import MathUtils from "../../../Wolfie2D/Utils/MathUtils";
 import Idle from "./PlayerStates/Idle";
 import Moving from "./PlayerStates/Moving";
 
+import { GameEvents, EnemyActions } from "../../GameEnums";
+
 
 export enum PlayerStates {
 	IDLE = "IDLE_PLAYER_STATE", 
 	MOVING = "MOVING_PLAYER_STATE"
 }
 
-export enum PlayerActions {
-	ATTACKED = "ATTACKED_PLAYER_ACTION"
+export enum PlayerEvents {
+	ATTACKED = "PLAYER_EVENT_ATTACKED",
+	HEALTH_CHANGE = "PLAYER_EVENT_HEALTH_CHANGE",
+	MONEY_CHANGE = "PLAYER_EVENT_MONEY_CHANGE"
 }
 
 export default class PlayerController extends StateMachineAI {
 	// We want to be able to control our owner, so keep track of them
 	protected owner: AnimatedSprite;
 	protected tilemap: OrthogonalTilemap;
+
+	protected money: number = 0;
 
 	initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
 		this.owner = owner;
@@ -37,11 +43,29 @@ export default class PlayerController extends StateMachineAI {
 		this.addState(PlayerStates.MOVING, moving);
 
         this.initialize(PlayerStates.IDLE);
+
+		this.receiver.subscribe(GameEvents.PICKUP_ITEM);
 	}
 
 	activate(options: Record<string, any>): void {};
 
-	handleEvent(event: GameEvent): void {};
+	handleEvent(event: GameEvent): void {
+		switch(event.type) {
+			case GameEvents.PICKUP_ITEM: {
+				console.log("Caught item pickup in player controller");
+				this.handleItemPickupEvent(event);
+				break;
+			}
+			case EnemyActions.ATTACK: {
+				console.log("Caught enemy attack action in player controller");
+				break;
+			}
+			default: {
+				console.log("Caught unhandled event in event handler for player controller");
+				break;
+			}
+		}
+	};
 
 	update(deltaT: number): void {
 
@@ -51,6 +75,24 @@ export default class PlayerController extends StateMachineAI {
 		while(this.receiver.hasNextEvent()){
 			this.handleEvent(this.receiver.getNextEvent());
 		}
+
+	}
+
+	// All item pickup events should have a "type"
+	handleItemPickupEvent(event: GameEvent): void {
+		switch(event.data.get("type")) {
+
+			
+
+			default: {
+				console.log(`Unrecognized type on pickup event: ${event.data.get("type")}`);
+				break;
+			}
+		}
+	}
+
+	// TODO: handles when an enemy trys to attack the player
+	handleEnemyAttackEvent(event: GameEvent): void {
 
 	}
 

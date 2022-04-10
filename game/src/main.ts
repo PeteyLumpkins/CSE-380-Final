@@ -20,7 +20,9 @@ import AITest from "./game/Scenes/TestLevels/AITest";
             { name: "right", keys: ["d"] },
             { name: "pause", keys: ["escape"]},
             { name: "open", keys: ["1"]},
-            { name: "close", keys: ["2"]}
+            { name: "close", keys: ["2"]},
+            { name: "nextlvl", keys: ["3"]},
+            { name: "attack", keys: ["space"]}
         ],
         useWebGL: false,                        // Tell the game we want to use webgl
         showDebug: false                       // Whether to show debug messages. You can change this to true if you want

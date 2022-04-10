@@ -9,7 +9,7 @@ import Timer from "../../../../Wolfie2D/Timing/Timer";
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 
 import PlayerState from "./PlayerState";
-import { PlayerStates, PlayerActions } from "../PlayerController";
+import { PlayerStates } from "../PlayerController";
 
 
 
@@ -21,26 +21,26 @@ export default class Moving extends PlayerState {
      * TODO: When we start the moving animation we should play the sprites "move/run" animation
      */
     onEnter(options: Record<string, any>): void {
-		this.owner.animation.play("WALK");
-	}
+      this.owner.animation.play("WALK");
+    }
 
-  update(deltaT: number): void {
-		super.update(deltaT);
+    update(deltaT: number): void {
+      super.update(deltaT);
 
-		let dir = this.getInputDirection();
+      let dir = this.getInputDirection();
 
-		if(dir.isZero()){
-			this.finished(PlayerStates.IDLE);
-		} else {
-            // TODO: the movement should be affected by the players default speed and speedScale
+      if(dir.isZero()){
+        this.finished(PlayerStates.IDLE);
+      } else {
+              // TODO: the movement should be affected by the players default speed and speedScale
 
-            this.owner.move(dir.mult(new Vec2(this.speedScale, this.speedScale)));
-            this.emitter.fireEvent(PlayerStates.MOVING, {position: this.owner.position})
-        }
-		
-	}
+              this.owner.move(dir.mult(new Vec2(this.speedScale, this.speedScale)));
+              this.emitter.fireEvent(PlayerStates.MOVING, {position: this.owner.position})
+          }
+      
+    }
 
-  onExit(): Record<string, any> {
-    return {};
-  }
+    onExit(): Record<string, any> {
+      return {};
+    }
 }

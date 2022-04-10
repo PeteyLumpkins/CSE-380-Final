@@ -13,7 +13,13 @@ export enum GameLayers {
 export enum GameSprites {
     PLAYER = "GAME_SPRITE_PLAYER",
     STORE_BG = "GAME_SPRITE_STORE_BG",
-    STORE = "GAME_SPRITE_STORE"
+    STORE = "GAME_SPRITE_STORE",
+    COIN = "GAME_SPRITE_COIN"
+}
+
+export enum ItemSprites {
+    MOLD_BREAD = "ITEM_SPRITE_MOLD_BREAD",
+    OLD_BOOT = "ITEM_SPRITE_OLD_BOOT",
 }
 
 export enum GameEvents {
@@ -22,12 +28,15 @@ export enum GameEvents {
     CONTROLS = "CONTROLS_EVENT",
     MAIN_MENU = "MAIN_MENU_EVENT",
     OPEN_STORE = "OPEN_STORE_EVENT",
-    CLOSE_STORE = "CLOSE_STORE_EVENT"
+    CLOSE_STORE = "CLOSE_STORE_EVENT",
+    PICKUP_ITEM = "PICKUP_ITEM_EVENT",
+    CHANGE_LEVEL = "CHANGE_LEVEL_EVENT"
 }
 
 /* Any JSON objects floating around in the game */
 export enum GameData {
     NAVMESH = "NAVMESH_GAME_DATA",
+    STORE_ITEMS = "STOREITEMS_GAME_DATA"
 }
 
 export enum StoreEvents {
@@ -39,7 +48,8 @@ export enum StoreEvents {
 export enum EnemyStates {
     ACTIVE = "ACTIVE_ENEMY_STATE",
     PATROL = "PATROL_ENEMY_STATE",
-    GUARD = "GUARD_ENEMY_STATE"
+    GUARD = "GUARD_ENEMY_STATE",
+    DEAD = "DEAD_ENEMY_STATE"
 }
 
 export enum EnemyStatuses {

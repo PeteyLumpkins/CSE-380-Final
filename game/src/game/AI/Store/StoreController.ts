@@ -45,23 +45,7 @@ export default class StoreController extends StateMachineAI {
         this.receiver.subscribe(StoreEvents.REQUEST_PURCHASE);
     }
 
-    handleEvent(event: GameEvent): void {
-        switch(event.type) {
-            case StoreEvents.REQUEST_PURCHASE: {
-                console.log("Store purchase request caught!");
-                this.handleRequestPurchaseEvent(event);
-                break;
-            }
-            default: {
-                console.log("Unhandled event in store; type: " + event.type);
-                break;
-            }
-        }
-    }
-
-    handleRequestPurchaseEvent(event: GameEvent): void {
-        console.log(event.data);
-    }
+    
 
     update(deltaT: number): void {
         super.update(deltaT);
