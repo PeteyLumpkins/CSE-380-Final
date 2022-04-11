@@ -6,13 +6,21 @@ export enum GameLayers {
     CONTROLS = "CONTROLS_LAYER",
     STORE_BG = "STORE_BG_LAYER",
     STORE_CONTROLS = "STORE_CONTROLS_LAYER",
-    STORE_ITEMS = "STORE_ITEMS_LAYER"
+    STORE_ITEMS = "STORE_ITEMS_LAYER",
+    NAVMESH_GRAPH = "NAVMESH_GRAPH_LAYER",
 }
 
 export enum GameSprites {
     PLAYER = "GAME_SPRITE_PLAYER",
     STORE_BG = "GAME_SPRITE_STORE_BG",
-    STORE = "GAME_SPRITE_STORE"
+    STORE = "GAME_SPRITE_STORE",
+    COIN = "GAME_SPRITE_COIN",
+    LADDER = "GAME_SPRITE_LADDER"
+}
+
+export enum ItemSprites {
+    MOLD_BREAD = "ITEM_SPRITE_MOLD_BREAD",
+    OLD_BOOT = "ITEM_SPRITE_OLD_BOOT",
 }
 
 export enum GameEvents {
@@ -21,17 +29,39 @@ export enum GameEvents {
     CONTROLS = "CONTROLS_EVENT",
     MAIN_MENU = "MAIN_MENU_EVENT",
     OPEN_STORE = "OPEN_STORE_EVENT",
-    CLOSE_STORE = "CLOSE_STORE_EVENT"
+    CLOSE_STORE = "CLOSE_STORE_EVENT",
+    PICKUP_ITEM = "PICKUP_ITEM_EVENT",
+    CHANGE_LEVEL = "CHANGE_LEVEL_EVENT"
 }
 
+/* Any JSON objects floating around in the game */
+export enum GameData {
+    NAVMESH = "NAVMESH_GAME_DATA",
+    STORE_ITEMS = "STOREITEMS_GAME_DATA"
+}
 
-export enum Homework3Animations {
-	CAR_IDLE = "idle",
-	CAR_DRIVE = "driving",
-	CAR_DAMAGE = "damage",
-	CAR_DYRING = "dying", 
-	CAR_DEAD = "dead", 
-	CAR_FIRING = "firing"
+export enum StoreEvents {
+    REQUEST_PURCHASE = "PURCHASE_REQUEST_STORE_EVENT",
+    INVALID_PURCHASE = "PURCHASE_INVALID_STORE_EVENT",
+    VALID_PURCHASE = "VALID_PURCHASE"
+}
+
+export enum EnemyStates {
+    ACTIVE = "ACTIVE_ENEMY_STATE",
+    PATROL = "PATROL_ENEMY_STATE",
+    GUARD = "GUARD_ENEMY_STATE",
+    DEAD = "DEAD_ENEMY_STATE"
+}
+
+export enum EnemyStatuses {
+    GOAL_REACHED = "ENEMY_STATUS_GOAL_REACHED",
+    PLAYER_SEEN = "ENEMY_STATUS_PLAYER_SEEN",
+    IN_RANGE = "ENEMY_STATUS_IN_RANGE",
+}
+
+export enum EnemyActions {
+    ATTACK = "ENEMY_ACTION_ATTACK",
+    MOVE = "ENEMY_ACTION_MOVE"
 }
 
 export enum MenuLayers {

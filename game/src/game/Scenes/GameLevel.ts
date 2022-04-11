@@ -80,14 +80,14 @@ export default abstract class GameLevel extends Scene {
 
         // Init layers
         this.addLayers();
-        this.createNavmesh();
+        // this.createNavmesh();
         this.initViewport();
-        this.initPlayer();
+        // this.initPlayer();
 
         this.initUILayer();
         this.initPausedLayer();
 
-        this.initStore();
+        // this.initStore();
         this.initStoreLayer();
 
         // Subscribe to Events
@@ -386,7 +386,7 @@ export default abstract class GameLevel extends Scene {
     }
 
     protected initViewport(): void {
-        this.viewport.setZoomLevel(4);
+        this.viewport.setZoomLevel(1);
     }
 
     /**
@@ -438,7 +438,7 @@ export default abstract class GameLevel extends Scene {
         for (let i = 0; i < storeItems.length; i += 1, startX += spaceX) {
             this.storeItems[i] = this.add.sprite(ItemSprites.MOLD_BREAD, GameLayers.STORE_ITEMS);
             this.storeItems[i].position.set(startX/scale, startY/scale);
-            this.storeItems[i].scale.set(1, 1);
+            this.storeItems[i].scale.set(5, 5);
         }
 
         /* STORE ITEM NAME LABELS */
@@ -462,7 +462,7 @@ export default abstract class GameLevel extends Scene {
         spaceX = 150;
 
         for (let i = 0; i < storeItems.length; i += 1, startX += spaceX) {
-            this.storeItemCostLabels[i] = <Label>this.add.uiElement(UIElementType.LABEL, GameLayers.STORE_ITEMS, {position: new Vec2(startX/4, startY/4), text: `Cost: ${storeItems[i].cost}`});
+            this.storeItemCostLabels[i] = <Label>this.add.uiElement(UIElementType.LABEL, GameLayers.STORE_ITEMS, {position: new Vec2(startX/scale, startY/scale), text: `Cost: ${storeItems[i].cost}`});
             this.storeItemCostLabels[i].fontSize = 18;
             this.storeItemCostLabels[i].textColor = Color.WHITE;
         }
@@ -472,31 +472,29 @@ export default abstract class GameLevel extends Scene {
         this.getLayer(GameLayers.STORE_ITEMS).setHidden(true);
     }
 
-    protected initPlayer() {
-        this.player = this.add.animatedSprite(GameSprites.PLAYER, GameLayers.PRIMARY);
-		
-		this.player.position.set(this.playerSpawn.x, this.playerSpawn.y);
-        this.player.scale.set(this.playerScale.x, this.playerScale.y);
+    /**
+     * Override this method to initialize the player
+     */
+    initPlayer(): void {}
 
-		let playerCollider = new AABB(Vec2.ZERO, new Vec2(this.player.size.x/2*this.player.scale.x, this.player.size.y/2*this.player.scale.y));
-        this.player.addPhysics();
-		this.player.setCollisionShape(playerCollider);
-        
-		this.player.addAI(PlayerController);
+    /**
+     * Override this method to initialize the store
+     */
+    initStore(): void {}
 
-        this.viewport.follow(this.player);
-    }
+    /** 
+     * Override this method to initialize anything in the level
+     */
+    initMap(): void {}
 
-    protected initStore() {
-        this.store = new GameStore();
+    /** 
+     * Override this method to set the next and prev levels
+     */
+    initLevelLinks(): void {}
 
-        this.store.node = this.add.animatedSprite(GameSprites.STORE, GameLayers.PRIMARY);
-        this.store.node.position.set(this.viewport.getCenter().clone().x , this.viewport.getCenter().clone().y - 32*4);
-        (<AnimatedSprite>this.store.node).scale.set(0.4, 0.4);
-        this.store.node.addAI(StoreController, {radius: 100, player: this.player});
-
-        this.store.items = this.load.getObject(GameData.STORE_ITEMS);
-    }
-    
+    /** 
+     * Override this method to add enemies to your level
+     */
+    initEnemies(): void {}
 
 }
