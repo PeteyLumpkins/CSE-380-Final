@@ -13,6 +13,7 @@ import MathUtils from "../../../Wolfie2D/Utils/MathUtils";
 import IdleRight from "./PlayerStates/Idle/IdleRight";
 import IdleLeft from "./PlayerStates/Idle/IdleLeft";
 import IdleDown from "./PlayerStates/Idle/IdleDown";
+import IdleUp from "./PlayerStates/Idle/IdleUp";
 
 import MovingLeft from "./PlayerStates/Move/MovingLeft";
 import MovingRight from "./PlayerStates/Move/MovingRight";
@@ -23,7 +24,8 @@ export enum PlayerStates {
 	IDLE_RIGHT = "IDLE_RIGHT_PLAYER_STATE",
 	IDLE_LEFT = "IDLE_LEFT_PLAYER_STATE",
 	IDLE_DOWN = "IDLE_DOWN_PLAYER_STATE",
-
+	IDLE_UP = "IDLE_UP_PLAYER_STATE",
+	
 	MOVING_RIGHT = "MOVING_RIGHT_PLAYER_STATE",
 	MOVING_LEFT = "MOVING_LEFT_PLAYER_STATE",
 	MOVING_DOWN = "MOVING_DOWN_PLAYER_STATE",
@@ -45,6 +47,8 @@ export default class PlayerController extends StateMachineAI {
         this.addState(PlayerStates.IDLE_LEFT, new IdleLeft(this, this.owner));
 		this.addState(PlayerStates.IDLE_RIGHT, new IdleRight(this, this.owner));
 		this.addState(PlayerStates.IDLE_DOWN, new IdleDown(this, this.owner));
+		this.addState(PlayerStates.IDLE_UP, new IdleUp(this, this.owner));
+
 
 		this.addState(PlayerStates.MOVING_LEFT, new MovingLeft(this, this.owner));
 		this.addState(PlayerStates.MOVING_RIGHT, new MovingRight(this, this.owner));
