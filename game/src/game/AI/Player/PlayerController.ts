@@ -13,11 +13,16 @@ import { Homework3Animations } from "../../GameEnums";
 
 import Idle from "./PlayerStates/Idle";
 import Moving from "./PlayerStates/Moving";
-
+import IdleRight from "./PlayerStates/IdleRight";
+import MovingRight from "./PlayerStates/MovingRight";
 
 export enum PlayerStates {
 	IDLE = "IDLE_PLAYER_STATE", 
-	MOVING = "MOVING_PLAYER_STATE"
+	MOVING = "MOVING_PLAYER_STATE",
+	IDLE_RIGHT = "IDLE_RIGHT_PLAYER_STATE",
+	IDLE_LEFT = "IDLE_LEFT_PLAYER_STATE",
+	MOVING_RIGHT = "MOVING_RIGHT_PLAYER_STATE",
+	MOVING_LEFT = "MOVING_LEFT_PLAYER_STATE"
 }
 
 export enum PlayerActions {
@@ -36,7 +41,10 @@ export default class PlayerController extends StateMachineAI {
         this.addState(PlayerStates.IDLE, idle);
 		let moving = new Moving(this, this.owner);
 		this.addState(PlayerStates.MOVING, moving);
-
+		let idleRight = new IdleRight(this,this.owner);
+		this.addState(PlayerStates.IDLE_RIGHT, idleRight);
+		let movingRight = new MovingRight(this, this.owner);
+		this.addState(PlayerStates.MOVING_RIGHT, movingRight);
         this.initialize(PlayerStates.IDLE);
 	}
 
@@ -50,6 +58,8 @@ export default class PlayerController extends StateMachineAI {
 
 		// Updating the state machine will trigger the current state to be updated.
 		super.update(deltaT);
+
+		
 
 		while(this.receiver.hasNextEvent()){
 			this.handleEvent(this.receiver.getNextEvent());
