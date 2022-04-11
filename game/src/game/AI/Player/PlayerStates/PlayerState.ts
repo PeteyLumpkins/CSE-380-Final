@@ -7,15 +7,18 @@ import Input from "../../../../Wolfie2D/Input/Input";
 import Timer from "../../../../Wolfie2D/Timing/Timer";
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 
-
 import PlayerController from "../PlayerController";
+import { EnemyActions } from "../../../GameEnums";
+import { PlayerEvents } from "../../Player/PlayerController";
 
 export default abstract class PlayerState extends State {
 
 	parent: PlayerController;
 
     protected owner: AnimatedSprite;
-    protected invincibleTimer: Timer;
+
+
+    protected attackTimer: Timer;
 
 	// These values will scale the players stats
     protected speedScale: number = 2;
@@ -25,9 +28,34 @@ export default abstract class PlayerState extends State {
 	constructor(parent: StateMachine, owner: AnimatedSprite){
 		super(parent);
 		this.owner = owner;
+
+		// I think timer takes what milliseconds right?
+		this.attackTimer = new Timer(10000, () => {
+			console.log("Player attack timer ended");
+			this.sendPlayerAttacked(this.owner.position);
+		});
 	}
 
-    handleInput(event: GameEvent): void {}
+    handleInput(event: GameEvent): void {
+		console.log("Player state event caught: " + event.type);
+		switch(event.type) {
+
+			case EnemyActions.ATTACK: {
+				console.log("Enemy attack action caught in player state!");
+				break;
+			}
+
+			default: {
+				console.log("Unchecked action caught in player state");
+				break;
+			}
+		}
+	}
+
+	// Gets called after the player has finished attacking
+	sendPlayerAttacked(position: Vec2) {
+		this.emitter.fireEvent(PlayerEvents.ATTACKED, {position: position});
+	}
 
 	/** 
 	 * Get the inputs from the keyboard, or Vec2.Zero if nothing is being pressed
@@ -39,6 +67,13 @@ export default abstract class PlayerState extends State {
 		return direction;
 	}
 
+	attack(): void {
+		if (this.attackTimer.isStopped()) {
+			console.log("Starting the attack timer");
+			this.attackTimer.start();
+		}
+	}
+
     /** 
      * TODO: Updates the state of the player regardless of players state
      * 
@@ -46,7 +81,11 @@ export default abstract class PlayerState extends State {
      *  Should handle the player taking damage also
      */
 	update(deltaT: number): void {
-		
+
+		// This handles the attack action for now
+		if (Input.isPressed("attack")) {
+			this.attack();
+		}
 	}
 
 }
