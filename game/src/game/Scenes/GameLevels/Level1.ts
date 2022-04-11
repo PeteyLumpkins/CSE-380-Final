@@ -14,6 +14,7 @@ import Attack from "../../Ai/Enemy/EnemyActions/Attack";
 import LevelEndAI from "../../AI/LevelEnd/LevelEndAI";
 
 import {GameSprites, GameData, GameLayers, ItemSprites } from "../../GameEnums";
+import { PickupTypes } from "../../AI/Pickup/PickupTypes";
 
 
 export default class Level1 extends GameLevel {
@@ -33,7 +34,6 @@ export default class Level1 extends GameLevel {
         this.load.image(ItemSprites.MOLD_BREAD, "assets/itemsprites/moldBread.png");
         this.load.image(ItemSprites.OLD_BOOT, "assets/itemsprites/oldBoot.png");
         this.load.image("endlevel", "assets/sprites/EndOfLevel.png");
-
     }
 
     /**
@@ -66,98 +66,11 @@ export default class Level1 extends GameLevel {
 
         this.coin = this.add.animatedSprite(GameSprites.COIN, GameLayers.PRIMARY);
         this.coin.position.set(this.viewport.getCenter().clone().x , this.viewport.getCenter().clone().y - 32*2);
-        this.coin.addAI(PickupAI, {range: 50, player: this.player});
+        this.coin.addAI(PickupAI, {range: 25, player: this.player, data: {type: PickupTypes.MONEY, amount: 1}});
 
         this.nextLevel = this.add.sprite("endlevel", GameLayers.PRIMARY)
-        this.nextLevel.position.set(this.viewport.getCenter().clone().x , this.viewport.getCenter().clone().y);
-        this.nextLevel.addAI(LevelEndAI, {range: 50, player: this.player, nextLevel: Level1});
+        this.nextLevel.position.set(this.viewport.getCenter().clone().x + 275 , this.viewport.getCenter().clone().y);
+        this.nextLevel.addAI(LevelEndAI, {range: 25, player: this.player, nextLevel: Level1});
     }
 
-    // initializeEnemies(){
-    //     // Get the enemy data
-    //     const enemyData = this.load.getObject("enemyData");
-
-    //     // Create an enemies array
-    //     this.enemies = new Array<AnimatedSprite>(enemyData.numEnemies);
-
-        
-
-
-
-    //     // Initialize the enemies
-    //     for(let i = 0; i < enemyData.numEnemies; i++){
-    //         let data = enemyData.enemies[i];
-
-    //         // Create an enemy
-    //         this.enemies[i] = this.add.animatedSprite(data.type, "primary");
-    //         this.enemies[i].position.set(data.position[0], data.position[1]);
-    //         this.enemies[i].animation.play("IDLE");
-
-    //         // Activate physics
-    //         this.enemies[i].addPhysics(new AABB(Vec2.ZERO, new Vec2(5, 5)));
-
-    //         if(data.route){
-    //             data.route = data.route.map((index: number) => this.graph.getNodePosition(index));                
-    //         }
-
-    //         if(data.guardPosition){
-    //             data.guardPosition = new Vec2(data.guardPosition[0], data.guardPosition[1]);
-    //         }
-
-    //         /*initalize status and actions for each enemy. This can be edited if you want your custom enemies to start out with
-    //         different statuses, but dont remove these statuses for the original two enemies*/
-    //         let statusArray: Array<string> = [hw4_Statuses.CAN_RETREAT, hw4_Statuses.CAN_BERSERK];
-
-    //         //Vary weapon type and choose actions
-    //         let weapon;
-    //         let actions;
-    //         let range;
-    //         // HOMEWORK 4 - TODO
-    //         /**
-    //          * Once you've set up the actions for your custom enemy types, assign them here so they'll be spawned in your game.
-    //          * They can have any weapons you want.
-    //          * 
-    //          * Your game in the end should have an equal amount of each enemy type (Around 25% of each type of enemy), and at least 20 enemies in
-    //          * total. Also, half the enemies should patrol while the other half guard.
-    //          */
-    //         if (data.type === "gun_enemy"){
-    //             weapon = this.createWeapon("weak_pistol")
-    //             actions = actionsGun;
-    //             range = 100;
-    //         }
-    //         else if (data.type === "knife_enemy") {
-    //             weapon = this.createWeapon("knife")
-    //             actions = actionKnife;
-    //             range = 20;
-    //         }
-    //         // This is the laser guy
-    //         else if (data.type === "custom_enemy1") {
-    //             weapon = this.createWeapon("laserGun");
-    //             actions = actionCustom1;
-    //             range = 50;
-    //         }
-    //         // Sniper variant
-    //         else if (data.type === "custom_enemy2") {
-    //             weapon = this.createWeapon("pistol");
-    //             actions = actionCustom2;
-    //             range = 200;
-    //         }
-
-    //         let enemyOptions = {
-    //             defaultMode: data.mode,
-    //             patrolRoute: data.route,            // This only matters if they're a patroller
-    //             guardPosition: data.guardPosition,  // This only matters if the're a guard
-    //             health: data.health,
-    //             player1: this.playerCharacters[0],
-    //             player2: this.playerCharacters[1],
-    //             weapon: weapon,
-    //             goal: hw4_Statuses.REACHED_GOAL,
-    //             status: statusArray,
-    //             actions: actions,
-    //             inRange: range
-    //         }
-
-    //         this.enemies[i].addAI(EnemyAI, enemyOptions);
-    //     }
-    // }
 }

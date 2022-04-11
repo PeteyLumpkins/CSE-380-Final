@@ -24,6 +24,7 @@ import StoreController from "../AI/Store/StoreController";
 
 import { GameEvents, GameLayers, GameSprites, GameData, StoreEvents, ItemSprites } from "../GameEnums";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
+import { PlayerEvents } from "../AI/Player/PlayerController";
 import GameStore from "../Entities/GameStore";
 
 export default abstract class GameLevel extends Scene {
@@ -130,40 +131,42 @@ export default abstract class GameLevel extends Scene {
 
         this.receiver.subscribe(StoreEvents.INVALID_PURCHASE);
         this.receiver.subscribe(StoreEvents.VALID_PURCHASE);
+
+        this.receiver.subscribe(PlayerEvents.MONEY_CHANGE);
+        this.receiver.subscribe(PlayerEvents.HEALTH_CHANGE);
         // this.receiver.subscribe(GameEventType.KEY_DOWN);
     }
 
     protected handleGameEvent(event: GameEvent) {
-        
         switch(event.type) {
             case GameEvents.PAUSE: {
                 console.log("Pause event caught!");
-                this.handlePauseEvent(event);
+                this.eventHandlers.pause(event);
                 break;
             }
             case GameEvents.RESUME: {
                 console.log("Resume event caught!");
-                this.handleResumeEvent(event);
+                this.eventHandlers.resume(event);
                 break;
             }
             case GameEvents.CONTROLS: {
                 console.log("Control event caught!");
-                this.handleControlsEvent(event);
+                this.eventHandlers.controls(event);
                 break;
             }
             case GameEvents.MAIN_MENU: {
                 console.log("Main menu event caught!");
-                this.handleMainMenuEvent(event);
+                this.eventHandlers.mainMenu(event);
                 break;  
             }
             case GameEvents.OPEN_STORE: {
                 console.log("Open store event caught!");
-                this.handleOpenStoreEvent(event);
+                this.eventHandlers.openStore(event);
                 break;
             }
             case GameEvents.CLOSE_STORE: {
                 console.log("Close store event caught!");
-                this.handleCloseStoreEvent(event);
+                this.eventHandlers.closeStore(event);
                 break;
             }
             case StoreEvents.VALID_PURCHASE: {
@@ -176,13 +179,23 @@ export default abstract class GameLevel extends Scene {
             }
             case GameEvents.CHANGE_LEVEL: {
                 console.log("Change Level caught in GameLevel!");
-                this.handleChangeLevelEvent(event);
+                this.eventHandlers.changeLevel(event);
+                break;
+            }
+            case PlayerEvents.MONEY_CHANGE: {
+                console.log("Change in player's money caught in GameLevel!");
+                this.eventHandlers.moneyChange(event);
+                break;
+            }
+            case PlayerEvents.HEALTH_CHANGE: {
+                console.log("Change in player's health caught in GameLevel!");
+                this.eventHandlers.healthChange(event);
                 break;
             }
             case GameEventType.KEY_DOWN: {
                 switch(event.data.get("key")) {
                     case "escape": {
-                        this.handlePauseEvent(event);
+                        this.eventHandlers.pause(event);
                         break;
                     }
                 }
@@ -195,46 +208,56 @@ export default abstract class GameLevel extends Scene {
         }
     }
 
-    protected handleChangeLevelEvent(ev: GameEvent) {
-        console.log(ev.data.get("level"));
-        this.sceneManager.changeToScene(ev.data.get("level"));
-    }
+    /**
+     * This is an object that contains the handlers for each of the events
+     * the main GameLevel is subscribed to. They're mostly related to the UI
+    */
+    protected eventHandlers = {
 
-    // TODO: This handler should freeze the game
-    protected handlePauseEvent(ev: GameEvent) {
-        this.getLayer(GameLayers.PAUSED).setHidden(false);
-        // Need to freeze the AI and tiled layer?
-    }
+        changeLevel: (ev: GameEvent) => { 
+            this.sceneManager.changeToScene(ev.data.get("level")); 
+        },
 
-    // TODO: This handler should unfreeze the game
-    protected handleResumeEvent(ev: GameEvent) {
-        this.getLayer(GameLayers.PAUSED).setHidden(true);
-        // Need to unfreeze the AI and stuff?
-    }
+        // TODO: need to freeze the game when paused
+        pause: (ev: GameEvent) => { 
+            this.getLayer(GameLayers.PAUSED).setHidden(false);
+        },
 
-    // TODO: This handler should bring up with controls for the game
-    protected handleControlsEvent(ev: GameEvent) {
+        // TODO: need to unfreeze the game
+        resume: (ev: GameEvent) => {
+            this.getLayer(GameLayers.PAUSED).setHidden(true);
+        },
 
-    }
+        // TODO: display the users controls
+        controls: (ev: GameEvent) => {
 
-    // TODO: This method should bring us back to the main menu. We might be passing some
-    // data back to the main menu via the second param. Stuff about levels unlocked maybe?
-    protected handleMainMenuEvent(ev: GameEvent) {
-        this.sceneManager.changeToScene(MainMenu, {});
-    }
+        },
 
-    // TODO: Handles opening up the game store - should pause the rest of the game
-    protected handleOpenStoreEvent(ev: GameEvent) {
-        this.getLayer(GameLayers.STORE_BG).setHidden(false);
-        this.getLayer(GameLayers.STORE_CONTROLS).setHidden(false);
-        this.getLayer(GameLayers.STORE_ITEMS).setHidden(false);
-    }
+        mainMenu: (ev: GameEvent) => {
+            this.sceneManager.changeToScene(MainMenu, {});
+        },
 
-    // TODO: Handles closing the games store
-    protected handleCloseStoreEvent(ev: GameEvent) {
-        this.getLayer(GameLayers.STORE_BG).setHidden(true);
-        this.getLayer(GameLayers.STORE_CONTROLS).setHidden(true);
-        this.getLayer(GameLayers.STORE_ITEMS).setHidden(true);
+        // TODO: Handles opening up the game store - should pause the rest of the game
+        openStore: (ev: GameEvent) => {
+            this.getLayer(GameLayers.STORE_BG).setHidden(false);
+            this.getLayer(GameLayers.STORE_CONTROLS).setHidden(false);
+            this.getLayer(GameLayers.STORE_ITEMS).setHidden(false);
+        },
+
+        // TODO: handles closing the store - should unfreeze the game
+        closeStore: (ev: GameEvent) => {
+            this.getLayer(GameLayers.STORE_BG).setHidden(true);
+            this.getLayer(GameLayers.STORE_CONTROLS).setHidden(true);
+            this.getLayer(GameLayers.STORE_ITEMS).setHidden(true);
+        },
+
+        moneyChange: (ev: GameEvent) => {
+            this.playerMoneyLabel.text = `Peter's Money: ${ev.data.get("amount")}`;
+        },
+
+        healthChange: (ev: GameEvent) => {
+            this.playerHealthLabel.text = `Peter's Health: ${ev.data.get("amount")}`;
+        }
     }
 
     // FIXME: For some reason the lines aren't being drawn between the nodes in th debug map
@@ -363,7 +386,7 @@ export default abstract class GameLevel extends Scene {
     }
 
     protected initViewport(): void {
-        this.viewport.setZoomLevel(1);
+        this.viewport.setZoomLevel(4);
     }
 
     /**
@@ -375,6 +398,7 @@ export default abstract class GameLevel extends Scene {
         let scale = this.getViewScale();
 
         this.storeBackground = this.add.animatedSprite(GameSprites.STORE_BG, GameLayers.STORE_BG);
+        this.storeBackground.scale.set(1/scale, 1/scale);
         this.storeBackground.position.set(this.viewport.getCenter().x/scale, this.viewport.getCenter().y/scale);
         this.storeBackground.animation.play("idle");
 
@@ -390,7 +414,7 @@ export default abstract class GameLevel extends Scene {
         let spaceX = 150;
 
         for (let i = 0; i < storeItems.length; i++) {
-            this.storeButtons[i] = <Button>this.add.uiElement(UIElementType.BUTTON, GameLayers.STORE_CONTROLS, {position: new Vec2(startX, startY).scale(scale), text: "Buy Item " + (i + 1)});
+            this.storeButtons[i] = <Button>this.add.uiElement(UIElementType.BUTTON, GameLayers.STORE_CONTROLS, {position: new Vec2(startX, startY), text: "Buy Item " + (i + 1)});
             this.storeButtons[i].size.set(100/scale, 25/scale);
             this.storeButtons[i].borderWidth = 2;
             this.storeButtons[i].fontSize = 16;
@@ -413,8 +437,8 @@ export default abstract class GameLevel extends Scene {
 
         for (let i = 0; i < storeItems.length; i += 1, startX += spaceX) {
             this.storeItems[i] = this.add.sprite(ItemSprites.MOLD_BREAD, GameLayers.STORE_ITEMS);
-            this.storeItems[i].position.set(startX, startY);
-            this.storeItems[i].scale.set(5, 5);
+            this.storeItems[i].position.set(startX/scale, startY/scale);
+            this.storeItems[i].scale.set(1, 1);
         }
 
         /* STORE ITEM NAME LABELS */
@@ -425,7 +449,7 @@ export default abstract class GameLevel extends Scene {
         spaceX = 150;
 
         for (let i = 0; i < storeItems.length; i += 1, startX += spaceX) {
-            this.storeItemNameLabels[i] = <Label>this.add.uiElement(UIElementType.LABEL, GameLayers.STORE_ITEMS, {position: new Vec2(startX, startY), text: storeItems[i].name});
+            this.storeItemNameLabels[i] = <Label>this.add.uiElement(UIElementType.LABEL, GameLayers.STORE_ITEMS, {position: new Vec2(startX/scale, startY/scale), text: storeItems[i].name});
             this.storeItemNameLabels[i].fontSize = 18;
             this.storeItemNameLabels[i].textColor = Color.WHITE;
         }
@@ -438,7 +462,7 @@ export default abstract class GameLevel extends Scene {
         spaceX = 150;
 
         for (let i = 0; i < storeItems.length; i += 1, startX += spaceX) {
-            this.storeItemCostLabels[i] = <Label>this.add.uiElement(UIElementType.LABEL, GameLayers.STORE_ITEMS, {position: new Vec2(startX, startY), text: `Cost: ${storeItems[i].cost}`});
+            this.storeItemCostLabels[i] = <Label>this.add.uiElement(UIElementType.LABEL, GameLayers.STORE_ITEMS, {position: new Vec2(startX/4, startY/4), text: `Cost: ${storeItems[i].cost}`});
             this.storeItemCostLabels[i].fontSize = 18;
             this.storeItemCostLabels[i].textColor = Color.WHITE;
         }

@@ -14,6 +14,7 @@ import Idle from "./PlayerStates/Idle";
 import Moving from "./PlayerStates/Moving";
 
 import { GameEvents, EnemyActions } from "../../GameEnums";
+import { PickupTypes } from "../Pickup/PickupTypes";
 
 
 export enum PlayerStates {
@@ -82,7 +83,11 @@ export default class PlayerController extends StateMachineAI {
 	handleItemPickupEvent(event: GameEvent): void {
 		switch(event.data.get("type")) {
 
-			
+			case PickupTypes.MONEY: {
+				this.money += event.data.get("amount");
+				this.emitter.fireEvent(PlayerEvents.MONEY_CHANGE, {amount: this.money});
+				break;
+			}
 
 			default: {
 				console.log(`Unrecognized type on pickup event: ${event.data.get("type")}`);

@@ -59,13 +59,14 @@ export default class PickupAI extends StateMachineAI {
                     ease: EaseFunctionType.IN_OUT_QUAD
                 }
             ],
-            onEnd: GameEvents.PICKUP_ITEM
         });
     }   
 
     getRange(): number { return this.range; }
 
     getPlayerPosition(): Vec2 { return this.player.position; }
+
+    getData(): Record<string, any> { return this.data; }
 
     destroy(): void {
     }
