@@ -9,20 +9,25 @@ import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import StateMachineAI from "../../../Wolfie2D/AI/StateMachineAI";
 import OrthogonalTilemap from "../../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 import MathUtils from "../../../Wolfie2D/Utils/MathUtils";
-import { Homework3Animations } from "../../GameEnums";
 
-import Idle from "./PlayerStates/Idle";
-import Moving from "./PlayerStates/Moving";
-import IdleRight from "./PlayerStates/IdleRight";
-import MovingRight from "./PlayerStates/MovingRight";
+import IdleRight from "./PlayerStates/Idle/IdleRight";
+import IdleLeft from "./PlayerStates/Idle/IdleLeft";
+import IdleDown from "./PlayerStates/Idle/IdleDown";
+
+import MovingLeft from "./PlayerStates/Move/MovingLeft";
+import MovingRight from "./PlayerStates/Move/MovingRight";
+import MovingDown from "./PlayerStates/Move/MovingDown";
+import MovingUp from "./PlayerStates/Move/MovingUp";
 
 export enum PlayerStates {
-	IDLE = "IDLE_PLAYER_STATE", 
-	MOVING = "MOVING_PLAYER_STATE",
 	IDLE_RIGHT = "IDLE_RIGHT_PLAYER_STATE",
 	IDLE_LEFT = "IDLE_LEFT_PLAYER_STATE",
+	IDLE_DOWN = "IDLE_DOWN_PLAYER_STATE",
+
 	MOVING_RIGHT = "MOVING_RIGHT_PLAYER_STATE",
-	MOVING_LEFT = "MOVING_LEFT_PLAYER_STATE"
+	MOVING_LEFT = "MOVING_LEFT_PLAYER_STATE",
+	MOVING_DOWN = "MOVING_DOWN_PLAYER_STATE",
+	MOVING_UP = "MOVING_UP_PLAYER_STATE"
 }
 
 export enum PlayerActions {
@@ -37,15 +42,16 @@ export default class PlayerController extends StateMachineAI {
 	initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
 		this.owner = owner;
 
-		let idle = new Idle(this, this.owner);
-        this.addState(PlayerStates.IDLE, idle);
-		let moving = new Moving(this, this.owner);
-		this.addState(PlayerStates.MOVING, moving);
-		let idleRight = new IdleRight(this,this.owner);
-		this.addState(PlayerStates.IDLE_RIGHT, idleRight);
-		let movingRight = new MovingRight(this, this.owner);
-		this.addState(PlayerStates.MOVING_RIGHT, movingRight);
-        this.initialize(PlayerStates.IDLE);
+        this.addState(PlayerStates.IDLE_LEFT, new IdleLeft(this, this.owner));
+		this.addState(PlayerStates.IDLE_RIGHT, new IdleRight(this, this.owner));
+		this.addState(PlayerStates.IDLE_DOWN, new IdleDown(this, this.owner));
+
+		this.addState(PlayerStates.MOVING_LEFT, new MovingLeft(this, this.owner));
+		this.addState(PlayerStates.MOVING_RIGHT, new MovingRight(this, this.owner));
+		this.addState(PlayerStates.MOVING_DOWN, new MovingDown(this, this.owner));
+		this.addState(PlayerStates.MOVING_UP, new MovingUp(this, this.owner));
+		
+        this.initialize(PlayerStates.IDLE_RIGHT);
 	}
 
 	activate(options: Record<string, any>){};
@@ -58,8 +64,6 @@ export default class PlayerController extends StateMachineAI {
 
 		// Updating the state machine will trigger the current state to be updated.
 		super.update(deltaT);
-
-		
 
 		while(this.receiver.hasNextEvent()){
 			this.handleEvent(this.receiver.getNextEvent());

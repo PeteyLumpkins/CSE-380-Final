@@ -1,7 +1,7 @@
 import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
-
+import StoreController from "../AI/Store/StoreController";
 import PlayerController from "../AI/Player/PlayerController";
 import { GameSprites } from "../GameEnums";
 import GameLevel from "./GameLevel";
@@ -10,7 +10,7 @@ import GameLevel from "./GameLevel";
 export default class Level1 extends GameLevel {
 
     // The wall layer of the tilemap to use for bullet visualization
-    private walls: OrthogonalTilemap;
+    protected walls: OrthogonalTilemap;
 
     private PLAYER_SPAWN: Vec2 = new Vec2(448, 480);
 
