@@ -5,11 +5,11 @@ import Moving from "./Moving";
 export default class MovingUp extends Moving {
 
     onEnter(options: Record<string, any>): void {
-        this.owner.animation.play("WALK_DOWN");
+        this.owner.animation.play("WALK_UP");
     }
 
     idle(): void {
-        this.finished(PlayerStates.IDLE_DOWN);
+        this.finished(PlayerStates.IDLE_UP);
     }
 
     move(dir: Vec2): void {
@@ -25,7 +25,7 @@ export default class MovingUp extends Moving {
             this.finished(PlayerStates.MOVING_LEFT);
         } else if (dir.x > 0) {
             this.finished(PlayerStates.MOVING_RIGHT);
-        } else if (dir.y < 0) {
+        } else if (dir.y > 0) {
             this.finished(PlayerStates.MOVING_DOWN);
         } 
     }

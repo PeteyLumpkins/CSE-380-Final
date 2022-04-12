@@ -25,9 +25,9 @@ export default class MovingDown extends Moving {
             this.finished(PlayerStates.MOVING_LEFT);
         } else if (dir.x > 0) {
             this.finished(PlayerStates.MOVING_RIGHT);
-        } else if (dir.y > 0) {
+        } else if (dir.y < 0) {
             this.finished(PlayerStates.MOVING_UP);
-        } 
+        }
     }
 
     onExit(): Record<string, any> {
