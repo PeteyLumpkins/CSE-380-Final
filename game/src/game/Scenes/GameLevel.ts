@@ -263,7 +263,7 @@ export default abstract class GameLevel extends Scene {
     // FIXME: For some reason the lines aren't being drawn between the nodes in th debug map
     protected createNavmesh(): void {
         // Add a layer to display the graph
-        let gLayer = this.addLayer(GameLayers.NAVMESH_GRAPH, -1);
+        let gLayer = this.addLayer(GameLayers.NAVMESH_GRAPH, 10);
         // gLayer.setHidden(true);
 
         let navmeshData = this.load.getObject(GameData.NAVMESH);

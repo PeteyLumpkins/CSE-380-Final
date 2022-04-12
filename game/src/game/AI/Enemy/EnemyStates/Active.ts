@@ -34,8 +34,10 @@ export default class Active extends EnemyState {
 
         let nextAction = this.parent.plan.peek();
 
+    
         // Perform the action
         let result = nextAction.performAction(this.parent.currentStatus, this.parent, deltaT);
+       
 
         // If result is not null -> should check the effects...
         if (result !== null) {

@@ -21,7 +21,7 @@ export default class Guard extends EnemyState {
     }
 
     onEnter(options: Record<string, any>): void {
-        this.owner.animation.play("IDLE");
+        this.owner.animation.play("WalkRight");
     }
 
     handleInput(event: GameEvent): void { }

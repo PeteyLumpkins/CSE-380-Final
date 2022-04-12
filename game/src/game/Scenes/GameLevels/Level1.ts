@@ -4,10 +4,18 @@ import OrthogonalTilemap from "../../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilema
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import StoreController from "../../AI/Store/StoreController";
 import PlayerController from "../../AI/Player/PlayerController";
-import { GameSprites, GameData, ItemSprites } from "../../GameEnums";
+import { GameSprites, EnemyStatuses, GameData, ItemSprites, GameLayers } from "../../GameEnums";
+import PositionGraph from "../../../Wolfie2D/DataTypes/Graphs/PositionGraph";
+import Navmesh from "../../../Wolfie2D/Pathfinding/Navmesh";
+import { GraphicType } from "../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
+
+import Attack from "../../AI/Enemy/EnemyActions/Attack";
+import Move from "../../AI/Enemy/EnemyActions/Move";
+
 import GameLevel from "../GameLevel";
 import LevelEndAI from "../../AI/LevelEnd/LevelEndAI";
 import GameStore from "../../Entities/GameStore";
+import EnemyAI from "../../AI/Enemy/EnemyAI";
 
 
 export default class Level1 extends GameLevel {
@@ -19,11 +27,14 @@ export default class Level1 extends GameLevel {
 
     loadScene(){
         this.load.tilemap("level", "assets/tilemaps/prototypeMap.json");
+
         this.load.spritesheet("player", "assets/spritesheets/player.json");
         this.load.spritesheet("store_terminal", "assets/spritesheets/store_terminal.json");
         this.load.spritesheet("brokenGreenPipe", "assets/sprites/BrokenGreenPipe.json");
         this.load.spritesheet(GameSprites.STORE_BG, "assets/spritesheets/store_layer.json");
-        this.load.object("navmesh", "assets/data/navmeshLevel1.json"); 
+        this.load.spritesheet("rat", "assets/spritesheets/rat.json");
+
+        this.load.object(GameData.NAVMESH, "assets/data/navmeshLevel1.json"); 
         this.load.object(GameData.STORE_ITEMS, "assets/data/items.json");
 
         this.load.image(ItemSprites.MOLD_BREAD, "assets/itemsprites/moldBread.png");
@@ -41,6 +52,8 @@ export default class Level1 extends GameLevel {
         this.addLayer("primary", 5);
 
         this.initPlayer();
+
+        this.initEnemies();
 
         this.initStore();
 
@@ -96,11 +109,57 @@ export default class Level1 extends GameLevel {
         let tilemapSize: Vec2 = this.walls.size;
 
         this.viewport.setBounds(0, 0, tilemapSize.x, tilemapSize.y);
+
+        let gLayer = this.addLayer(GameLayers.NAVMESH_GRAPH, 10);
+        // gLayer.setHidden(true);
+
+        let navmeshData = this.load.getObject(GameData.NAVMESH);
+
+         // Create the graph
+        this.navmeshGraph = new PositionGraph();
+
+        // Add all nodes to our graph
+        for(let node of navmeshData.nodes){
+            this.navmeshGraph.addPositionedNode(new Vec2(node[0], node[1]));
+            this.add.graphic(GraphicType.POINT, GameLayers.NAVMESH_GRAPH, {position: new Vec2(node[0], node[1])});
+        }
+
+        // Add all edges to our graph
+        for(let edge of navmeshData.edges){
+            this.navmeshGraph.addEdge(edge[0], edge[1]);
+            this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: this.navmeshGraph.getNodePosition(edge[0]), end: this.navmeshGraph.getNodePosition(edge[1])})
+        }
+
+        // Set this graph as a navigable entity
+        let navmesh = new Navmesh(this.navmeshGraph);
+
+        this.navManager.addNavigableEntity("navmesh", navmesh);
     }
 
     initLevelLinks(): void {
         this.nextLevel = this.add.sprite(GameSprites.LADDER, "primary");
         this.nextLevel.position.set(2960, 595);
         this.nextLevel.addAI(LevelEndAI, {player: this.player, range: 25, nextLevel: Level1});
+    }
+
+    initEnemies(): void {
+        this.enemies = new Array<AnimatedSprite>();
+        this.enemies[0] = this.add.animatedSprite("rat", "primary");
+        this.enemies[0].position.set(1056, 1024);
+
+        this.enemies[0].addPhysics();
+
+        let possibleActions = [
+            new Attack(4, [EnemyStatuses.IN_RANGE], [EnemyStatuses.GOAL_REACHED]),
+            new Move(3, [], [EnemyStatuses.IN_RANGE], {inRange: 10}),
+        ]
+        let enemyOptions = {
+            health: 20,
+            player: this.player,
+            goal: EnemyStatuses.GOAL_REACHED,
+            actions: possibleActions,
+            inRange: 100
+        }
+        this.enemies[0].addAI(EnemyAI, enemyOptions);
     }
 }

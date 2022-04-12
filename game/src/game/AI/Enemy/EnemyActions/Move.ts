@@ -25,16 +25,17 @@ export default class Move extends GoapAction {
             let distance = enemy.owner.position.distanceTo(enemy.player.position);
 
             // Trigger the attack action
-            if (distance <= enemy.inRange){
+            if (distance <= 10){
+                console.log("In range of player");
                 return this.effects;
             }
 
-            this.path = enemy.path;
-            enemy.owner.rotation = Vec2.UP.angleToCCW(this.path.getMoveDirection(enemy.owner));
+            this.path = enemy.owner.getScene().getNavigationManager().getPath("navmesh", enemy.owner.position, enemy.player.position, true)
+            // enemy.owner.rotation = Vec2.UP.angleToCCW(this.path.getMoveDirection(enemy.owner));
             enemy.owner.moveOnPath(enemy.speed * deltaT, this.path);
             return null;
         }
-        return null;
+        return this.effects;
     }
 
     updateCost(options: Record<string, number>): void {}

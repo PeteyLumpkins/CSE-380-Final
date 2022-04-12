@@ -66,7 +66,7 @@ export default class EnemyAI extends StateMachineGoapAI {
         this.planner = new GoapActionPlanner();
     }
 
-    activate(options: Record<string, any>): void { }
+    activate(options: Record<string, any>): void {}
 
     isPlayerVisible(pos: Vec2): Vec2{
         //Check if one player is visible, taking into account walls
