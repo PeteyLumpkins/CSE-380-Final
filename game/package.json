@@ -17,5 +17,8 @@
     "typescript": "^3.9.10",
     "vinyl-source-stream": "^2.0.0",
     "watchify": "^3.11.1"
+  },
+  "dependencies": {
+    "firebase": "^9.6.10"
   }
 }
