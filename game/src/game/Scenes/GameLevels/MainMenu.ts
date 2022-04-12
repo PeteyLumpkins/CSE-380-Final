@@ -1,18 +1,25 @@
-import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
-import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
-import Layer from "../../Wolfie2D/Scene/Layer";
-import Scene from "../../Wolfie2D/Scene/Scene";
-import Color from "../../Wolfie2D/Utils/Color";
-import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
-import { MenuImages, MenuEvents, MenuLayers } from "../GameEnums";
+import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
+import { UIElementType } from "../../../Wolfie2D/Nodes/UIElements/UIElementTypes";
+import Layer from "../../../Wolfie2D/Scene/Layer";
+import Scene from "../../../Wolfie2D/Scene/Scene";
+import Color from "../../../Wolfie2D/Utils/Color";
+import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
+import { MenuImages, MenuEvents, MenuLayers } from "../../GameEnums";
+import GameLevel from "../GameLevel";
 import Level1 from "./Level1";
-import Label from "../../Wolfie2D/Nodes/UIElements/Label";
+import PrototypeLevel from "../TestLevels/PrototypeLevel";
+import AITest from "../TestLevels/AITest";
+import Label from "../../../Wolfie2D/Nodes/UIElements/Label";
 
 /** 
  * TODO: The position of the logo should be moved on each of the screens so that it 
  * doesn't overlap any of the buttons or text on the screens.
 */
 export default class MainMenu extends Scene {
+
+    // Sets the next first level to be loaded as level1
+    // private nextLevel: new (...args: any) => GameLevel = PrototypeLevel;
+
     // Layers, for multiple main menu screens
     private splash: Layer; //added, we need a new layer for the splash screen
     private mainMenu: Layer;
@@ -37,7 +44,8 @@ export default class MainMenu extends Scene {
     }
 
     startScene(){
-        const center = this.viewport.getCenter();
+        // When we return to main menu from the game -> need to reset the viewport bounds
+        this.viewport.setBounds(0, 0, 1024, 1024);
 
         // The background layer
         this.background = this.addLayer(MenuLayers.BACKGROUND, 0);
@@ -78,8 +86,6 @@ export default class MainMenu extends Scene {
         while(this.receiver.hasNextEvent()){
             let event = this.receiver.getNextEvent();
 
-            console.log(event);
-
             if(event.type === MenuEvents.PLAY_GAME){
                 this.sceneManager.changeToScene(Level1, {});
             }
@@ -111,7 +117,7 @@ export default class MainMenu extends Scene {
     }
 
     initSplash(){
-        const center = this.viewport.getCenter();
+        let center = this.viewport.getCenter();
 
         // This is the splash menu
         this.splash = this.addUILayer(MenuLayers.SPLASH);
@@ -126,7 +132,7 @@ export default class MainMenu extends Scene {
     }
 
     initMainMenu() {
-        const center = this.viewport.getCenter();
+        let center = this.viewport.getCenter();
 
         // The main menu
         this.mainMenu = this.addUILayer(MenuLayers.MAIN_MENU);
@@ -166,7 +172,7 @@ export default class MainMenu extends Scene {
     }   
 
     initControls() {
-        const center = this.viewport.getCenter();
+        let center = this.viewport.getCenter();
 
         this.controls = this.addUILayer(MenuLayers.CONTROLS);
         this.controls.setHidden(true);
@@ -272,7 +278,7 @@ export default class MainMenu extends Scene {
     }
 
     initLevels() {
-        const center = this.viewport.getCenter();
+        let center = this.viewport.getCenter();
         this.levels = this.addUILayer(MenuLayers.LEVELS);
         this.levels.setHidden(true);
 

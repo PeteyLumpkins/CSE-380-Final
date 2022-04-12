@@ -9,6 +9,8 @@ import Disabled from "./StoreStates/Disabled";
 import Enabled from "./StoreStates/Enabled";
 import Open from "./StoreStates/Open";
 
+import {StoreEvents} from "../../GameEnums";
+
 export enum StoreStates {
     DISABLED = "STORE_DISABLED",
     ENABLED = "STORE_ENABLED",
@@ -27,7 +29,7 @@ export default class StoreController extends StateMachineAI {
         
         this.owner = owner;
         console.log("Options.radius: " + options.radius);
-        // TODO: replace null with circle radius
+
         this.range = new Circle(owner.position, options.radius);
         this.player = options.player;
         
@@ -39,23 +41,19 @@ export default class StoreController extends StateMachineAI {
         this.addState(StoreStates.OPEN, open);
 
         this.initialize(StoreStates.DISABLED);
+
+        this.receiver.subscribe(StoreEvents.REQUEST_PURCHASE);
     }
 
-    handleEvent(event: GameEvent) {
-        super.handleEvent(event);
-    }
+    
 
     update(deltaT: number): void {
         super.update(deltaT);
     }
 
-    getRange(): Circle {
-        return this.range;
-    }
+    getRange(): Circle { return this.range; }
 
-    getPlayerPosition(): Vec2 {
-        return this.player.position;
-    }
+    getPlayerPosition(): Vec2 { return this.player.position; }
     
     activate(options: Record<string, any>) {}  
     
