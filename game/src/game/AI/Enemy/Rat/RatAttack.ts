@@ -7,7 +7,7 @@ import EnemyAI from "../EnemyAI";
 
 import { EnemyActions } from "../../../GameEnums";
 
-export default class AttackAction extends GoapAction {
+export default class RatAttackAction extends GoapAction {
     protected emitter: Emitter;
 
     constructor(cost: number, preconditions: Array<string>, effects: Array<string>, options?: Record<string, any>) {
@@ -20,8 +20,7 @@ export default class AttackAction extends GoapAction {
     performAction(statuses: Array<string>, actor: StateMachineGoapAI, deltaT: number, target?: StateMachineGoapAI): Array<string> {
         //Check if preconditions are met for this action to be performed
         if (this.checkPreconditions(statuses)){
-            console.log("Enemy Attacking!");
-
+            console.log("Rat Enemy Attacking!");
             return this.effects;
         }
         return null;

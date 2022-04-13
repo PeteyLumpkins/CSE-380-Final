@@ -9,13 +9,15 @@ import PositionGraph from "../../../Wolfie2D/DataTypes/Graphs/PositionGraph";
 import Navmesh from "../../../Wolfie2D/Pathfinding/Navmesh";
 import { GraphicType } from "../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 
-import Attack from "../../AI/Enemy/EnemyActions/Attack";
-import Move from "../../AI/Enemy/EnemyActions/Move";
+
 
 import GameLevel from "../GameLevel";
 import LevelEndAI from "../../AI/LevelEnd/LevelEndAI";
 import GameStore from "../../Entities/GameStore";
-import EnemyAI from "../../AI/Enemy/EnemyAI";
+
+import RatAI from "../../AI/Enemy/Rat/RatAI";
+import RatAttack from "../../AI/Enemy/Rat/RatAttack";
+import RatMove from "../../AI/Enemy/Rat/RatMove";
 
 
 export default class Level1 extends GameLevel {
@@ -146,20 +148,44 @@ export default class Level1 extends GameLevel {
         this.enemies = new Array<AnimatedSprite>();
         this.enemies[0] = this.add.animatedSprite("rat", "primary");
         this.enemies[0].position.set(1056, 1024);
-
         this.enemies[0].addPhysics();
 
+        this.enemies[1] = this.add.animatedSprite("rat", "primary");
+        this.enemies[1].position.set(1056, 928);
+        this.enemies[1].addPhysics();
+
+        this.enemies[2] = this.add.animatedSprite("rat", "primary");
+        this.enemies[2].position.set(1056, 976);
+        this.enemies[2].addPhysics();
+
+        this.enemies[3] = this.add.animatedSprite("rat", "primary");
+        this.enemies[3].position.set(1056, 850);
+        this.enemies[3].addPhysics();
+
+
         let possibleActions = [
-            new Attack(4, [EnemyStatuses.IN_RANGE], [EnemyStatuses.GOAL_REACHED]),
-            new Move(3, [], [EnemyStatuses.IN_RANGE], {inRange: 10}),
+            new RatAttack(4, [EnemyStatuses.IN_RANGE], [EnemyStatuses.GOAL_REACHED]),
+            new RatMove(3, [], [EnemyStatuses.IN_RANGE]),
         ]
         let enemyOptions = {
-            health: 20,
+            
             player: this.player,
             goal: EnemyStatuses.GOAL_REACHED,
+            statuses: new Array<EnemyStatuses>(),
             actions: possibleActions,
-            inRange: 100
+
+            health: 20,
+            sightRange: 100,
+            swarmRange: 50,
+            moveSpeed: 100,
+            attackRange: 25, 
+            attackDamage: 2
         }
-        this.enemies[0].addAI(EnemyAI, enemyOptions);
+
+        this.enemies[0].addAI(RatAI, enemyOptions);
+        this.enemies[1].addAI(RatAI, enemyOptions);
+        this.enemies[2].addAI(RatAI, enemyOptions);
+        this.enemies[3].addAI(RatAI, enemyOptions);
+
     }
 }

@@ -7,35 +7,7 @@ import EnemyState from "./EnemyState";
 
 import { EnemyStates, EnemyStatuses } from "../../../GameEnums";
 
-export default class Guard extends EnemyState {
-    private guardPosition: Vec2;
-
-    private route: NavigationPath;
-
-    private retObj: Record<string, any>;
+// export default class Guard extends EnemyState {
     
-    constructor(parent: EnemyAI, owner: AnimatedSprite, guardPosition: Vec2){
-        super(parent, owner);
 
-        this.guardPosition = guardPosition;
-    }
-
-    onEnter(options: Record<string, any>): void {
-        this.owner.animation.play("WalkRight");
-    }
-
-    handleInput(event: GameEvent): void { }
-
-    update(deltaT: number): void {
-        
-        if (this.owner.position.distanceTo(this.parent.player.position) < this.parent.inRange) {
-            this.finished(EnemyStates.ACTIVE);
-        }
-
-    }
-
-    onExit(): Record<string, any> {
-        return this.retObj;
-    }
-
-}
+// }

@@ -25,12 +25,12 @@
             "name": "WALK_DOWN",
             "repeat": true,
             "frames": [ 
-                {"index": 0, "duration": 16}, 
-                {"index": 4, "duration": 16}, 
-                {"index": 5, "duration": 16}, 
-                {"index": 0, "duration": 16}, 
-                {"index": 6, "duration": 16}, 
-                {"index": 7, "duration": 16} 
+                {"index": 0, "duration": 8}, 
+                {"index": 4, "duration": 8}, 
+                {"index": 5, "duration": 8}, 
+                {"index": 0, "duration": 8}, 
+                {"index": 6, "duration": 8}, 
+                {"index": 7, "duration": 8} 
             ]
         },
         { 
@@ -57,28 +57,28 @@
             "name": "WALK_RIGHT",
             "repeat": true,
             "frames": [ 
-                {"index": 8, "duration": 16}, 
-                {"index": 14, "duration": 16}, 
-                {"index": 15, "duration": 16}, 
-                {"index": 14, "duration": 16}, 
-                {"index": 9, "duration": 16}, 
-                {"index": 16, "duration": 16},
-                {"index": 17, "duration": 16},
-                {"index": 18, "duration": 16}
+                {"index": 8, "duration": 8}, 
+                {"index": 14, "duration": 8}, 
+                {"index": 15, "duration": 8}, 
+                {"index": 14, "duration": 8}, 
+                {"index": 9, "duration": 8}, 
+                {"index": 16, "duration": 8},
+                {"index": 17, "duration": 8},
+                {"index": 18, "duration": 8}
             ]
         },
         { 
             "name": "WALK_LEFT",
             "repeat": true,
             "frames": [ 
-                {"index": 11, "duration": 16}, 
-                {"index": 19, "duration": 16}, 
-                {"index": 20, "duration": 16}, 
-                {"index": 19, "duration": 16}, 
-                {"index": 11, "duration": 16}, 
-                {"index": 21, "duration": 16},
-                {"index": 22, "duration": 16},
-                {"index": 23, "duration": 16}
+                {"index": 11, "duration": 8}, 
+                {"index": 19, "duration": 8}, 
+                {"index": 20, "duration": 8}, 
+                {"index": 19, "duration": 8}, 
+                {"index": 11, "duration": 8}, 
+                {"index": 21, "duration": 8},
+                {"index": 22, "duration": 8},
+                {"index": 23, "duration": 8}
             ]
         },        
         { 
@@ -94,11 +94,11 @@
             "name": "WALK_UP",
             "repeat": true,
             "frames": [ 
-                {"index": 24, "duration": 32}, 
-                {"index": 26, "duration": 16}, 
-                {"index": 27, "duration": 16}, 
-                {"index": 28, "duration": 16}, 
-                {"index": 29, "duration": 16}
+                {"index": 24, "duration": 8}, 
+                {"index": 26, "duration": 8}, 
+                {"index": 27, "duration": 8}, 
+                {"index": 28, "duration": 8}, 
+                {"index": 29, "duration": 8}
                 
             ]
         }
