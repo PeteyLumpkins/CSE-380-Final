@@ -1,17 +1,35 @@
 import EnemyAI from "../EnemyAI";
+import GameNode from "../../../../Wolfie2D/Nodes/GameNode";
+import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
 
-import RatIdle from "./RatIdle";
-import RatActive from "./RatActive";
-import RatDead from "./RatDead";
+import { PlayerEvents } from "../../Player/PlayerController";
 
-export enum RatStates {
+import RatIdle from "./RatStates/RatIdle";
+import RatActive from "./RatStates/RatActive";
+import RatDead from "./RatStates/RatDead";
+
+import RatAttack from "./RatActions/RatAttack";
+import RatMove from "./RatActions/RatMove";
+
+export enum RatAIStates {
     IDLE = "RAT_IDLE_STATE",
     ACTIVE = "RAT_ACTIVE_STATE",
     DEAD = "RAT_DEAD_STATE"
 }
 
-export enum RatEvents {
+export enum RatAIEvents {
     PLAYER_SEEN = "RAT_PLAYER_SEEN_EVENT"
+}
+
+export enum RatAIStatuses {
+    IN_RANGE = "RAT_IN_RANGE",
+    GOAL_REACHED = "RAT_GOAL_REACHED"
+}
+
+export enum RatAIOptionType {
+    DEFAULT = "DEFAULT_RAT_OPTIONS",
+    FAST = "FAST_RAT_OPTIONS",
+    SLOW = "SLOW_RAT_OPTIONS"
 }
 
 export default class RatAI extends EnemyAI {
@@ -28,6 +46,31 @@ export default class RatAI extends EnemyAI {
     attackRange: number;
     attackDamage: number;
 
+    update(deltaT: number): void {
+        super.update(deltaT);
+        while(this.receiver.hasNextEvent()){
+			this.handleEvent(this.receiver.getNextEvent());
+		}
+    }
+
+    handleEvent(event: GameEvent): void {
+        switch(event.type) {
+            case PlayerEvents.ATTACKED: {
+                console.log("Caught player attacked event in RatAI");
+                this.handlePlayerAttackEvent(event);
+                break;
+            }
+            default: {
+                console.log("Unhandled event caught in RatAI");
+                break;
+            }
+        }
+    }
+
+    handlePlayerAttackEvent(event: GameEvent): void {
+        this.health -= 5;
+    }
+
     /** Initialize custom attributes for Rat */
     initOptions(options: Record<string, any>): void {
         this.maxHealth = options.health;
@@ -43,16 +86,56 @@ export default class RatAI extends EnemyAI {
 
     /** Initialize custom state for Rat */
     initStates(): void {
-        this.addState(RatStates.IDLE, new RatIdle(this, this.owner));
-        this.addState(RatStates.ACTIVE, new RatActive(this, this.owner));
-        this.addState(RatStates.DEAD, new RatDead(this, this.owner));
+        this.addState(RatAIStates.IDLE, new RatIdle(this, this.owner));
+        this.addState(RatAIStates.ACTIVE, new RatActive(this, this.owner));
+        this.addState(RatAIStates.DEAD, new RatDead(this, this.owner));
 
-        this.initialize(RatStates.IDLE);
+        this.initialize(RatAIStates.IDLE);
     }
 
     subscribeToEvents(): void {
-        this.receiver.subscribe(RatEvents.PLAYER_SEEN);
+        this.receiver.subscribe(RatAIEvents.PLAYER_SEEN);
+        this.receiver.subscribe(PlayerEvents.ATTACKED);
     }
 
+    /**
+     * This is a builder for the options that are to be fed a RatAI. Basically, it allows you to create a
+     * set of RatAIOptions from a template. Once the options are returned, they can be tweaked and tuned 
+     * however you want.
+     * 
+     * @param type the type of RatAIOption we want to give to our RatAI - defined in the enum RatAIOptions 
+     * @param player the player node to add to the options (this is required)
+     * @param options any custom options we want to tweak
+     * @returns a set of options for a RatAI
+     */
+    public static optionsBuilder(type: RatAIOptionType, player: GameNode): Record<string, any> {
 
+        let optionsTemplate: Record<string, any>;
+
+        switch(type) {
+
+            case RatAIOptionType.DEFAULT: {
+                optionsTemplate = {
+                    player: player,
+                    goal: RatAIStatuses.GOAL_REACHED,
+                    statuses: new Array<RatAIStatuses>(),
+                    actions: [
+                        new RatAttack(3, [RatAIStatuses.IN_RANGE], [RatAIStatuses.GOAL_REACHED]),
+                        new RatMove(4, [], [RatAIStatuses.IN_RANGE])
+                    ],
+                    health: 20,
+                    sightRange: 100,
+                    swarmRange: 50,
+                    moveSpeed: 100,
+                    attackRange: 25, 
+                    attackDamage: 2
+                }
+                break;
+            }
+            default: 
+                throw new Error(`Invalid Rat options type: ${type}`);
+        }
+
+        return optionsTemplate;
+    }
 }

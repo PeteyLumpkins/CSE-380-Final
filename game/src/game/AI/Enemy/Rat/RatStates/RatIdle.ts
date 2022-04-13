@@ -1,12 +1,12 @@
-import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
-import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
-import GameNode from "../../../../Wolfie2D/Nodes/GameNode";
-import Receiver from "../../../../Wolfie2D/Events/Receiver";
-import AnimatedSprite from "../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import Vec2 from "../../../../../Wolfie2D/DataTypes/Vec2";
+import GameEvent from "../../../../../Wolfie2D/Events/GameEvent";
+import GameNode from "../../../../../Wolfie2D/Nodes/GameNode";
+import Receiver from "../../../../../Wolfie2D/Events/Receiver";
+import AnimatedSprite from "../../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 
-import RatAI from "./RatAI";
+import RatAI from "../RatAI";
 import RatState from "./RatState";
-import { RatStates, RatEvents } from "./RatAI";
+import { RatAIStates, RatAIEvents } from "../RatAI";
 
 export default class RatIdle extends RatState {
 
@@ -17,11 +17,11 @@ export default class RatIdle extends RatState {
     }
 
     handleInput(event: GameEvent): void { 
+        super.handleInput(event);
 
         switch (event.type) {
 
-            case RatEvents.PLAYER_SEEN: {
-                console.log("Rat caught player seen event");
+            case RatAIEvents.PLAYER_SEEN: {
                 this.handlePlayerSeenEvent(event);
                 break;
             }
@@ -36,7 +36,7 @@ export default class RatIdle extends RatState {
 
         // If we're within the swarm range of the rat that saw the player -> make active
         if (this.inSwarmRange(event.data.get("position"))) {
-            this.finished(RatStates.ACTIVE);
+            this.finished(RatAIStates.ACTIVE);
         }
     }
 
@@ -46,7 +46,7 @@ export default class RatIdle extends RatState {
 
         // If we're in range of the player - rat becomes active
         if (this.inSightRange(this.parent.player.position)) {
-            this.finished(RatStates.ACTIVE);
+            this.finished(RatAIStates.ACTIVE);
         }
     }
 

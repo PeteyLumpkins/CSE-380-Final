@@ -1,10 +1,10 @@
-import GoapAction from "../../../../Wolfie2D/DataTypes/Interfaces/GoapAction";
-import StateMachineGoapAI from "../../../../Wolfie2D/AI/StateMachineGoapAI"
-import RatAI from "../../../AI/Enemy/Rat/RatAI";
-import NavigationPath from "../../../../Wolfie2D/Pathfinding/NavigationPath";
-import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
+import GoapAction from "../../../../../Wolfie2D/DataTypes/Interfaces/GoapAction";
+import StateMachineGoapAI from "../../../../../Wolfie2D/AI/StateMachineGoapAI"
+import RatAI from "../RatAI";
+import NavigationPath from "../../../../../Wolfie2D/Pathfinding/NavigationPath";
+import Vec2 from "../../../../../Wolfie2D/DataTypes/Vec2";
 
-import { EnemyActions } from "../../../GameEnums";
+import { EnemyActions } from "../../../../GameEnums";
 
 export default class RatMoveAction extends GoapAction {
 
@@ -20,13 +20,11 @@ export default class RatMoveAction extends GoapAction {
     performAction(statuses: Array<string>, actor: StateMachineGoapAI, deltaT: number, target?: StateMachineGoapAI): Array<string> {
         //Check if preconditions are met for this action to be performed
         if (this.checkPreconditions(statuses)){
-            console.log("Enemy Moving");
             let enemy = <RatAI>actor;
             let distance = enemy.owner.position.distanceTo(enemy.player.position);
 
             // Trigger the attack action
             if (distance <= enemy.attackRange){
-                console.log("In range of player");
                 return this.effects;
             }
 
