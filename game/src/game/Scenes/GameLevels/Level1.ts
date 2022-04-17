@@ -30,6 +30,9 @@ export default class Level1 extends GameLevel {
     loadScene(){
         this.load.tilemap("level", "assets/tilemaps/prototypeMap.json");
 
+        this.load.image("itembg", "assets/sprites/itembg.png");
+        this.load.image("itembarbg", "assets/sprites/itembarbg.png");
+
         this.load.spritesheet("player", "assets/spritesheets/player.json");
         this.load.spritesheet("store_terminal", "assets/spritesheets/store_terminal.json");
         this.load.spritesheet("brokenGreenPipe", "assets/sprites/BrokenGreenPipe.json");
@@ -52,7 +55,7 @@ export default class Level1 extends GameLevel {
 
         this.initMap();
 
-        this.addLayer("primary", 5);
+        this.addLayer(GameLayers.PRIMARY, 5);
 
         this.initPlayer();
 
@@ -62,15 +65,18 @@ export default class Level1 extends GameLevel {
 
         this.initLevelLinks();
         
-        let bgPipe = this.add.animatedSprite("brokenGreenPipe", "primary");
+        let bgPipe = this.add.animatedSprite("brokenGreenPipe", GameLayers.PRIMARY);
         bgPipe.animation.play("idle", true);
         bgPipe.position.set(880, 432);
 
         super.startScene();
+
+        // this.itemBarBackground = this.add.sprite("itembarbg", GameLayers.UI);
+        // this.itemBarBackground.position.set(this.viewport.getCenter().x, 32);
     }
 
     initPlayer(): void {
-        this.player = this.add.animatedSprite("player", "primary");
+        this.player = this.add.animatedSprite("player", GameLayers.PRIMARY);
 		
 		this.player.position.set(448, 480);
         // this.player.scale.set(.75, .75);
@@ -86,7 +92,7 @@ export default class Level1 extends GameLevel {
 
     initStore(): void {
         this.store = new GameStore();
-        this.store.node = this.add.animatedSprite("store_terminal", "primary");
+        this.store.node = this.add.animatedSprite("store_terminal", GameLayers.PRIMARY);
         this.store.node.position.set(1056, 1152);
         (<AnimatedSprite>this.store.node).scale.set(0.4, 0.4);
         this.store.node.addAI(StoreController, {radius: 100, player: this.player});
@@ -140,26 +146,26 @@ export default class Level1 extends GameLevel {
     }
 
     initLevelLinks(): void {
-        this.nextLevel = this.add.sprite(GameSprites.LADDER, "primary");
+        this.nextLevel = this.add.sprite(GameSprites.LADDER, GameLayers.PRIMARY);
         this.nextLevel.position.set(2960, 595);
         this.nextLevel.addAI(LevelEndAI, {player: this.player, range: 25, nextLevel: Level1});
     }
 
     initEnemies(): void {
         this.enemies = new Array<AnimatedSprite>();
-        this.enemies[0] = this.add.animatedSprite("rat", "primary");
+        this.enemies[0] = this.add.animatedSprite("rat", GameLayers.PRIMARY);
         this.enemies[0].position.set(1056, 1024);
         this.enemies[0].addPhysics();
 
-        this.enemies[1] = this.add.animatedSprite("rat", "primary");
+        this.enemies[1] = this.add.animatedSprite("rat", GameLayers.PRIMARY);
         this.enemies[1].position.set(1056, 928);
         this.enemies[1].addPhysics();
 
-        this.enemies[2] = this.add.animatedSprite("rat", "primary");
+        this.enemies[2] = this.add.animatedSprite("rat", GameLayers.PRIMARY);
         this.enemies[2].position.set(1056, 976);
         this.enemies[2].addPhysics();
 
-        this.enemies[3] = this.add.animatedSprite("rat", "primary");
+        this.enemies[3] = this.add.animatedSprite("rat", GameLayers.PRIMARY);
         this.enemies[3].position.set(1056, 850);
         this.enemies[3].addPhysics();
 

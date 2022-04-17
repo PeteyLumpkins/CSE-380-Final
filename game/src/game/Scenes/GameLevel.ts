@@ -27,6 +27,24 @@ import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import { PlayerEvents } from "../AI/Player/PlayerController";
 import GameStore from "../Entities/GameStore";
 
+import InventoryManager from "../GameSystems/InventoryManager";
+import PauseManager from "../GameSystems/PauseManager";
+
+export enum UILayers {
+    ITEM_BAR = "UI_LAYER_ITEM_BAR",
+    PRIMARY = "UI_LAYER_PRIMARY",
+    ITEM_SLOTS = "UI_LAYER_ITEM_SLOTS",
+    ITEM_SPRITES = "ITEM_SPRITE_LAYER",
+
+    LEVEL = "LEVEL_LAYER", 
+    PAUSED = "PAUSED_LAYER",
+    CONTROLS = "CONTROLS_LAYER",
+
+    STORE_BG = "STORE_BG_LAYER",
+    STORE_CONTROLS = "STORE_CONTROLS_LAYER",
+    STORE_ITEMS = "STORE_ITEMS_LAYER",
+}
+
 export default abstract class GameLevel extends Scene {
 
     /* PLAYER CONSTANTS */
@@ -57,6 +75,7 @@ export default abstract class GameLevel extends Scene {
 
     /* GAME STORE */
     protected store: GameStore;
+    protected inventory: InventoryManager;
     
     /* STORE UI COMPONENTS */
     protected storeBackground: AnimatedSprite;
@@ -64,6 +83,12 @@ export default abstract class GameLevel extends Scene {
     protected storeItemNameLabels: Array<Label>;
     protected storeItemCostLabels: Array<Label>;
     protected storeButtons: Array<Button>; 
+
+    /* MORE UI COMPONENTS */
+    protected itemBarBackground: Sprite;
+    protected itemBackgrounds: Array<Sprite>;
+    protected itemBackgroundNumbers: Array<Label>;
+    protected itemSprites: Array<Sprite>;
     
     /* PAUSE AND UNPAUSE BUTTONS */
     protected pauseButton: Button;
@@ -73,6 +98,7 @@ export default abstract class GameLevel extends Scene {
 
     // Paused background
     protected pausedBackground: Label;
+    protected pauseManager: PauseManager;
 
     loadScene(): void {}
 
@@ -80,12 +106,20 @@ export default abstract class GameLevel extends Scene {
 
         // Init layers
         this.addLayers();
-        // this.createNavmesh();
+
         this.initViewport();
+
+        let scalar = new Vec2(this.getViewScale(), this.getViewScale());
+        this.inventory = new InventoryManager(this, 9, 16, new Vec2(450, 24), UILayers.ITEM_SLOTS, "itembg", UILayers.ITEM_SPRITES);
+        // this.createNavmesh();
+
         // this.initPlayer();
 
-        this.initUILayer();
+        this.initUIPrimary();
         this.initPausedLayer();
+        this.pauseManager = new PauseManager(this, [GameLayers.PRIMARY], GameLayers.PAUSED);
+
+        this.initUIItemBar();
 
         // this.initStore();
         this.initStoreLayer();
@@ -105,6 +139,16 @@ export default abstract class GameLevel extends Scene {
         console.log("Adding layers");
         this.addUILayer(GameLayers.UI);
 
+        /* Item bar layer for the UI*/
+        this.addUILayer(UILayers.ITEM_BAR);
+        this.getLayer(UILayers.ITEM_BAR).setDepth(0);
+
+        this.addUILayer(UILayers.PRIMARY);
+        this.getLayer(UILayers.PRIMARY).setDepth(1);
+
+        // this.addUILayer(UILayers.ITEM_SPRITES);
+        // this.getLayer(UILayers.ITEM_SPRITES).setDepth(2);
+
         this.addUILayer(GameLayers.PAUSED);
         this.getLayer(GameLayers.PAUSED).setDepth(2);
 
@@ -115,8 +159,6 @@ export default abstract class GameLevel extends Scene {
         this.getLayer(GameLayers.STORE_ITEMS).setDepth(1);
 
         this.addUILayer(GameLayers.STORE_BG);
-
-        this.addLayer(GameLayers.PRIMARY, 5);
     }
 
     protected subscribeToEvents(): void {
@@ -220,12 +262,12 @@ export default abstract class GameLevel extends Scene {
 
         // TODO: need to freeze the game when paused
         pause: (ev: GameEvent) => { 
-            this.getLayer(GameLayers.PAUSED).setHidden(false);
+            this.pauseManager.pause();
         },
 
         // TODO: need to unfreeze the game
         resume: (ev: GameEvent) => {
-            this.getLayer(GameLayers.PAUSED).setHidden(true);
+            this.pauseManager.unpause();
         },
 
         // TODO: display the users controls
@@ -293,22 +335,22 @@ export default abstract class GameLevel extends Scene {
      * FIXME: The controls and displays on the UI layer need to be adjusted to fit the screen. Right now
      * they're a little messed up and the pause button is off the screen 
      */
-    protected initUILayer() {
+    protected initUILayer(): void {
 
         let scalar = new Vec2(this.getViewScale(), this.getViewScale());
         let scale = this.getViewScale();
 
-        this.playerHealthLabel = <Label>this.add.uiElement(UIElementType.LABEL, GameLayers.UI, {position: new Vec2(120, 30).div(scalar), text: "Peter's Health: " + (this.playerHealth)});
+        this.playerHealthLabel = <Label>this.add.uiElement(UIElementType.LABEL, GameLayers.UI, {position: new Vec2(120, 30).div(scalar), text: "Health: " + (this.playerHealth)});
         this.playerHealthLabel.size.set(100/scale, 50/scale);
         this.playerHealthLabel.textColor = Color.WHITE;
         this.playerHealthLabel.fontSize = 20;
-        this.playerHealthLabel.font = "PixelSimple";
+        this.playerHealthLabel.font = "Courier";
 
-        this.playerMoneyLabel = <Label>this.add.uiElement(UIElementType.LABEL, GameLayers.UI, {position: new Vec2(500, 30).div(scalar), text: "Peter's Money: " + (this.playerMoney)});
+        this.playerMoneyLabel = <Label>this.add.uiElement(UIElementType.LABEL, GameLayers.UI, {position: new Vec2(300, 30).div(scalar), text: "Money: " + (this.playerMoney)});
         this.playerMoneyLabel.size.set(100/scale, 50/scale);
         this.playerMoneyLabel.textColor = Color.WHITE;
         this.playerMoneyLabel.fontSize = 20;
-        this.playerMoneyLabel.font = "PixelSimple";
+        this.playerMoneyLabel.font = "Courier";
 
         this.pauseButton = <Button>this.add.uiElement(UIElementType.BUTTON, GameLayers.UI, {position: new Vec2(950, 30).div(scalar), text: "Pause"});
         this.pauseButton.size.set(100/scale, 50/scale);
@@ -317,10 +359,48 @@ export default abstract class GameLevel extends Scene {
         this.pauseButton.backgroundColor = Color.BLACK;
         this.pauseButton.onClickEventId = GameEvents.PAUSE;
 
+        this.itemBarBackground = this.add.sprite("itembarbg", GameLayers.UI);
+
 
         console.log(this.pauseButton.relativePosition);
         console.log(this.pauseButton.position);
         // this.getLayer(GameLayers.UI).setHidden(true);
+    }
+
+    protected initUIItemBar(): void {
+        let scale = this.getViewScale();
+        let scalar = new Vec2(scale, scale);
+
+        this.itemBarBackground = this.add.sprite("itembarbg", UILayers.ITEM_BAR);
+        this.itemBarBackground.position.set(this.viewport.getCenter().x, 32).div(scalar);
+        this.itemBarBackground.scale.div(scalar);
+    }
+
+    protected initUIPrimary(): void {
+        let scalar = new Vec2(this.getViewScale(), this.getViewScale());
+        let scale = this.getViewScale();
+
+        this.playerHealthLabel = <Label>this.add.uiElement(UIElementType.LABEL, UILayers.PRIMARY, {position: new Vec2(120, 32).div(scalar), text: "Health: " + (this.playerHealth)});
+        this.playerHealthLabel.size.set(100/scale, 50/scale);
+        this.playerHealthLabel.textColor = Color.WHITE;
+        this.playerHealthLabel.fontSize = 20;
+        this.playerHealthLabel.font = "Courier";
+
+        this.playerMoneyLabel = <Label>this.add.uiElement(UIElementType.LABEL, UILayers.PRIMARY, {position: new Vec2(300, 32).div(scalar), text: "Money: " + (this.playerMoney)});
+        this.playerMoneyLabel.size.set(100/scale, 50/scale);
+        this.playerMoneyLabel.textColor = Color.WHITE;
+        this.playerMoneyLabel.fontSize = 20;
+        this.playerMoneyLabel.font = "Courier";
+
+        this.pauseButton = <Button>this.add.uiElement(UIElementType.BUTTON, UILayers.PRIMARY, {position: new Vec2(950, 32).div(scalar), text: "Pause"});
+        this.pauseButton.size.set(100/scale, 50/scale);
+        this.pauseButton.textColor = Color.WHITE;
+        this.pauseButton.borderWidth = 2;
+        this.pauseButton.borderColor = Color.WHITE;
+        this.pauseButton.backgroundColor = Color.TRANSPARENT;
+        this.pauseButton.onClickEventId = GameEvents.PAUSE;
+        this.pauseButton.fontSize = 20;
+        this.pauseButton.font = "Courier";
     }
 
     /**
@@ -352,6 +432,7 @@ export default abstract class GameLevel extends Scene {
         this.resumeButton.fontSize = 16;
         this.resumeButton.backgroundColor = Color.BLACK;
         this.resumeButton.onClickEventId = GameEvents.RESUME;
+        this.resumeButton.size.set(100/scale, 25/scale);
 
         // Controls button
         this.controlsButton = <Button>this.add.uiElement(UIElementType.BUTTON, GameLayers.PAUSED, {position: new Vec2(center.x, center.y).div(scalar), text: "Controls"});
@@ -373,20 +454,8 @@ export default abstract class GameLevel extends Scene {
         this.getLayer(GameLayers.PAUSED).setHidden(true);
     }
 
-    /**
-     * Initializes the controls layer that will pop up when the player presses the "controls"
-     * button on the paused dialogue button or whatever
-     * 
-     *  1.) Should have a little close button in the top right our something
-     *  2.) If the 'resume' button of the pause button is visible and is pressed, this
-     *      layer should become invisible and the game should resume. (ie game shouldn't be 
-     *      player with controls layer still visible).
-     */
-    private initControlsLayer() {
-    }
-
     protected initViewport(): void {
-        this.viewport.setZoomLevel(1);
+        this.viewport.setZoomLevel(3);
     }
 
     /**
