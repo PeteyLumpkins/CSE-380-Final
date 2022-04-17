@@ -9,13 +9,15 @@ import PositionGraph from "../../../Wolfie2D/DataTypes/Graphs/PositionGraph";
 import Navmesh from "../../../Wolfie2D/Pathfinding/Navmesh";
 import { GraphicType } from "../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 
-import Attack from "../../AI/Enemy/EnemyActions/Attack";
-import Move from "../../AI/Enemy/EnemyActions/Move";
+import { RatAIOptionType } from "../../AI/Enemy/Rat/RatAI";
 
 import GameLevel from "../GameLevel";
 import LevelEndAI from "../../AI/LevelEnd/LevelEndAI";
 import GameStore from "../../Entities/GameStore";
-import EnemyAI from "../../AI/Enemy/EnemyAI";
+
+import RatAI from "../../AI/Enemy/Rat/RatAI";
+import RatAttack from "../../AI/Enemy/Rat/RatActions/RatAttack";
+import RatMove from "../../AI/Enemy/Rat/RatActions/RatMove";
 
 
 export default class Level1 extends GameLevel {
@@ -33,6 +35,7 @@ export default class Level1 extends GameLevel {
         this.load.spritesheet("brokenGreenPipe", "assets/sprites/BrokenGreenPipe.json");
         this.load.spritesheet(GameSprites.STORE_BG, "assets/spritesheets/store_layer.json");
         this.load.spritesheet("rat", "assets/spritesheets/rat.json");
+        this.load.spritesheet(GameSprites.COIN, "assets/spritesheets/coin.json");
 
         this.load.object(GameData.NAVMESH, "assets/data/navmeshLevel1.json"); 
         this.load.object(GameData.STORE_ITEMS, "assets/data/items.json");
@@ -66,7 +69,7 @@ export default class Level1 extends GameLevel {
         super.startScene();
     }
 
-    initPlayer(){
+    initPlayer(): void {
         this.player = this.add.animatedSprite("player", "primary");
 		
 		this.player.position.set(448, 480);
@@ -146,20 +149,27 @@ export default class Level1 extends GameLevel {
         this.enemies = new Array<AnimatedSprite>();
         this.enemies[0] = this.add.animatedSprite("rat", "primary");
         this.enemies[0].position.set(1056, 1024);
-
         this.enemies[0].addPhysics();
 
-        let possibleActions = [
-            new Attack(4, [EnemyStatuses.IN_RANGE], [EnemyStatuses.GOAL_REACHED]),
-            new Move(3, [], [EnemyStatuses.IN_RANGE], {inRange: 10}),
-        ]
-        let enemyOptions = {
-            health: 20,
-            player: this.player,
-            goal: EnemyStatuses.GOAL_REACHED,
-            actions: possibleActions,
-            inRange: 100
-        }
-        this.enemies[0].addAI(EnemyAI, enemyOptions);
+        this.enemies[1] = this.add.animatedSprite("rat", "primary");
+        this.enemies[1].position.set(1056, 928);
+        this.enemies[1].addPhysics();
+
+        this.enemies[2] = this.add.animatedSprite("rat", "primary");
+        this.enemies[2].position.set(1056, 976);
+        this.enemies[2].addPhysics();
+
+        this.enemies[3] = this.add.animatedSprite("rat", "primary");
+        this.enemies[3].position.set(1056, 850);
+        this.enemies[3].addPhysics();
+
+
+        let options = RatAI.optionsBuilder(RatAIOptionType.DEFAULT, this.player);
+
+        this.enemies[0].addAI(RatAI, options);
+        this.enemies[1].addAI(RatAI, options);
+        this.enemies[2].addAI(RatAI, options);
+        this.enemies[3].addAI(RatAI, options);
+
     }
 }

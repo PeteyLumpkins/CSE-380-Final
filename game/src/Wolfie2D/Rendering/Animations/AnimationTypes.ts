@@ -49,6 +49,9 @@ export class TweenData {
     loop: boolean;
     /** The name of the event to send (if any) when the tween finishes playing */
     onEnd: string
+
+    /** Extra data to be sent when the onEnd event is fired. Keys with the name 'key' or 'node' are reserved and can't be used as names for your extra data */
+    onEndData: Record<string, any>;
     
     // Members for management by the tween manager
     /** The progress of this tween through its effects */

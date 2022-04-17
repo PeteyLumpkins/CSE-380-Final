@@ -30,30 +30,19 @@ export default abstract class PlayerState extends State {
 		this.owner = owner;
 
 		// I think timer takes what milliseconds right?
-		this.attackTimer = new Timer(10000, () => {
+		this.attackTimer = new Timer(100, () => {
 			console.log("Player attack timer ended");
 			this.sendPlayerAttacked(this.owner.position);
 		});
 	}
 
     handleInput(event: GameEvent): void {
-		console.log("Player state event caught: " + event.type);
-		switch(event.type) {
-
-			case EnemyActions.ATTACK: {
-				console.log("Enemy attack action caught in player state!");
-				break;
-			}
-
-			default: {
-				console.log("Unchecked action caught in player state");
-				break;
-			}
-		}
+		
 	}
 
 	// Gets called after the player has finished attacking
 	sendPlayerAttacked(position: Vec2) {
+		console.log("Firing attack event");
 		this.emitter.fireEvent(PlayerEvents.ATTACKED, {position: position});
 	}
 
@@ -84,6 +73,7 @@ export default abstract class PlayerState extends State {
 
 		// This handles the attack action for now
 		if (Input.isPressed("attack")) {
+			console.log("attacking?");
 			this.attack();
 		}
 	}
