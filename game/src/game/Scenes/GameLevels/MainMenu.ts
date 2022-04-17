@@ -8,7 +8,6 @@ import { MenuImages, MenuEvents, MenuLayers } from "../../GameEnums";
 import GameLevel from "../GameLevel";
 import Level1 from "./Level1";
 import PrototypeLevel from "../TestLevels/PrototypeLevel";
-import AITest from "../TestLevels/AITest";
 import Label from "../../../Wolfie2D/Nodes/UIElements/Label";
 
 /** 

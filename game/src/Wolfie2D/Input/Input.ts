@@ -247,7 +247,7 @@ export default class Input {
 	 * @returns True if the mouse was just pressed, false otherwise
 	 */
 	static isMouseJustPressed(mouseButton?: number): boolean {
-		if (mouseButton) {
+		if (mouseButton !== undefined) {
 			return Input.mouseJustPressed && !Input.mouseDisabled && mouseButton == this.mouseButtonPressed;
 		}
 		return Input.mouseJustPressed && !Input.mouseDisabled;
@@ -260,7 +260,7 @@ export default class Input {
 	 * @returns True if the mouse is currently pressed, false otherwise
 	 */
 	static isMousePressed(mouseButton?: number): boolean {
-		if (mouseButton) {
+		if (mouseButton !== undefined) {
 			return Input.mousePressed && !Input.mouseDisabled && mouseButton == this.mouseButtonPressed;
 		}
 		return Input.mousePressed && !Input.mouseDisabled;
@@ -304,7 +304,7 @@ export default class Input {
 	 * @returns The mouse position stored as a Vec2
 	 */
 	static getMousePressPosition(): Vec2 {
-		return Input.mousePressPosition;
+		return Input.getMousePosition();
 	}
 
 	/**

@@ -2,7 +2,6 @@ import Game from "./Wolfie2D/Loop/Game";
 import MainMenu from "./game/Scenes/GameLevels/MainMenu";
 import Level1 from "./game/Scenes/GameLevels/Level1";
 import GameLevel from "./game/Scenes/GameLevel";
-import AITest from "./game/Scenes/TestLevels/AITest";
 
 // The main function is your entrypoint into Wolfie2D. Specify your first scene and any options here.
 (function main(){

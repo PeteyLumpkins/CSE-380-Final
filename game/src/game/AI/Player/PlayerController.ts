@@ -46,16 +46,21 @@ export default class PlayerController extends StateMachineAI {
 	protected owner: AnimatedSprite;
 	protected tilemap: OrthogonalTilemap;
 
-	protected money: number = 0;
+	protected maxHealth: number;
+	protected health: number;
+	protected money: number;
 
 	initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
 		this.owner = owner;
+
+		this.maxHealth = 20;
+		this.health = 20;
+		this.money = 0;
 
         this.addState(PlayerStates.IDLE_LEFT, new IdleLeft(this, this.owner));
 		this.addState(PlayerStates.IDLE_RIGHT, new IdleRight(this, this.owner));
 		this.addState(PlayerStates.IDLE_DOWN, new IdleDown(this, this.owner));
 		this.addState(PlayerStates.IDLE_UP, new IdleUp(this, this.owner));
-
 
 		this.addState(PlayerStates.MOVING_LEFT, new MovingLeft(this, this.owner));
 		this.addState(PlayerStates.MOVING_RIGHT, new MovingRight(this, this.owner));
@@ -63,6 +68,9 @@ export default class PlayerController extends StateMachineAI {
 		this.addState(PlayerStates.MOVING_UP, new MovingUp(this, this.owner));
 		
         this.initialize(PlayerStates.IDLE_RIGHT);
+
+		this.receiver.subscribe(GameEvents.PICKUP_ITEM);
+		this.receiver.subscribe(EnemyActions.ATTACK);
 	}
 
 	activate(options: Record<string, any>): void {};
@@ -70,12 +78,11 @@ export default class PlayerController extends StateMachineAI {
 	handleEvent(event: GameEvent): void {
 		switch(event.type) {
 			case GameEvents.PICKUP_ITEM: {
-				console.log("Caught item pickup in player controller");
 				this.handleItemPickupEvent(event);
 				break;
 			}
 			case EnemyActions.ATTACK: {
-				console.log("Caught enemy attack action in player controller");
+				this.handleEnemyAttackEvent(event);
 				break;
 			}
 			default: {
@@ -115,7 +122,8 @@ export default class PlayerController extends StateMachineAI {
 
 	// TODO: handles when an enemy trys to attack the player
 	handleEnemyAttackEvent(event: GameEvent): void {
-
+		this.health -= 1;
+		this.emitter.fireEvent(PlayerEvents.HEALTH_CHANGE, {amount: this.health});
 	}
 
 	destroy(): void {}
