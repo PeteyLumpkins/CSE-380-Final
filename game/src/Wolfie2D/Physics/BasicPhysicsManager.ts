@@ -264,7 +264,7 @@ export default class BasicPhysicsManager extends PhysicsManager {
 			// Also check for triggers
 			for(let overlap of overlaps){
 				// Check for a trigger. If we care about the trigger, react
-				if(overlap.other.isTrigger && (overlap.other.triggerMask & node.group)){
+				if(overlap.other.isTrigger && (overlap.other.triggerMask & node.group) && node.group != -1){
 					// Get the bit that this group is represented by
 					let index = Math.floor(Math.log2(node.group));
 

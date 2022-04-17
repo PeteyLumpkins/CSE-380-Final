@@ -86,8 +86,8 @@ export default class OrthogonalTilemap extends Tilemap {
         let row = Math.floor(index / this.numCols);
 
         // Get the world position
-        let x = col * this.tileSize.x;
-        let y = row * this.tileSize.y;
+        let x = col * this.tileSize.x * this.scale.x;
+        let y = row * this.tileSize.y * this.scale.y;
 
         return new Vec2(x, y);
     }

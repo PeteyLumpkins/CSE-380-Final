@@ -54,6 +54,7 @@ export default class RatAI extends EnemyAI {
     }
 
     handleEvent(event: GameEvent): void {
+        super.handleEvent(event);
         switch(event.type) {
             case PlayerEvents.ATTACKED: {
                 console.log("Caught player attacked event in RatAI");

@@ -24,7 +24,6 @@ export default class GoapActionPlanner {
 
         //Build tree from 0 to 1
         this.buildTree(0, goal, possibleActions, currentStatus);
-        //console.log(this.graph.toString());
 
         //Run djikstra to find shortest path
         this.path = GraphUtils.djikstra(this.graph, 0);
@@ -34,7 +33,6 @@ export default class GoapActionPlanner {
 		
 		let i = 1;
 		while(this.path[i] !== -1){
-            //console.log(this.path[i]);
             if (this.path[i] !== 0){
 			    plan.push(<GoapAction>this.mapping.get(this.path[i]));
             }
@@ -47,9 +45,6 @@ export default class GoapActionPlanner {
     buildTree(root: number, goal:string, possibleActions: Array<GoapAction>, currentStatus: Array<string>): void {
         //For each possible action 
         possibleActions.forEach(action => {
-            /*console.log("root:" + root + ",action precons:" + action.preconditions.toString() 
-                + ", action effects:" + action.effects.toString() + ", current Status:" + currentStatus.toString())*/
-
             //Can it be performed?
             if (action.checkPreconditions(currentStatus)){
                 //This action can be performed
@@ -59,7 +54,6 @@ export default class GoapActionPlanner {
 
                 //Check if the new node is the goal
                 if (newStatus.includes(goal)){
-                    //console.log("AT GOAL");
                     let newNode = this.graph.addNode() - 1;
                     this.mapping.set(newNode, action);
                     this.graph.addEdge(root, newNode, action.cost);
@@ -73,7 +67,6 @@ export default class GoapActionPlanner {
                 this.graph.addEdge(root, newNode, action.cost);
                 
                 //Recursive call
-                //console.log(possibleActions.indexOf(action))
                 let newActions = possibleActions.filter(act => act !== action)
                 this.buildTree(newNode, goal, newActions, action.effects);
             }

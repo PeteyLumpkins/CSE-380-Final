@@ -17,7 +17,6 @@ export default class RatIdle extends RatState {
     }
 
     handleInput(event: GameEvent): void { 
-        super.handleInput(event);
 
         switch (event.type) {
 
@@ -33,7 +32,8 @@ export default class RatIdle extends RatState {
     }
 
     handlePlayerSeenEvent(event: GameEvent): void {
-
+        
+        console.log(event.data.get("position"));
         // If we're within the swarm range of the rat that saw the player -> make active
         if (this.inSwarmRange(event.data.get("position"))) {
             this.finished(RatAIStates.ACTIVE);

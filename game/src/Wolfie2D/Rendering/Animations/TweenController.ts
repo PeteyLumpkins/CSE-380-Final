@@ -143,7 +143,16 @@ export default class TweenController {
 
             // If it has an onEnd, send an event
             if(tween.onEnd){
-                this.emitter.fireEvent(tween.onEnd, {key: key, node: this.owner.id}); 
+                let data: Record<string, any> = {key: key, node: this.owner.id}
+                // If it has onEnd event data, add each entry, as long as the key is not named 'key' or 'node'
+                if (tween.onEndData) {
+                    Object.keys(tween.onEndData).forEach(key => {
+                        if (key !== "key" && key !== "node") {
+                            data[key] = tween.onEndData[key];
+                        }
+                    })
+                }
+                this.emitter.fireEvent(tween.onEnd, data); 
             }
         }
     }
