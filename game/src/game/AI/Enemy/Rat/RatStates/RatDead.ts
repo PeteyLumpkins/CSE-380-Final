@@ -16,15 +16,13 @@ export default class RatDead extends RatState {
         console.log("STARTED RAT DEATH");
 
         /** Should drop a coin wherever the rat dies hopefully */
-        let coin = this.owner.getScene().add.animatedSprite(GameSprites.COIN, "primary");
+        let coin = this.owner.getScene().add.animatedSprite(GameSprites.COIN, GameLayers.PRIMARY);
         coin.position.set(this.owner.position.x, this.owner.position.y);
         coin.addAI(PickupAI, {
             player: this.parent.player, 
             range: 25,
             data: {type: PickupTypes.MONEY, amount: 1}
         });
-
-        console.log(this.owner.getScene().getLayer("primary").getItems())
 
         /** Destroys the rat */
         this.owner.destroy();

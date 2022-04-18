@@ -69,7 +69,10 @@ export default class RatAI extends EnemyAI {
     }
 
     handlePlayerAttackEvent(event: GameEvent): void {
-        this.health -= 5;
+
+        if (this.owner.position.distanceTo(event.data.get("position")) <= event.data.get("range")) {
+            this.health -= event.data.get("damage");
+        }
     }
 
     /** Initialize custom attributes for Rat */
@@ -128,6 +131,24 @@ export default class RatAI extends EnemyAI {
                     sightRange: 100,
                     swarmRange: 50,
                     moveSpeed: 100,
+                    attackRange: 25, 
+                    attackDamage: 2
+                }
+                break;
+            }
+            case RatAIOptionType.FAST: {
+                optionsTemplate = {
+                    player: player,
+                    goal: RatAIStatuses.GOAL_REACHED,
+                    statuses: new Array<RatAIStatuses>(),
+                    actions: [
+                        new RatAttack(3, [RatAIStatuses.IN_RANGE], [RatAIStatuses.GOAL_REACHED]),
+                        new RatMove(4, [], [RatAIStatuses.IN_RANGE])
+                    ],
+                    health: 10,
+                    sightRange: 200,
+                    swarmRange: 50,
+                    moveSpeed: 150,
                     attackRange: 25, 
                     attackDamage: 2
                 }

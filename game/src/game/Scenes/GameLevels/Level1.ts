@@ -24,6 +24,7 @@ export default class Level1 extends GameLevel {
 
     // The wall layer of the tilemap to use for bullet visualization
     protected walls: OrthogonalTilemap;
+    protected navmeshGraph: PositionGraph;
 
     private PLAYER_SPAWN: Vec2 = new Vec2(448, 480);
 
@@ -38,6 +39,7 @@ export default class Level1 extends GameLevel {
         this.load.spritesheet("brokenGreenPipe", "assets/sprites/BrokenGreenPipe.json");
         this.load.spritesheet(GameSprites.STORE_BG, "assets/spritesheets/store_layer.json");
         this.load.spritesheet("rat", "assets/spritesheets/rat.json");
+        this.load.spritesheet("whiteRat", "assets/spritesheets/whiteRat.json");
         this.load.spritesheet(GameSprites.COIN, "assets/spritesheets/coin.json");
         this.load.spritesheet("bat", "assets/spritesheets/WhiffleBat.json");
 
@@ -74,6 +76,10 @@ export default class Level1 extends GameLevel {
 
         // this.itemBarBackground = this.add.sprite("itembarbg", GameLayers.UI);
         // this.itemBarBackground.position.set(this.viewport.getCenter().x, 32);
+    }
+
+    initViewport(): void {
+        this.viewport.setZoomLevel(3);
     }
 
     initPlayer(): void {
@@ -166,17 +172,18 @@ export default class Level1 extends GameLevel {
         this.enemies[2].position.set(1056, 976);
         this.enemies[2].addPhysics();
 
-        this.enemies[3] = this.add.animatedSprite("rat", GameLayers.PRIMARY);
+        this.enemies[3] = this.add.animatedSprite("whiteRat", GameLayers.PRIMARY);
         this.enemies[3].position.set(1056, 850);
         this.enemies[3].addPhysics();
 
 
         let options = RatAI.optionsBuilder(RatAIOptionType.DEFAULT, this.player);
+        let fastOptions = RatAI.optionsBuilder(RatAIOptionType.FAST, this.player);
 
         this.enemies[0].addAI(RatAI, options);
         this.enemies[1].addAI(RatAI, options);
         this.enemies[2].addAI(RatAI, options);
-        this.enemies[3].addAI(RatAI, options);
+        this.enemies[3].addAI(RatAI, fastOptions);
 
     }
 }

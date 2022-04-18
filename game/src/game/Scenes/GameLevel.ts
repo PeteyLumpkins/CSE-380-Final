@@ -50,44 +50,35 @@ export enum UILayers {
 
 export default abstract class GameLevel extends Scene {
 
-    /* PLAYER CONSTANTS */
-    private DEFAULT_PLAYER_HEALTH: number = 20;
-    private DEFAULT_PLAYER_SPAWN: Vec2 = new Vec2(0, 0);
-    private DEFAULT_PLAYER_SCALE: Vec2 = new Vec2(1, 1);
-
-    /* PLAYER ATTRIBUTES */
-    protected playerHealth: number = this.DEFAULT_PLAYER_HEALTH;
-    protected playerSpawn: Vec2 = this.DEFAULT_PLAYER_SPAWN;
-    protected playerScale: Vec2 = this.DEFAULT_PLAYER_SPAWN;
-    protected playerHealthLabel: Label;
+    /* THE PLAYER GAME NODE */
     protected player: AnimatedSprite;
 
-    /* NEXT AND PREV LEVELS */
-    protected nextLevel: Sprite;
-    protected prevLevel: Sprite;
+    /* PLAYER UI STATS */
+    protected playerHealth: number;
+    protected playerHealthLabel: Label;
 
     protected playerMoney: number = 0;
     protected playerMoneyLabel: Label;
 
-    /* ENEMIES LIST */
-    protected enemies: Array<AnimatedSprite>;
+    /* MORE UI COMPONENTS */
+    protected itemBarBackground: Sprite;
+    protected pauseButton: Button;
 
-    /* THE GAMES LEVEL */
-    protected walls: OrthogonalTilemap;
-    protected navmeshGraph: PositionGraph;
+    /* NEXT AND PREV LEVELS LINKS */
+    protected nextLevel: Sprite;
+    protected prevLevel: Sprite;
+
+    /* THE ARRAY OF ENEMY NODES */
+    protected enemies: Array<AnimatedSprite>;
 
     /* GAME STORE */
     protected store: GameStore;
-    protected inventoryManager: InventoryManager;
     
-    /* STORE UI COMPONENTS */
+    /* UI MANAGERS */
     protected storeManager: StoreManager;
-
-    /* MORE UI COMPONENTS */
-    protected itemBarBackground: Sprite;
-
     protected pauseManager: PauseManager;
-    protected pauseButton: Button;
+    protected inventoryManager: InventoryManager;
+
 
     loadScene(): void {}
 
@@ -96,7 +87,6 @@ export default abstract class GameLevel extends Scene {
         // Init layers
         this.addPauseUILayers();
         this.addStoreUILayers();
-        this.initViewport();
 
         this.inventoryManager = new InventoryManager(this, 9, 16, new Vec2(450, 24), UILayers.ITEM_SLOTS, "itembg", UILayers.ITEM_SPRITES);
 
@@ -167,7 +157,7 @@ export default abstract class GameLevel extends Scene {
         console.log("Subscribing to events");
         this.receiver.subscribe(GameEvents.CHANGE_LEVEL);
         this.receiver.subscribe(GameEvents.PAUSE);
-        
+
         this.receiver.subscribe(StoreEvents.INVALID_PURCHASE);
         this.receiver.subscribe(StoreEvents.VALID_PURCHASE);
 
@@ -245,35 +235,6 @@ export default abstract class GameLevel extends Scene {
         }
     }
 
-    // FIXME: For some reason the lines aren't being drawn between the nodes in th debug map
-    protected createNavmesh(): void {
-        // Add a layer to display the graph
-        let gLayer = this.addLayer(GameLayers.NAVMESH_GRAPH, 10);
-        // gLayer.setHidden(true);
-
-        let navmeshData = this.load.getObject(GameData.NAVMESH);
-
-         // Create the graph
-        this.navmeshGraph = new PositionGraph();
-
-        // Add all nodes to our graph
-        for(let node of navmeshData.nodes){
-            this.navmeshGraph.addPositionedNode(new Vec2(node[0], node[1]));
-            this.add.graphic(GraphicType.POINT, GameLayers.NAVMESH_GRAPH, {position: new Vec2(node[0], node[1])});
-        }
-
-        // Add all edges to our graph
-        for(let edge of navmeshData.edges){
-            this.navmeshGraph.addEdge(edge[0], edge[1]);
-            this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: this.navmeshGraph.getNodePosition(edge[0]), end: this.navmeshGraph.getNodePosition(edge[1])})
-        }
-
-        // Set this graph as a navigable entity
-        let navmesh = new Navmesh(this.navmeshGraph);
-
-        this.navManager.addNavigableEntity("navmesh", navmesh);
-    }
-
     protected initUIPrimary(): void {
         let scale = this.getViewScale();
         let scalar = new Vec2(scale, scale);
@@ -308,33 +269,34 @@ export default abstract class GameLevel extends Scene {
         this.itemBarBackground.scale.div(scalar);
     }
 
-    protected initViewport(): void {
-        this.viewport.setZoomLevel(3);
-    }
+    /**
+     * Override and set the zoom of the viewport here
+     */
+    abstract initViewport(): void;
 
     /**
      * Override this method to initialize the player
      */
-    initPlayer(): void {}
+    abstract initPlayer(): void;
 
     /**
      * Override this method to initialize the store
      */
-    initStore(): void {}
+    abstract initStore(): void;
 
     /** 
      * Override this method to initialize the levels map
      */
-    initMap(): void {}
+    abstract initMap(): void;
 
     /** 
      * Override this method to set the next and prev levels
      */
-    initLevelLinks(): void {}
+    abstract initLevelLinks(): void;
 
     /** 
      * Override this method to add enemies to your level
      */
-    initEnemies(): void {}
+    abstract initEnemies(): void;
 
 }
