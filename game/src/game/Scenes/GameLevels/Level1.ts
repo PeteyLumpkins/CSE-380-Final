@@ -39,6 +39,7 @@ export default class Level1 extends GameLevel {
         this.load.spritesheet(GameSprites.STORE_BG, "assets/spritesheets/store_layer.json");
         this.load.spritesheet("rat", "assets/spritesheets/rat.json");
         this.load.spritesheet(GameSprites.COIN, "assets/spritesheets/coin.json");
+        this.load.spritesheet("bat", "assets/spritesheets/WhiffleBat.json");
 
         this.load.object(GameData.NAVMESH, "assets/data/navmeshLevel1.json"); 
         this.load.object(GameData.STORE_ITEMS, "assets/data/items.json");

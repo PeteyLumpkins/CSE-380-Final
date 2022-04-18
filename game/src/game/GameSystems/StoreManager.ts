@@ -1,0 +1,207 @@
+import Scene from "../../Wolfie2D/Scene/Scene";
+
+import Updateable from "../../Wolfie2D/DataTypes/Interfaces/Updateable";
+import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
+
+import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
+import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import Label from "../../Wolfie2D/Nodes/UIElements/Label";
+import Button from "../../Wolfie2D/Nodes/UIElements/Button"
+import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
+
+import Emitter from "../../Wolfie2D/Events/Emitter";
+import Receiver from "../../Wolfie2D/Events/Receiver";
+import GameEvent from "../../Wolfie2D/Events/GameEvent";
+
+import { ItemSprites, StoreEvents, GameEvents } from "../GameEnums";
+
+import Color from "../../Wolfie2D/Utils/Color";
+
+
+export enum StoreEvent {
+    BUY_ITEM = "BUY_ITEM_STORE_EVENT",
+    
+}
+
+export default class StoreManager implements Updateable {
+
+    /* The scene */
+    private scene: Scene;
+    private numItems: number;
+
+    private emitter: Emitter;
+    private receiver: Receiver;
+
+    /* Store UI Layers */
+    private backgroundLayer: string;
+    private itemLayer: string;
+    private nameLayer: string;
+    private costLayer: string;
+    private buttonLayer: string;
+
+    /* Store UI Components */
+    protected storeBackgroundSprite: string;
+    protected storeItems: Array<string>;
+
+    protected storeBackground: AnimatedSprite;
+    protected itemSprites: Array<Sprite>;
+    protected itemNameLabels: Array<Label>;
+    protected itemCostLabels: Array<Label>;
+    protected itemBuyButtons: Array<Button>; 
+
+
+    constructor(scene: Scene, storeBackgroundSprite: string, numItems: number, storeItems: Array<string>, 
+        backgroundLayer: string, itemLayer: string, nameLayer: string, costLayer: string, buttonLayer: string) {
+
+            this.scene = scene;
+            this.numItems = numItems;
+
+            this.storeBackgroundSprite = storeBackgroundSprite;
+            this.storeItems = storeItems;
+
+            this.backgroundLayer = backgroundLayer;
+            this.itemLayer = itemLayer;
+            this.nameLayer = nameLayer;
+            this.costLayer = costLayer;
+            this.buttonLayer = buttonLayer;
+
+            this.receiver = new Receiver();
+            this.emitter = new Emitter();
+
+            this.receiver.subscribe(GameEvents.OPEN_STORE);
+            this.receiver.subscribe(GameEvents.CLOSE_STORE);
+
+            this.initStoreLayer();
+    }
+
+    update(deltaT: number) {
+        while (this.receiver.hasNextEvent()) {
+            this.handleEvent(this.receiver.getNextEvent());
+        }
+    }
+
+    openStore() {
+        this.scene.getLayer(this.backgroundLayer).enable();
+        this.scene.getLayer(this.itemLayer).enable();
+        this.scene.getLayer(this.costLayer).enable();
+        this.scene.getLayer(this.nameLayer).enable();
+        this.scene.getLayer(this.buttonLayer).enable();
+    }
+
+    closeStore() {
+        this.scene.getLayer(this.backgroundLayer).disable();
+        this.scene.getLayer(this.itemLayer).disable();
+        this.scene.getLayer(this.costLayer).disable();
+        this.scene.getLayer(this.nameLayer).disable();
+        this.scene.getLayer(this.buttonLayer).disable();
+    }
+
+    private handleEvent(event: GameEvent): void {
+        switch(event.type) {
+            case GameEvents.OPEN_STORE: {
+                console.log("Open store event caught!");
+                this.handleOpenStoreEvent(event);
+                break;
+            }
+            case GameEvents.CLOSE_STORE: {
+                console.log("Close store event caught!");
+                this.handleCloseStoreEvent(event);
+                break;
+            }
+            default: {
+                console.log("")
+                break;
+            }
+        }
+    }
+
+    private handleOpenStoreEvent(event: GameEvent) {
+        this.openStore();
+    }
+
+    private handleCloseStoreEvent(event: GameEvent) {
+        this.closeStore();
+    }
+
+    /**
+     * TODO: This method will initialize the store layer of our game. It should be called
+     * after the level has been loaded, I'm pretty sure.
+     */
+    private initStoreLayer() {
+        let center = this.scene.getViewport().getCenter();
+        let scale = this.scene.getViewScale();
+        let scalar = new Vec2(scale, scale);
+
+        this.storeBackground = this.scene.add.animatedSprite(this.storeBackgroundSprite, this.backgroundLayer);
+        this.storeBackground.scale.div(scalar);
+        this.storeBackground.position.set(this.scene.getViewport().getCenter().x, this.scene.getViewport().getCenter().y).div(scalar);
+        this.storeBackground.animation.play("idle");
+
+        /* STORE BUTTONS */
+        this.itemBuyButtons = new Array<Button>();
+        let startX = center.x - 150;
+        let startY = center.y + 100;
+        let spaceX = 150;
+
+        for (let i = 0; i < this.numItems; i++) {
+            this.itemBuyButtons[i] = <Button>this.scene.add.uiElement(UIElementType.BUTTON, this.buttonLayer, {position: new Vec2(startX, startY).div(scalar), text: "Buy Item " + (i + 1)});
+            this.itemBuyButtons[i].size.set(100, 25);
+            this.itemBuyButtons[i].scale.div(scalar);
+            this.itemBuyButtons[i].borderWidth = 2;
+            this.itemBuyButtons[i].fontSize = 16;
+            this.itemBuyButtons[i].backgroundColor = Color.BLACK;
+            this.itemBuyButtons[i].onClick = () => {
+                this.emitter.fireEvent(StoreEvents.REQUEST_PURCHASE, { 
+                    id: i,
+                    amount: 1
+                });
+            };
+            startX += spaceX;
+        }
+
+        /* STORE ITEMS */
+        this.itemSprites = new Array<Sprite>();
+        
+        startX = center.x - 150;
+        startY = center.y - 100;
+        spaceX = 150;
+
+        for (let i = 0; i < this.numItems; i += 1, startX += spaceX) {
+            this.itemSprites[i] = this.scene.add.sprite(this.storeItems[i], this.itemLayer);
+            this.itemSprites[i].position.set(startX, startY).div(scalar);
+            this.itemSprites[i].scale.set(5, 5).div(scalar);
+        }
+
+        /* STORE ITEM NAME LABELS */
+        this.itemNameLabels = new Array<Label>();
+
+        startX = center.x - 150;
+        startY = center.y - 175;
+        spaceX = 150;
+
+        for (let i = 0; i < this.numItems; i += 1, startX += spaceX) {
+            this.itemNameLabels[i] = <Label>this.scene.add.uiElement(UIElementType.LABEL, this.nameLayer, {position: new Vec2(startX, startY).div(scalar), text: "ITEM NAME"});
+            this.itemNameLabels[i].fontSize = 18;
+            this.itemNameLabels[i].textColor = Color.WHITE;
+            this.itemNameLabels[i].scale.div(scalar);
+        }
+
+        /* STORE ITEM COST LABELS */
+        this.itemCostLabels = new Array<Label>();
+
+        startX = center.x - 150;
+        startY = center.y - 25;
+        spaceX = 150;
+
+        for (let i = 0; i < this.numItems; i += 1, startX += spaceX) {
+            this.itemCostLabels[i] = <Label>this.scene.add.uiElement(UIElementType.LABEL, this.costLayer, {position: new Vec2(startX, startY).div(scalar), text: `Cost: ITEM COST`});
+            this.itemCostLabels[i].fontSize = 18;
+            this.itemCostLabels[i].textColor = Color.WHITE;
+            this.itemCostLabels[i].scale.div(scalar);
+        }
+
+        this.closeStore();
+    }
+
+ 
+}

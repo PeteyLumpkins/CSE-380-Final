@@ -3,13 +3,14 @@ import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import Color from "../../Wolfie2D/Utils/Color";
 import Scene from "../../Wolfie2D/Scene/Scene";
+import Updateable from "../../Wolfie2D/DataTypes/Interfaces/Updateable";
 
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 
 /**
  * Manages the player inventory that is displayed in the GameLevel UI
  */
-export default class InventoryManager {
+export default class InventoryManager implements Updateable {
 
     private scene: Scene;
 
@@ -38,9 +39,7 @@ export default class InventoryManager {
 
         // TODO: Maybe set the layers up in the game level, then just pass the layer names to the manager
         this.slotLayer = slotLayer;
-        this.scene.addUILayer(slotLayer);
         this.itemLayer = itemLayer;
-        this.scene.addUILayer(itemLayer);
 
         let scale = scene.getViewScale();
         let scalar = new Vec2(scale, scale);
@@ -82,9 +81,9 @@ export default class InventoryManager {
     unsetSlot(slot: number): Sprite { return; }
 
     /**
-     * Updates the inventory being displayed in the UI?
+     * Updates the inventory being displayed in the UI
      */
-    updateInventory(): void {
+    update(deltaT: number): void {
 
     }
 
