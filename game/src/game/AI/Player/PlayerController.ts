@@ -57,9 +57,10 @@ export default class PlayerController extends StateMachineAI {
 	protected tilemap: OrthogonalTilemap;
 
 	protected maxHealth: number;
+
 	protected health: number;
 	protected money: number;
-	protected inventory: Array<Record<string,any>>;
+	protected inventory: Array<Record<string, any>>;
 
 	initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
 		this.owner = owner;

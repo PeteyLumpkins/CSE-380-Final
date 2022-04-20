@@ -10,7 +10,7 @@ import GameLevel from "./game/Scenes/GameLevel";
 
     // Set up options for our game
     let options = {
-        canvasSize: {x: 1024, y: 1024},          // The size of the game
+        canvasSize: {x: 1024, y: 800},          // The size of the game
         clearColor: {r: 0.1, g: 0.1, b: 0.1},   // The color the game clears to
         inputs: [
             { name: "forward", keys: ["w"] },   // Forward is assigned to w

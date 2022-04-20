@@ -12,7 +12,10 @@ export default class Open extends StoreState {
      */
     onEnter(options: Record<string, any>): void {
         console.log("Started open store state");
-        this.emitter.fireEvent(GameEvents.OPEN_STORE);
+        this.emitter.fireEvent(GameEvents.OPEN_STORE, {
+            items: this.parent.getStoreItems(), 
+            playerMoney: this.parent.getPlayerMoney()
+        });
     }
 
     // FIXME: also needs to be fixed so that the store closes properly

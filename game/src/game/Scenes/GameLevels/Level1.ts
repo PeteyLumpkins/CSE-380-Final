@@ -13,7 +13,7 @@ import { RatAIOptionType } from "../../AI/Enemy/Rat/RatAI";
 
 import GameLevel from "../GameLevel";
 import LevelEndAI from "../../AI/LevelEnd/LevelEndAI";
-import GameStore from "../../Entities/GameStore";
+import GameStore from "../../AI/Store/StoreItems";
 
 import RatAI from "../../AI/Enemy/Rat/RatAI";
 import RatAttack from "../../AI/Enemy/Rat/RatActions/RatAttack";
@@ -24,18 +24,24 @@ export default class Level1 extends GameLevel {
 
     // The wall layer of the tilemap to use for bullet visualization
     protected walls: OrthogonalTilemap;
+    protected navmeshGraph: PositionGraph;
 
     private PLAYER_SPAWN: Vec2 = new Vec2(448, 480);
 
     loadScene(){
         this.load.tilemap("level", "assets/tilemaps/prototypeMap.json");
 
-        this.load.spritesheet("player", "assets/spritesheets/player.json");
-        this.load.spritesheet("store_terminal", "assets/spritesheets/store_terminal.json");
+        this.load.image("itembg", "assets/sprites/itembg.png");
+        this.load.image("itembarbg", "assets/sprites/itembarbg.png");
+
+        this.load.spritesheet("player", "assets/spritesheets/player/player.json");
+        this.load.spritesheet("store_terminal", "assets/spritesheets/store/store_terminal.json");
         this.load.spritesheet("brokenGreenPipe", "assets/sprites/BrokenGreenPipe.json");
-        this.load.spritesheet(GameSprites.STORE_BG, "assets/spritesheets/store_layer.json");
-        this.load.spritesheet("rat", "assets/spritesheets/rat.json");
+        this.load.spritesheet(GameSprites.STORE_BG, "assets/spritesheets/store/store_layer.json");
+        this.load.spritesheet("rat", "assets/spritesheets/enemies/rat.json");
+        this.load.spritesheet("whiteRat", "assets/spritesheets/enemies/whiteRat.json");
         this.load.spritesheet(GameSprites.COIN, "assets/spritesheets/coin.json");
+        // this.load.spritesheet("bat", "assets/spritesheets/WhiffleBat.json");
 
         this.load.object(GameData.NAVMESH, "assets/data/navmeshLevel1.json"); 
         this.load.object(GameData.STORE_ITEMS, "assets/data/items.json");
@@ -52,7 +58,7 @@ export default class Level1 extends GameLevel {
 
         this.initMap();
 
-        this.addLayer("primary", 5);
+        this.addLayer(GameLayers.PRIMARY, 5);
 
         this.initPlayer();
 
@@ -62,20 +68,27 @@ export default class Level1 extends GameLevel {
 
         this.initLevelLinks();
         
-        let bgPipe = this.add.animatedSprite("brokenGreenPipe", "primary");
+        let bgPipe = this.add.animatedSprite("brokenGreenPipe", GameLayers.PRIMARY);
         bgPipe.animation.play("idle", true);
         bgPipe.position.set(880, 432);
 
         super.startScene();
+
+        // this.itemBarBackground = this.add.sprite("itembarbg", GameLayers.UI);
+        // this.itemBarBackground.position.set(this.viewport.getCenter().x, 32);
+    }
+
+    initViewport(): void {
+        this.viewport.setZoomLevel(3);
     }
 
     initPlayer(): void {
-        this.player = this.add.animatedSprite("player", "primary");
+        this.player = this.add.animatedSprite("player", GameLayers.PRIMARY);
 		
 		this.player.position.set(448, 480);
         // this.player.scale.set(.75, .75);
 
-		let playerCollider = new AABB(Vec2.ZERO, new Vec2(this.player.sizeWithZoom.x / 4, this.player.sizeWithZoom.y / 8));
+		let playerCollider = new AABB(Vec2.ZERO, new Vec2(this.player.sizeWithZoom.x, this.player.sizeWithZoom.y).div(new Vec2(2, 2)));
         this.player.addPhysics();
 		this.player.setCollisionShape(playerCollider);
         
@@ -85,13 +98,28 @@ export default class Level1 extends GameLevel {
     }
 
     initStore(): void {
-        this.store = new GameStore();
-        this.store.node = this.add.animatedSprite("store_terminal", "primary");
-        this.store.node.position.set(1056, 1152);
-        (<AnimatedSprite>this.store.node).scale.set(0.4, 0.4);
-        this.store.node.addAI(StoreController, {radius: 100, player: this.player});
+        let items = [
+            { 
+                "name": "Moldy bread",
+                "cost": 2,
+                "spriteKey": ItemSprites.MOLD_BREAD
+            },
+            {   
+                "name": "More Moldy Bread",
+                "cost": 3,
+                "spriteKey": ItemSprites.MOLD_BREAD
+            },
+            { 
+                "name": "Old Boot",
+                "cost": 5,
+                "spriteKey": ItemSprites.MOLD_BREAD
+            }
+        ];
 
-        this.store.items = this.load.getObject(GameData.STORE_ITEMS);
+        this.store = this.add.animatedSprite("store_terminal", GameLayers.PRIMARY);
+        this.store.position.set(1056, 1152);
+        this.store.scale.set(0.4, 0.4);
+        this.store.addAI(StoreController, {radius: 100, player: this.player, items: items});
     }
 
     initMap(): void {
@@ -140,36 +168,36 @@ export default class Level1 extends GameLevel {
     }
 
     initLevelLinks(): void {
-        this.nextLevel = this.add.sprite(GameSprites.LADDER, "primary");
+        this.nextLevel = this.add.sprite(GameSprites.LADDER, GameLayers.PRIMARY);
         this.nextLevel.position.set(2960, 595);
         this.nextLevel.addAI(LevelEndAI, {player: this.player, range: 25, nextLevel: Level1});
     }
 
     initEnemies(): void {
         this.enemies = new Array<AnimatedSprite>();
-        this.enemies[0] = this.add.animatedSprite("rat", "primary");
+        this.enemies[0] = this.add.animatedSprite("rat", GameLayers.PRIMARY);
         this.enemies[0].position.set(1056, 1024);
         this.enemies[0].addPhysics();
 
-        this.enemies[1] = this.add.animatedSprite("rat", "primary");
+        this.enemies[1] = this.add.animatedSprite("rat", GameLayers.PRIMARY);
         this.enemies[1].position.set(1056, 928);
         this.enemies[1].addPhysics();
 
-        this.enemies[2] = this.add.animatedSprite("rat", "primary");
+        this.enemies[2] = this.add.animatedSprite("rat", GameLayers.PRIMARY);
         this.enemies[2].position.set(1056, 976);
         this.enemies[2].addPhysics();
 
-        this.enemies[3] = this.add.animatedSprite("rat", "primary");
+        this.enemies[3] = this.add.animatedSprite("whiteRat", GameLayers.PRIMARY);
         this.enemies[3].position.set(1056, 850);
         this.enemies[3].addPhysics();
 
-
         let options = RatAI.optionsBuilder(RatAIOptionType.DEFAULT, this.player);
+        let fastOptions = RatAI.optionsBuilder(RatAIOptionType.FAST, this.player);
 
         this.enemies[0].addAI(RatAI, options);
         this.enemies[1].addAI(RatAI, options);
         this.enemies[2].addAI(RatAI, options);
-        this.enemies[3].addAI(RatAI, options);
+        this.enemies[3].addAI(RatAI, fastOptions);
 
     }
 }
