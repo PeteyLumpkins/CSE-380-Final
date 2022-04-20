@@ -35,7 +35,7 @@
         },
         {
             "name": "PUNCH_DOWN",
-            "repeat": false,
+            "repeat": true,
             "frames": [ 
                 {"index": 8, "duration": 8}, 
                 {"index": 9, "duration": 8}, 
@@ -74,7 +74,7 @@
         },
         {
             "name": "PUNCH_UP",
-            "repeat": false,
+            "repeat": true,
             "frames": [ 
                 {"index": 25, "duration": 8}, 
                 {"index": 26, "duration": 8}, 
@@ -116,7 +116,7 @@
         },
         {
             "name": "PUNCH_RIGHT",
-            "repeat": false,
+            "repeat": true,
             "frames": [ 
                 {"index": 43, "duration": 8}, 
                 {"index": 44, "duration": 8}, 
@@ -160,7 +160,7 @@
         },
         {
             "name": "PUNCH_LEFT",
-            "repeat": false,
+            "repeat": true,
             "frames": [ 
                 {"index": 60, "duration": 8}, 
                 {"index": 61, "duration": 8}, 
