@@ -1,4 +1,6 @@
-[
+{
+"numItems": 3,
+"items": [
     {
         "name": "Old Boot", 
         "path": "assets/itemsprites/oldBoot.png",
@@ -30,3 +32,4 @@
         }
     }
 ]
+}
