@@ -17,16 +17,22 @@ export default abstract class Moving extends PlayerState {
         super.update(deltaT);
 
         let dir = this.getInputDirection();
+
+        if (this.isAttacking()) {
+            this.attack();
+        }
+
         if(dir.isZero()){
             this.idle()
         } 
         
-        this.owner.move(dir.mult(new Vec2(this.speedScale, this.speedScale)));
         this.move(dir);
     }
 
     abstract idle(): void;
 
     abstract move(dir: Vec2): void;
+
+    abstract attack(): void;
 
 }
