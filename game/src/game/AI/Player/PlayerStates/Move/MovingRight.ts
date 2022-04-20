@@ -32,6 +32,10 @@ export default class MovingRight extends Moving {
         } 
     }
 
+    attack(): void {
+        this.finished(PlayerStates.PUNCH_RIGHT);
+    }
+
     onExit(): Record<string, any> {
         return
     }

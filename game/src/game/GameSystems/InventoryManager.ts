@@ -1,6 +1,7 @@
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
+import GameNode from "../../Wolfie2D/Nodes/GameNode";
 
 import Emitter from "../../Wolfie2D/Events/Emitter";
 import Receiver from "../../Wolfie2D/Events/Receiver";
@@ -12,7 +13,6 @@ import Scene from "../../Wolfie2D/Scene/Scene";
 import Updateable from "../../Wolfie2D/DataTypes/Interfaces/Updateable";
 
 import { StoreEvent } from "./StoreManager";
-import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import PlayerController from "../AI/Player/PlayerController";
 
 
@@ -115,7 +115,5 @@ export default class InventoryManager implements Updateable {
         }
         let inventory = (<PlayerController>this.player._ai).getPlayerInventory();
     }
-
-
 
 }

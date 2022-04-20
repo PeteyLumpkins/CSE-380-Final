@@ -10,8 +10,8 @@ import StateMachineAI from "../../../Wolfie2D/AI/StateMachineAI";
 import OrthogonalTilemap from "../../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 import MathUtils from "../../../Wolfie2D/Utils/MathUtils";
 
-import IdleRight from "./PlayerStates/Idle/IdleRight";
 import IdleLeft from "./PlayerStates/Idle/IdleLeft";
+import IdleRight from "./PlayerStates/Idle/IdleRight";
 import IdleDown from "./PlayerStates/Idle/IdleDown";
 import IdleUp from "./PlayerStates/Idle/IdleUp";
 
@@ -19,6 +19,11 @@ import MovingLeft from "./PlayerStates/Move/MovingLeft";
 import MovingRight from "./PlayerStates/Move/MovingRight";
 import MovingDown from "./PlayerStates/Move/MovingDown";
 import MovingUp from "./PlayerStates/Move/MovingUp";
+
+import PunchLeft from "./PlayerStates/Punch/PunchLeft";
+import PunchRight from "./PlayerStates/Punch/PunchRight";
+import PunchDown from "./PlayerStates/Punch/PunchDown";
+import PunchUp from "./PlayerStates/Punch/PunchUp";
 
 import {GameEvents, EnemyActions } from "../../GameEnums";
 import {PickupTypes} from "../Pickup/PickupTypes";
@@ -32,7 +37,12 @@ export enum PlayerStates {
 	MOVING_RIGHT = "MOVING_RIGHT_PLAYER_STATE",
 	MOVING_LEFT = "MOVING_LEFT_PLAYER_STATE",
 	MOVING_DOWN = "MOVING_DOWN_PLAYER_STATE",
-	MOVING_UP = "MOVING_UP_PLAYER_STATE"
+	MOVING_UP = "MOVING_UP_PLAYER_STATE",
+
+	PUNCH_RIGHT = "PUNCH_RIGHT_PLAYER_STATE",
+	PUNCH_LEFT = "PUNCH_LEFT_PLAYER_STATE",
+	PUNCH_UP = "PUNCH_UP_PLAYER_STATE",
+	PUNCH_DOWN = "PUNCH_DOWN_PLAYER_STATE"
 }
 
 export enum PlayerEvents {
@@ -58,6 +68,7 @@ export default class PlayerController extends StateMachineAI {
 		this.maxHealth = 20;
 		this.health = 20;
 		this.money = 0;
+		this.inventory = new Array<Record<string, any>>();
 
         this.addState(PlayerStates.IDLE_LEFT, new IdleLeft(this, this.owner));
 		this.addState(PlayerStates.IDLE_RIGHT, new IdleRight(this, this.owner));
@@ -68,11 +79,24 @@ export default class PlayerController extends StateMachineAI {
 		this.addState(PlayerStates.MOVING_RIGHT, new MovingRight(this, this.owner));
 		this.addState(PlayerStates.MOVING_DOWN, new MovingDown(this, this.owner));
 		this.addState(PlayerStates.MOVING_UP, new MovingUp(this, this.owner));
+
+		this.addState(PlayerStates.PUNCH_LEFT, new PunchLeft(this, this.owner));
+		this.addState(PlayerStates.PUNCH_RIGHT, new PunchRight(this, this.owner));
+		this.addState(PlayerStates.PUNCH_DOWN, new PunchDown(this, this.owner));
+		this.addState(PlayerStates.PUNCH_UP, new PunchUp(this, this.owner));
 		
         this.initialize(PlayerStates.IDLE_RIGHT);
 
 		this.receiver.subscribe(GameEvents.PICKUP_ITEM);
 		this.receiver.subscribe(EnemyActions.ATTACK);
+	}
+
+	getPlayerMoney(): number { 
+		return this.money;
+	}
+
+	getPlayerInventory(): Array<Record<string,any>> {
+		return this.inventory;
 	}
 
 	activate(options: Record<string, any>): void {};
@@ -126,14 +150,6 @@ export default class PlayerController extends StateMachineAI {
 	private handleEnemyAttackEvent(event: GameEvent): void {
 		this.health -= 1;
 		this.emitter.fireEvent(PlayerEvents.HEALTH_CHANGE, {amount: this.health});
-	}
-
-	getPlayerMoney(): number { 
-		return this.money;
-	}
-
-	getPlayerInventory(): Array<Record<string, any>> {
-		return this.inventory;
 	}
 
 	destroy(): void {}

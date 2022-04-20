@@ -30,6 +30,10 @@ export default class MovingUp extends Moving {
         } 
     }
 
+    attack(): void {
+        this.finished(PlayerStates.PUNCH_UP);
+    }
+
     onExit(): Record<string, any> {
         return;
     }

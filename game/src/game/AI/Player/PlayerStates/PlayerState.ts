@@ -17,7 +17,6 @@ export default abstract class PlayerState extends State {
 
     protected owner: AnimatedSprite;
 
-
     protected attackTimer: Timer;
 
 	// These values will scale the players stats
@@ -56,26 +55,15 @@ export default abstract class PlayerState extends State {
 		return direction;
 	}
 
-	attack(): void {
-		if (this.attackTimer.isStopped()) {
-			console.log("Starting the attack timer");
-			this.attackTimer.start();
-		}
+	isAttacking(): boolean {
+		return Input.isPressed("attack") || !this.attackTimer.isStopped();
 	}
 
     /** 
-     * TODO: Updates the state of the player regardless of players state
-     * 
-     *  Should handle the players invincible timer here I'm pretty sure
-     *  Should handle the player taking damage also
+     * Regardless of the players state (attacking or moving), they should be able to move
      */
 	update(deltaT: number): void {
-
-		// This handles the attack action for now
-		if (Input.isPressed("attack")) {
-			console.log("attacking?");
-			this.attack();
-		}
+		this.owner.move(this.getInputDirection().mult(new Vec2(this.speedScale, this.speedScale)));
 	}
 
 }

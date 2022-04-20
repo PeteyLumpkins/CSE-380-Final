@@ -30,6 +30,10 @@ export default class MovingDown extends Moving {
         }
     }
 
+    attack(): void {
+        this.finished(PlayerStates.PUNCH_DOWN);
+    }
+
     onExit(): Record<string, any> {
         return
     }
