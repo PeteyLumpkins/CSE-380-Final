@@ -13,6 +13,7 @@ import Updateable from "../../Wolfie2D/DataTypes/Interfaces/Updateable";
 
 import { StoreEvent } from "./StoreManager";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
+import PlayerController from "../AI/Player/PlayerController";
 
 
 /**
@@ -44,6 +45,8 @@ export default class InventoryManager implements Updateable {
     constructor(scene: Scene, player: GameNode, size: number, padding: number, start: Vec2, itemLayer: string, slotSprite: string, slotLayer: string) {
 
         this.scene = scene;
+        this.player = player;
+
         this.receiver = new Receiver();
         this.emitter = new Emitter();
 
@@ -54,26 +57,29 @@ export default class InventoryManager implements Updateable {
         this.start = start;
         this.slotSprite = slotSprite;
 
-        // TODO: Maybe set the layers up in the game level, then just pass the layer names to the manager
+        // Init the layers for the items
         this.slotLayer = slotLayer;
         this.itemLayer = itemLayer;
 
+        // Set up the scales for scaling to the viewport
         let scale = scene.getViewScale();
         let scalar = new Vec2(scale, scale);
 
+        // Load th item slot sprites
         this.itemSlots = new Array<Sprite>();
         for (let i = 0; i < this.size; i += 1) {
             this.itemSlots[i] = this.scene.add.sprite(this.slotSprite, this.slotLayer);
             this.itemSlots[i].scale.div(scalar);
         }
 
+        // Set the positions of the item sprites
         let width = this.itemSlots[0].size.x;
         let height = this.itemSlots[0].size.y;
-
         for (let i = 0; i < this.size; i += 1) {
             this.itemSlots[i].position.set(this.start.x + i*(width + this.padding), this.start.y).div(scalar);
         }
 
+        // Set the slot numbers in the user interface
         this.itemSlotNums = new Array<Label>();
         for (let i = 0; i < this.size; i += 1) {
             this.itemSlotNums[i] = <Label>this.scene.add.uiElement(UIElementType.LABEL, this.slotLayer, {position: new Vec2(this.start.x + i*(width + this.padding), start.y + height/2 + 8).div(scalar), text: `${i + 1}`});
@@ -83,31 +89,21 @@ export default class InventoryManager implements Updateable {
         }
     }
 
-    /**
-     * Updates to invetory being displayed in the UI to display the inventory 
-     * represented by @param inventory
-     * 
-     * @param inventory the inventory we want display in the UI
-     */
-    setInventory(inventory: Array<String>): void {
-
-    }
-
-    setSlot(slot: number, item: Sprite): void {}
-
-    unsetSlot(slot: number): Sprite { return; }
-
     private handleEvent(event: GameEvent): void {
         switch(event.type) {
             case StoreEvent.ITEM_PURCHASED: {
-                console.log("Item purchased event caught in invetory handler");
-                console.log(event.data.get("item"));
+                this.handleAddItemEvent(event);
                 break;
             }
             default: {
                 break;
             }
         }
+    }
+
+    private handleAddItemEvent(event: GameEvent): void {
+        let item = event.data.get("item");
+        (<PlayerController>this.player._ai).getPlayerInventory().push(item);
     }
 
     /**
@@ -117,6 +113,7 @@ export default class InventoryManager implements Updateable {
         while (this.receiver.hasNextEvent()) {
             this.handleEvent(this.receiver.getNextEvent())
         }
+        let inventory = (<PlayerController>this.player._ai).getPlayerInventory();
     }
 
 
