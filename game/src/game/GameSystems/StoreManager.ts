@@ -3,17 +3,20 @@ import Scene from "../../Wolfie2D/Scene/Scene";
 import Updateable from "../../Wolfie2D/DataTypes/Interfaces/Updateable";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 
+import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button"
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
+import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
+import UILayer from "../../Wolfie2D/Scene/Layers/UILayer";
 
 import Emitter from "../../Wolfie2D/Events/Emitter";
 import Receiver from "../../Wolfie2D/Events/Receiver";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 
-import { GameEvents } from "../GameEnums";
+import { GameEvents, ItemSprites } from "../GameEnums";
 
 import Color from "../../Wolfie2D/Utils/Color";
 
@@ -125,7 +128,6 @@ export default class StoreManager implements Updateable {
 
     private handleCloseStoreEvent(event: GameEvent) {
         this.closeStore();
-        this.unloadItemSprites();
     }
 
     /**
@@ -143,21 +145,31 @@ export default class StoreManager implements Updateable {
         let center = this.scene.getViewport().getCenter();
         let scale = this.scene.getViewScale();
         let scalar = new Vec2(scale, scale);
-
-        /* STORE ITEMS */
-        this.itemSprites = new Array<Sprite>();
         
-        let startX = center.x - 150;
-        let startY = center.y - 100;
-        let spaceX = 150;
+        let spaceX = 150 / scale;
+        let spaceY = 100 / scale;
+
+        let startX = center.x - spaceX;
+        let startY = center.y - spaceY;
 
         for (let i = 0; i < this.numItems; i += 1, startX += spaceX) {
+            let oldItem = this.itemSprites[i];
+            let oldX = this.itemSprites[i].position.x;
+            let oldY = this.itemSprites[i].position.y;
+
+            console.log(`Old Position ${oldX},${oldY}`);
+            let origin = this.scene.getViewport().getOrigin();
+            console.log(`Start x: ${startX} y: ${startY}`);
+            console.log(origin);
+
             this.itemSprites[i] = this.scene.add.sprite(items[i].spriteKey, this.itemLayer);
-            this.itemSprites[i].position.set(startX, startY).div(scalar);
+            this.itemSprites[i].position.set(startX, startY).sub(origin);
             this.itemSprites[i].scale.set(5, 5).div(scalar);
 
             this.itemCostLabels[i].text = items[i].cost;
             this.itemNameLabels[i].text = items[i].name;
+
+            oldItem.destroy();
         }
     }
 
@@ -234,6 +246,18 @@ export default class StoreManager implements Updateable {
             this.itemCostLabels[i].scale.div(scalar);
         }
 
+        /* STORE SPRITE POSITIONS */
+        this.itemSprites = new Array<Sprite>();
+        
+        startX = center.x - 150;
+        startY = center.y - 100;
+        spaceX = 150;
+
+        for (let i = 0; i < this.numItems; i += 1, startX += spaceX) {
+            this.itemSprites[i] = this.scene.add.sprite(ItemSprites.MOLD_BREAD, this.itemLayer);
+            this.itemSprites[i].position.set(startX, startY).div(scalar);
+        }
+
         this.closeStore();
     }
 
@@ -247,5 +271,4 @@ export default class StoreManager implements Updateable {
         /* Otherwise, set item as purchased */
     }
 
- 
 }

@@ -74,12 +74,11 @@ export default abstract class GameLevel extends Scene {
         this.initViewport();
         this.initPlayer();
 
-
         this.addPrimaryUILayers();
         this.initUIPrimary();
 
         this.addItemUILayers();
-        this.inventoryManager = new InventoryManager(this, this.player, 9, 16, new Vec2(450, 24), UILayers.ITEM_SLOTS, "itembg", UILayers.ITEM_SPRITES);
+        this.inventoryManager = new InventoryManager(this, this.player, 9, 16, new Vec2(450, 24), UILayers.ITEM_SPRITES, "itembg", UILayers.ITEM_SLOTS);
 
         this.initUIPrimary();
         this.pauseManager = new PauseManager(this, [GameLayers.PRIMARY], GameLayers.PAUSED);
@@ -95,6 +94,12 @@ export default abstract class GameLevel extends Scene {
             UILayers.STORE_COSTS,
             UILayers.STORE_CONTROLS
         );
+
+        this.initMap();
+
+        this.initEnemies();
+
+        this.initStore();
 
         /* Init the level links of the game level */
         this.initLevelLinks();
@@ -272,6 +277,10 @@ export default abstract class GameLevel extends Scene {
 
     /**
      * Override and set the zoom of the viewport here
+     * 
+     * FIXME: There are issues cropping up with the viewport whenever we transition from
+     * one scene to the next. It looks like it just keeps scaling/zooming in the viewport.
+     * 
      */
     abstract initViewport(): void;
 

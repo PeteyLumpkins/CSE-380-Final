@@ -40,3 +40,10 @@ export default abstract class Punch extends PlayerState {
     abstract attack(dir: Vec2): void;
 
 }
+
+import PunchLeft from "./PunchLeft";
+import PunchRight from "./PunchRight";
+import PunchDown from "./PunchDown";
+import PunchUp from "./PunchUp";
+
+export { PunchLeft, PunchRight, PunchDown, PunchUp }

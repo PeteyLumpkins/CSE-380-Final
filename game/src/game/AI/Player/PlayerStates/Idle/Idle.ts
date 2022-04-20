@@ -2,7 +2,6 @@ import PlayerState from "../PlayerState";
 import { PlayerStates } from "../../PlayerController";
 import Vec2 from "../../../../../Wolfie2D/DataTypes/Vec2";
 
-
 export default abstract class Idle extends PlayerState {
 
     update(deltaT: number): void {
@@ -42,3 +41,10 @@ export default abstract class Idle extends PlayerState {
     abstract attack(): void;
 
 }
+
+import IdleLeft from "./IdleLeft";
+import IdleRight from "./IdleRight";
+import IdleDown from "./IdleDown";
+import IdleUp from "./IdleUp";
+
+export { IdleLeft, IdleRight, IdleDown, IdleUp } 

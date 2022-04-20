@@ -13,6 +13,7 @@ import Scene from "../../Wolfie2D/Scene/Scene";
 import Updateable from "../../Wolfie2D/DataTypes/Interfaces/Updateable";
 
 import { StoreEvent } from "./StoreManager";
+import { ItemSprites } from "../GameEnums";
 import PlayerController from "../AI/Player/PlayerController";
 
 
@@ -65,19 +66,21 @@ export default class InventoryManager implements Updateable {
         let scale = scene.getViewScale();
         let scalar = new Vec2(scale, scale);
 
-        // Load th item slot sprites
+        // Load the item slot sprites
         this.itemSlots = new Array<Sprite>();
         for (let i = 0; i < this.size; i += 1) {
             this.itemSlots[i] = this.scene.add.sprite(this.slotSprite, this.slotLayer);
             this.itemSlots[i].scale.div(scalar);
         }
 
-        // Set the positions of the item sprites
+        // Set the positions of the item slot sprites
         let width = this.itemSlots[0].size.x;
         let height = this.itemSlots[0].size.y;
         for (let i = 0; i < this.size; i += 1) {
             this.itemSlots[i].position.set(this.start.x + i*(width + this.padding), this.start.y).div(scalar);
         }
+
+        this.itemSprites = new Array<Sprite>();
 
         // Set the slot numbers in the user interface
         this.itemSlotNums = new Array<Label>();
@@ -103,7 +106,31 @@ export default class InventoryManager implements Updateable {
 
     private handleAddItemEvent(event: GameEvent): void {
         let item = event.data.get("item");
-        (<PlayerController>this.player._ai).getPlayerInventory().push(item);
+        let inv = (<PlayerController>this.player._ai).getPlayerInventory();
+
+        let scale = this.scene.getViewScale();
+        let scalar = new Vec2(scale, scale);
+
+        inv.push(item);
+
+        this.updateInventoryUI();
+    }
+
+    private updateInventoryUI():void {
+
+        let inv = (<PlayerController>this.player._ai).getPlayerInventory()
+        let scale = this.scene.getViewScale();
+        let scalar = new Vec2(scale, scale);
+
+        for (let i = 0; i < inv.length; i += 1) {
+            let oldSprite = this.itemSprites[i]
+            this.itemSprites[i] = this.scene.add.sprite(inv[i].spriteKey, this.itemLayer);
+            this.itemSprites[i].position.set(this.start.x + i*(this.itemSlots[0].size.x + this.padding), this.start.y).div(scalar);
+            if (oldSprite !== undefined) {
+                oldSprite.destroy();
+            }
+            
+        }
     }
 
     /**
