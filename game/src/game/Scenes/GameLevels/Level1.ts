@@ -13,7 +13,7 @@ import { RatAIOptionType } from "../../AI/Enemy/Rat/RatAI";
 
 import GameLevel from "../GameLevel";
 import LevelEndAI from "../../AI/LevelEnd/LevelEndAI";
-import GameStore from "../../Entities/GameStore";
+import GameStore from "../../AI/Store/StoreItems";
 
 import RatAI from "../../AI/Enemy/Rat/RatAI";
 import RatAttack from "../../AI/Enemy/Rat/RatActions/RatAttack";
@@ -34,14 +34,14 @@ export default class Level1 extends GameLevel {
         this.load.image("itembg", "assets/sprites/itembg.png");
         this.load.image("itembarbg", "assets/sprites/itembarbg.png");
 
-        this.load.spritesheet("player", "assets/spritesheets/player.json");
-        this.load.spritesheet("store_terminal", "assets/spritesheets/store_terminal.json");
+        this.load.spritesheet("player", "assets/spritesheets/player/player.json");
+        this.load.spritesheet("store_terminal", "assets/spritesheets/store/store_terminal.json");
         this.load.spritesheet("brokenGreenPipe", "assets/sprites/BrokenGreenPipe.json");
-        this.load.spritesheet(GameSprites.STORE_BG, "assets/spritesheets/store_layer.json");
-        this.load.spritesheet("rat", "assets/spritesheets/rat.json");
-        this.load.spritesheet("whiteRat", "assets/spritesheets/whiteRat.json");
+        this.load.spritesheet(GameSprites.STORE_BG, "assets/spritesheets/store/store_layer.json");
+        this.load.spritesheet("rat", "assets/spritesheets/enemies/rat.json");
+        this.load.spritesheet("whiteRat", "assets/spritesheets/enemies/whiteRat.json");
         this.load.spritesheet(GameSprites.COIN, "assets/spritesheets/coin.json");
-        this.load.spritesheet("bat", "assets/spritesheets/WhiffleBat.json");
+        // this.load.spritesheet("bat", "assets/spritesheets/WhiffleBat.json");
 
         this.load.object(GameData.NAVMESH, "assets/data/navmeshLevel1.json"); 
         this.load.object(GameData.STORE_ITEMS, "assets/data/items.json");
@@ -88,7 +88,7 @@ export default class Level1 extends GameLevel {
 		this.player.position.set(448, 480);
         // this.player.scale.set(.75, .75);
 
-		let playerCollider = new AABB(Vec2.ZERO, new Vec2(this.player.sizeWithZoom.x / 4, this.player.sizeWithZoom.y / 8));
+		let playerCollider = new AABB(Vec2.ZERO, new Vec2(this.player.sizeWithZoom.x, this.player.sizeWithZoom.y).div(new Vec2(2, 2)));
         this.player.addPhysics();
 		this.player.setCollisionShape(playerCollider);
         
@@ -98,13 +98,28 @@ export default class Level1 extends GameLevel {
     }
 
     initStore(): void {
-        this.store = new GameStore();
-        this.store.node = this.add.animatedSprite("store_terminal", GameLayers.PRIMARY);
-        this.store.node.position.set(1056, 1152);
-        (<AnimatedSprite>this.store.node).scale.set(0.4, 0.4);
-        this.store.node.addAI(StoreController, {radius: 100, player: this.player});
+        let items = [
+            { 
+                "name": "Moldy bread",
+                "cost": 2,
+                "spriteKey": ItemSprites.MOLD_BREAD
+            },
+            {   
+                "name": "More Moldy Bread",
+                "cost": 3,
+                "spriteKey": ItemSprites.MOLD_BREAD
+            },
+            { 
+                "name": "Old Boot",
+                "cost": 5,
+                "spriteKey": ItemSprites.MOLD_BREAD
+            }
+        ];
 
-        this.store.items = this.load.getObject(GameData.STORE_ITEMS);
+        this.store = this.add.animatedSprite("store_terminal", GameLayers.PRIMARY);
+        this.store.position.set(1056, 1152);
+        this.store.scale.set(0.4, 0.4);
+        this.store.addAI(StoreController, {radius: 100, player: this.player, items: items});
     }
 
     initMap(): void {
@@ -175,7 +190,6 @@ export default class Level1 extends GameLevel {
         this.enemies[3] = this.add.animatedSprite("whiteRat", GameLayers.PRIMARY);
         this.enemies[3].position.set(1056, 850);
         this.enemies[3].addPhysics();
-
 
         let options = RatAI.optionsBuilder(RatAIOptionType.DEFAULT, this.player);
         let fastOptions = RatAI.optionsBuilder(RatAIOptionType.FAST, this.player);

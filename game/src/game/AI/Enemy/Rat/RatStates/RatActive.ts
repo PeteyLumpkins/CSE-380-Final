@@ -1,5 +1,8 @@
 import GameEvent from "../../../../../Wolfie2D/Events/GameEvent";
+import Timer from "../../../../../Wolfie2D/Timing/Timer";
+
 import RatState from "./RatState";
+import { EnemyActions } from "../../../../GameEnums";
 import { RatAIStatuses, RatAIEvents } from "../RatAI";
 
 
@@ -11,11 +14,15 @@ export default class RatActive extends RatState {
 
     handleInput(event: GameEvent): void {
         super.handleInput(event);
-     }
+    }
 
     update(deltaT: number): void {
 
         super.update(deltaT);
+
+        if (this.isDead()) {
+            return;
+        }
 
         if (!this.inAttackRange(this.parent.player.position)) {
             let i = this.parent.currentStatus.indexOf(RatAIStatuses.IN_RANGE);
@@ -30,7 +37,11 @@ export default class RatActive extends RatState {
         let result = nextAction.performAction(this.parent.currentStatus, this.parent, deltaT);
        
         if (result !== null) {
-            this.parent.plan.pop()
+            this.parent.plan.pop();
+
+            if (result.toString() === EnemyActions.ATTACK) {
+                this.attackCooldownTimer.start();
+            }
 
             // Adds statuses to the current status of the
             if (!result.includes(RatAIStatuses.GOAL_REACHED)) {

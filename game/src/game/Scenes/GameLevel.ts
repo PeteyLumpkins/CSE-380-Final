@@ -9,27 +9,15 @@ import MainMenu from "./GameLevels/MainMenu";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 
-/* Imports for the navmesh */
-import Navmesh from "../../Wolfie2D/Pathfinding/Navmesh";
-import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
-import PositionGraph from "../../Wolfie2D/DataTypes/Graphs/PositionGraph";
-import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
-
-import GameNode from "../../Wolfie2D/Nodes/GameNode";
-import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
-import Input from "../../Wolfie2D/Input/Input";
-
-import PlayerController from "../AI/Player/PlayerController";
-import StoreController from "../AI/Store/StoreController";
-
 import { GameEvents, GameLayers, GameSprites, GameData, StoreEvents, ItemSprites } from "../GameEnums";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import { PlayerEvents } from "../AI/Player/PlayerController";
-import GameStore from "../Entities/GameStore";
+import GameStore from "../AI/Store/StoreItems";
 
 import InventoryManager from "../GameSystems/InventoryManager";
 import PauseManager from "../GameSystems/PauseManager";
 import StoreManager from "../GameSystems/StoreManager";
+import GameNode from "../../Wolfie2D/Nodes/GameNode";
 
 export enum UILayers {
     ITEM_BAR = "UI_LAYER_ITEM_BAR",
@@ -54,7 +42,7 @@ export default abstract class GameLevel extends Scene {
     protected player: AnimatedSprite;
 
     /* PLAYER UI STATS */
-    protected playerHealth: number;
+    protected playerHealth: number = 20;
     protected playerHealthLabel: Label;
 
     protected playerMoney: number = 0;
@@ -72,32 +60,35 @@ export default abstract class GameLevel extends Scene {
     protected enemies: Array<AnimatedSprite>;
 
     /* GAME STORE */
-    protected store: GameStore;
+    protected store: AnimatedSprite;
     
     /* UI MANAGERS */
     protected storeManager: StoreManager;
     protected pauseManager: PauseManager;
     protected inventoryManager: InventoryManager;
 
-
     loadScene(): void {}
 
     startScene(): void {
 
-        // Init layers
-        this.addPauseUILayers();
-        this.addStoreUILayers();
+        this.initViewport();
+        this.initPlayer();
 
-        this.inventoryManager = new InventoryManager(this, 9, 16, new Vec2(450, 24), UILayers.ITEM_SLOTS, "itembg", UILayers.ITEM_SPRITES);
+
+        this.addPrimaryUILayers();
+        this.initUIPrimary();
+
+        this.addItemUILayers();
+        this.inventoryManager = new InventoryManager(this, this.player, 9, 16, new Vec2(450, 24), UILayers.ITEM_SLOTS, "itembg", UILayers.ITEM_SPRITES);
 
         this.initUIPrimary();
         this.pauseManager = new PauseManager(this, [GameLayers.PRIMARY], GameLayers.PAUSED);
 
+        this.addStoreUILayers();
         this.storeManager = new StoreManager(
             this, 
             GameSprites.STORE_BG, 
             3, 
-            [ItemSprites.MOLD_BREAD, ItemSprites.MOLD_BREAD, ItemSprites.MOLD_BREAD], 
             UILayers.STORE_BG,
             UILayers.STORE_ITEMS, 
             UILayers.STORE_NAMES, 
@@ -105,6 +96,10 @@ export default abstract class GameLevel extends Scene {
             UILayers.STORE_CONTROLS
         );
 
+        /* Init the level links of the game level */
+        this.initLevelLinks();
+
+        /* Subscribe to any events */
         this.subscribeToEvents();
     }
 
@@ -115,28 +110,32 @@ export default abstract class GameLevel extends Scene {
 
         this.pauseManager.update(deltaT);
         this.storeManager.update(deltaT);
-
-        this.store.update(deltaT);
+        this.inventoryManager.update(deltaT);
     }
 
-    protected addPauseUILayers(): void {
-
-        /* Add layers */
+    private addPrimaryUILayers(): void {
         this.addUILayer(UILayers.ITEM_BAR);
         this.addUILayer(UILayers.PRIMARY);
+
+        /* Set depths of layers */
+        this.getLayer(UILayers.PRIMARY).setDepth(1);
+        this.getLayer(UILayers.ITEM_BAR).setDepth(0);
+    }
+
+    private addItemUILayers(): void {
+
+        /* Add layers */
         this.addUILayer(UILayers.ITEM_SLOTS);
         this.addUILayer(UILayers.ITEM_SPRITES);
 
         this.addUILayer(UILayers.PAUSED);
 
         /* Set layer depths */
-        this.getLayer(UILayers.ITEM_BAR).setDepth(0);
-        this.getLayer(UILayers.PRIMARY).setDepth(1);
         this.getLayer(UILayers.ITEM_SLOTS).setDepth(1);
         this.getLayer(UILayers.ITEM_SPRITES).setDepth(2);
     }
 
-    protected addStoreUILayers(): void {
+    private addStoreUILayers(): void {
 
         /* Add layers */
         this.addUILayer(UILayers.STORE_BG);
@@ -153,7 +152,7 @@ export default abstract class GameLevel extends Scene {
         this.getLayer(UILayers.STORE_CONTROLS).setDepth(1);
     }
 
-    protected subscribeToEvents(): void {
+    private subscribeToEvents(): void {
         console.log("Subscribing to events");
         this.receiver.subscribe(GameEvents.CHANGE_LEVEL);
         this.receiver.subscribe(GameEvents.PAUSE);
@@ -166,7 +165,7 @@ export default abstract class GameLevel extends Scene {
         // this.receiver.subscribe(GameEventType.KEY_DOWN);
     }
 
-    protected handleGameEvent(event: GameEvent) {
+    private handleGameEvent(event: GameEvent) {
         switch(event.type) {
             case GameEvents.PAUSE: {
                 console.log("Pause event caught!");
@@ -268,6 +267,8 @@ export default abstract class GameLevel extends Scene {
         this.itemBarBackground.position.set(this.viewport.getCenter().x, 32).div(scalar);
         this.itemBarBackground.scale.div(scalar);
     }
+
+
 
     /**
      * Override and set the zoom of the viewport here

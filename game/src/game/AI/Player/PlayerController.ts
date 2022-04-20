@@ -104,7 +104,7 @@ export default class PlayerController extends StateMachineAI {
 	}
 
 	// All item pickup events should have a "type"
-	handleItemPickupEvent(event: GameEvent): void {
+	private handleItemPickupEvent(event: GameEvent): void {
 		switch(event.data.get("type")) {
 
 			case PickupTypes.MONEY: {
@@ -121,9 +121,13 @@ export default class PlayerController extends StateMachineAI {
 	}
 
 	// TODO: handles when an enemy trys to attack the player
-	handleEnemyAttackEvent(event: GameEvent): void {
+	private handleEnemyAttackEvent(event: GameEvent): void {
 		this.health -= 1;
 		this.emitter.fireEvent(PlayerEvents.HEALTH_CHANGE, {amount: this.health});
+	}
+
+	getPlayerMoney(): number { 
+		return this.money;
 	}
 
 	destroy(): void {}

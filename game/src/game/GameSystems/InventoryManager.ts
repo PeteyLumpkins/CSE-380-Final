@@ -1,18 +1,32 @@
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
+import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
+
+import Emitter from "../../Wolfie2D/Events/Emitter";
+import Receiver from "../../Wolfie2D/Events/Receiver";
+import GameEvent from "../../Wolfie2D/Events/GameEvent";
+
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import Color from "../../Wolfie2D/Utils/Color";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Updateable from "../../Wolfie2D/DataTypes/Interfaces/Updateable";
 
-import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
+import { StoreEvent } from "./StoreManager";
+import GameNode from "../../Wolfie2D/Nodes/GameNode";
+
 
 /**
  * Manages the player inventory that is displayed in the GameLevel UI
  */
 export default class InventoryManager implements Updateable {
 
+    /* Important stuff */
     private scene: Scene;
+    private player: GameNode;
+
+    /* Event handling stuff */
+    private receiver: Receiver;
+    private emitter: Emitter;
 
     private start: Vec2;
     private padding: number;
@@ -20,18 +34,21 @@ export default class InventoryManager implements Updateable {
     private itemSlotNums: Array<Label>;
     private itemSprites: Array<Sprite>;
 
+    /* Inventory UI Layers */
     private slotSprite: string;
     private itemLayer: string;
     private slotLayer: string;
 
     private size: number;
 
-    /* This will be an array of item sprite strings? */
-    private inventory: Array<String>;
-
-    constructor(scene: Scene, size: number, padding: number, start: Vec2, itemLayer: string, slotSprite: string, slotLayer: string) {
+    constructor(scene: Scene, player: GameNode, size: number, padding: number, start: Vec2, itemLayer: string, slotSprite: string, slotLayer: string) {
 
         this.scene = scene;
+        this.receiver = new Receiver();
+        this.emitter = new Emitter();
+
+        this.receiver.subscribe(StoreEvent.ITEM_PURCHASED);
+
         this.size = size;
         this.padding = padding;
         this.start = start;
@@ -80,11 +97,26 @@ export default class InventoryManager implements Updateable {
 
     unsetSlot(slot: number): Sprite { return; }
 
+    private handleEvent(event: GameEvent): void {
+        switch(event.type) {
+            case StoreEvent.ITEM_PURCHASED: {
+                console.log("Item purchased event caught in invetory handler");
+                console.log(event.data.get("item"));
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+    }
+
     /**
      * Updates the inventory being displayed in the UI
      */
     update(deltaT: number): void {
-
+        while (this.receiver.hasNextEvent()) {
+            this.handleEvent(this.receiver.getNextEvent())
+        }
     }
 
 
