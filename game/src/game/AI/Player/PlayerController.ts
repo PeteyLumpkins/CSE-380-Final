@@ -1,31 +1,17 @@
-import AI from "../../../Wolfie2D/DataTypes/Interfaces/AI";
-import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
-import Debug from "../../../Wolfie2D/Debug/Debug";
-import Emitter from "../../../Wolfie2D/Events/Emitter";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
-import Receiver from "../../../Wolfie2D/Events/Receiver";
-import Input from "../../../Wolfie2D/Input/Input";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import StateMachineAI from "../../../Wolfie2D/AI/StateMachineAI";
 import OrthogonalTilemap from "../../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
-import MathUtils from "../../../Wolfie2D/Utils/MathUtils";
 
-import IdleLeft from "./PlayerStates/Idle/IdleLeft";
-import IdleRight from "./PlayerStates/Idle/IdleRight";
-import IdleDown from "./PlayerStates/Idle/IdleDown";
-import IdleUp from "./PlayerStates/Idle/IdleUp";
+import {
 
-import MovingLeft from "./PlayerStates/Move/MovingLeft";
-import MovingRight from "./PlayerStates/Move/MovingRight";
-import MovingDown from "./PlayerStates/Move/MovingDown";
-import MovingUp from "./PlayerStates/Move/MovingUp";
+	IdleLeft, IdleRight, IdleDown, IdleUp,
+	MovingLeft, MovingRight, MovingDown, MovingUp,
+	PunchLeft, PunchRight, PunchDown, PunchUp
 
-import PunchLeft from "./PlayerStates/Punch/PunchLeft";
-import PunchRight from "./PlayerStates/Punch/PunchRight";
-import PunchDown from "./PlayerStates/Punch/PunchDown";
-import PunchUp from "./PlayerStates/Punch/PunchUp";
+} from "./PlayerStates/PlayerState";
 
-import {GameEvents, EnemyActions } from "../../GameEnums";
+import { GameEvents, EnemyActions } from "../../GameEnums";
 import {PickupTypes} from "../Pickup/PickupTypes";
 
 export enum PlayerStates {

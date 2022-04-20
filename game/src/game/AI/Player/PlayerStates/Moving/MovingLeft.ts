@@ -1,6 +1,5 @@
 import Vec2 from "../../../../../Wolfie2D/DataTypes/Vec2";
 import { PlayerStates } from "../../PlayerController";
-import PlayerState from "../PlayerState";
 import Moving from "./Moving";
 
 export default class MovingLeft extends Moving {

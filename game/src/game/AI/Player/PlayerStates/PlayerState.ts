@@ -1,5 +1,4 @@
 import State from "../../../../Wolfie2D/DataTypes/State/State";
-import StateMachineAI from "../../../../Wolfie2D/AI/StateMachineAI";
 import StateMachine from "../../../../Wolfie2D/DataTypes/State/StateMachine";
 import AnimatedSprite from "../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
@@ -8,7 +7,6 @@ import Timer from "../../../../Wolfie2D/Timing/Timer";
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 
 import PlayerController from "../PlayerController";
-import { EnemyActions } from "../../../GameEnums";
 import { PlayerEvents } from "../../Player/PlayerController";
 
 export default abstract class PlayerState extends State {
@@ -63,7 +61,17 @@ export default abstract class PlayerState extends State {
      * Regardless of the players state (attacking or moving), they should be able to move
      */
 	update(deltaT: number): void {
-		this.owner.move(this.getInputDirection().mult(new Vec2(this.speedScale, this.speedScale)));
+		this.owner.move(this.getInputDirection().mult(new Vec2(this.speedScale, this.speedScale))); 
 	}
 
+}
+
+import { IdleLeft, IdleRight, IdleDown, IdleUp } from "./Idle/Idle";
+import { MovingLeft, MovingRight, MovingDown, MovingUp } from "./Moving/Moving";
+import { PunchLeft, PunchRight, PunchDown, PunchUp } from "./Punch/Punch";
+
+export {
+	IdleLeft, IdleRight, IdleDown, IdleUp,
+	MovingLeft, MovingRight, MovingDown, MovingUp,
+	PunchLeft, PunchRight, PunchDown, PunchUp
 }
