@@ -7,7 +7,6 @@ import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
 import { MenuImages, MenuEvents, MenuLayers } from "../../GameEnums";
 import GameLevel from "../GameLevel";
 import Level1 from "./Level1";
-import PrototypeLevel from "../TestLevels/PrototypeLevel";
 import Label from "../../../Wolfie2D/Nodes/UIElements/Label";
 
 /** 
@@ -45,6 +44,7 @@ export default class MainMenu extends Scene {
     startScene(){
         // When we return to main menu from the game -> need to reset the viewport bounds
         this.viewport.setBounds(0, 0, 1024, 1024);
+        this.viewport.setZoomLevel(1);
 
         // The background layer
         this.background = this.addLayer(MenuLayers.BACKGROUND, 0);

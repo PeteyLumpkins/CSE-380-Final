@@ -7,7 +7,7 @@ export default class PickedUp extends PickupState {
     onEnter(): void {
         this.owner.tweens.play("pickup");
         this.emitter.fireEvent(GameEvents.PICKUP_ITEM, this.parent.getData());
-        this.parent.destroy();
+        this.owner.destroy();
     }
 
     handleInput(): void {
