@@ -1,14 +1,14 @@
 {
     "name": "TopdownPlayer",
     "spriteSheetImage": "player.png",
-    "spriteWidth": 32,
-    "spriteHeight": 48,
+    "spriteWidth": 64,
+    "spriteHeight": 64,
     "columns": 9,
     "leftBuffer": 0,
     "rightBuffer": 0,
     "topBuffer": 0,
     "bottomBuffer": 0,
-    "rows": 5,
+    "rows": 9,
     "durationType": "time",
     "animations": [
         { 
