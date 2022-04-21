@@ -3,7 +3,7 @@ import OrthogonalTilemap from "../../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilema
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import StoreController from "../../AI/Store/StoreController";
 import PlayerController from "../../AI/Player/PlayerController";
-import { GameSprites, EnemyStatuses, GameData, ItemSprites, GameLayers } from "../../GameEnums";
+import { GameSprites, GameData, ItemSprites, GameLayers } from "../../GameEnums";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import PositionGraph from "../../../Wolfie2D/DataTypes/Graphs/PositionGraph";
 import Navmesh from "../../../Wolfie2D/Pathfinding/Navmesh";
@@ -45,6 +45,7 @@ export default class Level1 extends GameLevel {
 
         this.load.object(GameData.NAVMESH, "assets/data/navmeshLevel1.json"); 
         this.load.object(GameData.STORE_ITEMS, "assets/data/items.json");
+        this.load.object("enemyData", "assets/data/enemyLevel1.json");
 
         this.load.image(ItemSprites.MOLD_BREAD, "assets/itemsprites/moldBread.png");
         this.load.image(ItemSprites.OLD_BOOT, "assets/itemsprites/oldBoot.png");
@@ -69,7 +70,7 @@ export default class Level1 extends GameLevel {
     }
 
     initViewport(): void {
-        this.viewport.setZoomLevel(3);
+        this.viewport.setZoomLevel(1);
     }
 
     initPlayer(): void {
@@ -166,30 +167,19 @@ export default class Level1 extends GameLevel {
     }
 
     initEnemies(): void {
-        // this.enemies = new Array<AnimatedSprite>();
-        // this.enemies[0] = this.add.animatedSprite("rat", GameLayers.PRIMARY);
-        // this.enemies[0].position.set(1056, 1024);
-        // this.enemies[0].addPhysics();
+        
+        this.enemies = new Array<AnimatedSprite>();
+        let enemyData = this.load.getObject("enemyData");
+        let options = RatAI.optionsBuilder(RatAIOptionType.FAST, this.player);
 
-        // this.enemies[1] = this.add.animatedSprite("rat", GameLayers.PRIMARY);
-        // this.enemies[1].position.set(1056, 928);
-        // this.enemies[1].addPhysics();
+        for (let i = 0; i < enemyData.enemies.length; i++) {
+            this.enemies[i] = this.add.animatedSprite("rat", GameLayers.PRIMARY);
+            this.enemies[i].position.set(enemyData.enemies[i].position[0], enemyData.enemies[i].position[1]);
+            this.enemies[i].addAI(RatAI, options);
+            this.enemies[i].addPhysics();
 
-        // this.enemies[2] = this.add.animatedSprite("rat", GameLayers.PRIMARY);
-        // this.enemies[2].position.set(1056, 976);
-        // this.enemies[2].addPhysics();
-
-        // this.enemies[3] = this.add.animatedSprite("whiteRat", GameLayers.PRIMARY);
-        // this.enemies[3].position.set(1056, 850);
-        // this.enemies[3].addPhysics();
-
-        // let options = RatAI.optionsBuilder(RatAIOptionType.DEFAULT, this.player);
-        // let fastOptions = RatAI.optionsBuilder(RatAIOptionType.FAST, this.player);
-
-        // this.enemies[0].addAI(RatAI, options);
-        // this.enemies[1].addAI(RatAI, options);
-        // this.enemies[2].addAI(RatAI, options);
-        // this.enemies[3].addAI(RatAI, fastOptions);
+            console.log(this.enemies[i]);
+        }
 
     }
 }

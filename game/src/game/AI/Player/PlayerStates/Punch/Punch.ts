@@ -5,7 +5,7 @@ import PlayerState from "../PlayerState";
 export default abstract class Punch extends PlayerState {
 
     onEnter(options: Record<string, any> ): void {
-        this.attackTimer.start(880*2);
+        this.attackTimer.start(880/2);
     }
 
     update(deltaT: number): void {

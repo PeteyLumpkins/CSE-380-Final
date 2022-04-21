@@ -37,17 +37,17 @@
             "name": "PUNCH_DOWN",
             "repeat": true,
             "frames": [ 
-                {"index": 8, "duration": 8}, 
-                {"index": 9, "duration": 8}, 
-                {"index": 10, "duration": 8}, 
-                {"index": 11, "duration": 8}, 
-                {"index": 12, "duration": 8}, 
-                {"index": 13, "duration": 8}, 
-                {"index": 14, "duration": 8}, 
-                {"index": 15, "duration": 8}, 
-                {"index": 16, "duration": 8}, 
-                {"index": 17, "duration": 8},
-                {"index": 18, "duration": 8}   
+                {"index": 8, "duration": 2}, 
+                {"index": 9, "duration": 2}, 
+                {"index": 10, "duration": 2}, 
+                {"index": 11, "duration": 2}, 
+                {"index": 12, "duration": 2}, 
+                {"index": 13, "duration": 2}, 
+                {"index": 14, "duration": 2}, 
+                {"index": 15, "duration": 2}, 
+                {"index": 16, "duration": 2}, 
+                {"index": 17, "duration": 2},
+                {"index": 18, "duration": 2}   
  
             ]
         },
@@ -76,17 +76,17 @@
             "name": "PUNCH_UP",
             "repeat": true,
             "frames": [ 
-                {"index": 25, "duration": 8}, 
-                {"index": 26, "duration": 8}, 
-                {"index": 27, "duration": 8}, 
-                {"index": 28, "duration": 8}, 
-                {"index": 29, "duration": 8}, 
-                {"index": 30, "duration": 8}, 
-                {"index": 31, "duration": 8}, 
-                {"index": 32, "duration": 8}, 
-                {"index": 33, "duration": 8}, 
-                {"index": 34, "duration": 8},
-                {"index": 35, "duration": 8}   
+                {"index": 25, "duration": 2}, 
+                {"index": 26, "duration": 2}, 
+                {"index": 27, "duration": 2}, 
+                {"index": 28, "duration": 2}, 
+                {"index": 29, "duration": 2}, 
+                {"index": 30, "duration": 2}, 
+                {"index": 31, "duration": 2}, 
+                {"index": 32, "duration": 2}, 
+                {"index": 33, "duration": 2}, 
+                {"index": 34, "duration": 2},
+                {"index": 35, "duration": 2}   
  
             ]
         },
@@ -118,17 +118,17 @@
             "name": "PUNCH_RIGHT",
             "repeat": true,
             "frames": [ 
-                {"index": 43, "duration": 8}, 
-                {"index": 44, "duration": 8}, 
-                {"index": 45, "duration": 8}, 
-                {"index": 46, "duration": 8}, 
-                {"index": 47, "duration": 8}, 
-                {"index": 48, "duration": 8}, 
-                {"index": 49, "duration": 8}, 
-                {"index": 45, "duration": 8}, 
-                {"index": 50, "duration": 8}, 
-                {"index": 51, "duration": 8}, 
-                {"index": 52, "duration": 8}
+                {"index": 43, "duration": 2}, 
+                {"index": 44, "duration": 2}, 
+                {"index": 45, "duration": 2}, 
+                {"index": 46, "duration": 2}, 
+                {"index": 47, "duration": 2}, 
+                {"index": 48, "duration": 2}, 
+                {"index": 49, "duration": 2}, 
+                {"index": 45, "duration": 2}, 
+                {"index": 50, "duration": 2}, 
+                {"index": 51, "duration": 2}, 
+                {"index": 52, "duration": 2}
 
             ]
         },
@@ -147,14 +147,14 @@
             "name": "WALK_LEFT",
             "repeat": true,
             "frames": [ 
-                {"index": 53, "duration": 16}, 
-                {"index": 56, "duration": 16}, 
-                {"index": 57, "duration": 16}, 
-                {"index": 56, "duration": 16},
-                {"index": 53, "duration": 16}, 
-                {"index": 58, "duration": 16}, 
-                {"index": 59, "duration": 16}, 
-                {"index": 60, "duration": 16}
+                {"index": 53, "duration": 8}, 
+                {"index": 56, "duration": 8}, 
+                {"index": 57, "duration": 8}, 
+                {"index": 56, "duration": 8},
+                {"index": 53, "duration": 8}, 
+                {"index": 58, "duration": 8}, 
+                {"index": 59, "duration": 8}, 
+                {"index": 60, "duration": 8}
 
             ]
         },
@@ -162,17 +162,17 @@
             "name": "PUNCH_LEFT",
             "repeat": true,
             "frames": [ 
-                {"index": 60, "duration": 8}, 
-                {"index": 61, "duration": 8}, 
-                {"index": 62, "duration": 8}, 
-                {"index": 63, "duration": 8}, 
-                {"index": 64, "duration": 8}, 
-                {"index": 65, "duration": 8}, 
-                {"index": 66, "duration": 8}, 
-                {"index": 62, "duration": 8}, 
-                {"index": 67, "duration": 8}, 
-                {"index": 68, "duration": 8}, 
-                {"index": 69, "duration": 8}
+                {"index": 60, "duration": 2}, 
+                {"index": 61, "duration": 2}, 
+                {"index": 62, "duration": 2}, 
+                {"index": 63, "duration": 2}, 
+                {"index": 64, "duration": 2}, 
+                {"index": 65, "duration": 2}, 
+                {"index": 66, "duration": 2}, 
+                {"index": 62, "duration": 2}, 
+                {"index": 67, "duration": 2}, 
+                {"index": 68, "duration": 2}, 
+                {"index": 69, "duration": 2}
 
             ]
         }

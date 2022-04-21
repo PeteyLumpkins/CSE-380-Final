@@ -48,6 +48,6 @@ export default abstract class RatState extends State {
     }
 
     inAttackRange(position: Vec2) {
-        return this.owner.position.distanceTo(position) <= this.parent.swarmRange;
+        return this.owner.position.distanceTo(position) <= this.parent.attackRange;
     }
 }

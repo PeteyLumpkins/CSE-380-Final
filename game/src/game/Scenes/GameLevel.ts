@@ -5,7 +5,6 @@ import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
-import MainMenu from "./GameLevels/MainMenu";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 
@@ -231,11 +230,11 @@ export default abstract class GameLevel extends Scene {
         },
 
         moneyChange: (ev: GameEvent) => {
-            this.playerMoneyLabel.text = `Peter's Money: ${ev.data.get("amount")}`;
+            this.playerMoneyLabel.text = `Money: ${ev.data.get("amount")}`;
         },
 
         healthChange: (ev: GameEvent) => {
-            this.playerHealthLabel.text = `Peter's Health: ${ev.data.get("amount")}`;
+            this.playerHealthLabel.text = `Health: ${ev.data.get("amount")}`;
         }
     }
 

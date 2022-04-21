@@ -15,7 +15,12 @@ export default class Enabled extends StoreState {
         if (!this.inRange(this.parent.getPlayerPosition())) {
             this.finished(StoreStates.DISABLED);
         } else if (Input.isPressed("open")) {
-            this.finished(StoreStates.OPEN);
+            if (!this.justToggled) {
+                this.justToggled = true;
+                this.finished(StoreStates.OPEN);
+            }
+        } else {
+            this.justToggled = false;
         }
     }
 

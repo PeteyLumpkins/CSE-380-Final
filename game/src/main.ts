@@ -21,16 +21,17 @@ import ItemRegistry from "./game/Registry/ItemRegistry";
             { name: "right", keys: ["d"] },
             { name: "pause", keys: ["escape"]},
             { name: "open", keys: ["e"]},
-            { name: "close", keys: ["2"]},
+            { name: "close", keys: ["e"]},
             { name: "nextlvl", keys: ["3"]},
-            { name: "attack", keys: ["space"]}
+            { name: "attack", keys: ["space"]},
+            { name: "dropItem", keys: ["1", "2", "3", "4", "5", "6", "7", "8", "9"]}
         ],
         useWebGL: false,                        // Tell the game we want to use webgl
         showDebug: false                       // Whether to show debug messages. You can change this to true if you want
     }
     // Sets up custom registries like HW4:
-    let itemRegistry = new ItemRegistry();
-    RegistryManager.addCustomRegistry("items", itemRegistry);
+    // let itemRegistry = new ItemRegistry();
+    // RegistryManager.addCustomRegistry("items", itemRegistry);
 
     // Create a game with the options specified
     const game = new Game(options);

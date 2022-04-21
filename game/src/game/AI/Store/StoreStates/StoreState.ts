@@ -12,9 +12,12 @@ export default abstract class StoreState extends State {
     protected parent: StoreController;
     protected owner: AnimatedSprite;
 
+    protected justToggled: boolean;
+
     constructor(parent: StateMachine, owner: AnimatedSprite){
 		super(parent);
 		this.owner = owner;
+        this.justToggled = false;
 	}
 
     handleInput(event: GameEvent): void {

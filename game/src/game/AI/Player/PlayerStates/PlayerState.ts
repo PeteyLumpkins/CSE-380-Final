@@ -40,7 +40,7 @@ export default abstract class PlayerState extends State {
 	// Gets called after the player has finished attacking
 	sendPlayerAttacked(position: Vec2) {
 		console.log("Firing attack event");
-		this.emitter.fireEvent(PlayerEvents.ATTACKED, {position: position, range: 50, damage: 5});
+		this.emitter.fireEvent(PlayerEvents.ATTACKED, {position: position, range: 75, damage: 5});
 	}
 
 	/** 
