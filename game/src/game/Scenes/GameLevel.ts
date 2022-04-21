@@ -167,7 +167,7 @@ export default abstract class GameLevel extends Scene {
 
         this.receiver.subscribe(PlayerEvents.MONEY_CHANGE);
         this.receiver.subscribe(PlayerEvents.HEALTH_CHANGE);
-        // this.receiver.subscribe(GameEventType.KEY_DOWN);
+        this.receiver.subscribe(GameEventType.KEY_DOWN);
     }
 
     private handleGameEvent(event: GameEvent) {

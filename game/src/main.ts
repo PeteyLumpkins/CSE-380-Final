@@ -18,7 +18,7 @@ import GameLevel from "./game/Scenes/GameLevel";
             { name: "left", keys: ["a"] },
             { name: "right", keys: ["d"] },
             { name: "pause", keys: ["escape"]},
-            { name: "open", keys: ["1"]},
+            { name: "open", keys: ["e"]},
             { name: "close", keys: ["2"]},
             { name: "nextlvl", keys: ["3"]},
             { name: "attack", keys: ["space"]}

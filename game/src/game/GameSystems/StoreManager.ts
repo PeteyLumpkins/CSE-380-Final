@@ -9,8 +9,6 @@ import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button"
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
-import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
-import UILayer from "../../Wolfie2D/Scene/Layers/UILayer";
 
 import Emitter from "../../Wolfie2D/Events/Emitter";
 import Receiver from "../../Wolfie2D/Events/Receiver";
