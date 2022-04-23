@@ -30,8 +30,8 @@ import ItemRegistry from "./game/Registry/ItemRegistry";
         showDebug: false                       // Whether to show debug messages. You can change this to true if you want
     }
     // Sets up custom registries like HW4:
-    // let itemRegistry = new ItemRegistry();
-    // RegistryManager.addCustomRegistry("items", itemRegistry);
+    let itemRegistry = new ItemRegistry();
+    RegistryManager.addCustomRegistry("items", itemRegistry);
 
     // Create a game with the options specified
     const game = new Game(options);

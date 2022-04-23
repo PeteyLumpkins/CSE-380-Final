@@ -3,6 +3,7 @@ import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
 
+import Input from "../../Wolfie2D/Input/Input";
 import Emitter from "../../Wolfie2D/Events/Emitter";
 import Receiver from "../../Wolfie2D/Events/Receiver";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
@@ -13,6 +14,7 @@ import Scene from "../../Wolfie2D/Scene/Scene";
 import Updateable from "../../Wolfie2D/DataTypes/Interfaces/Updateable";
 
 import { StoreEvent } from "./StoreManager";
+import { GameLayers } from "../GameEnums";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import PlayerController from "../AI/Player/PlayerController";
 
@@ -137,6 +139,10 @@ export default class InventoryManager implements Updateable {
         let inv = (<PlayerController>this.player._ai).getPlayerInventory();
 
         if (inv[index] !== undefined && inv[index] !== null) {
+            let itemDrop = this.scene.add.sprite(inv[index].spriteKey, GameLayers.PRIMARY);
+            itemDrop.position.set(this.player.position.x, this.player.position.y);
+            itemDrop.scale.set(2, 2);
+
             inv.splice(index, 1);
             this.updateInventoryUI();
         }
@@ -171,6 +177,7 @@ export default class InventoryManager implements Updateable {
      * Updates the inventory being displayed in the UI
      */
     update(deltaT: number): void {
+
         while (this.receiver.hasNextEvent()) {
             this.handleEvent(this.receiver.getNextEvent())
         }

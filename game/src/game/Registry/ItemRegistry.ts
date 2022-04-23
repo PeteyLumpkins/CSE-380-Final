@@ -12,24 +12,6 @@ export default class ItemRegistry extends Registry<Item>{
         rm.image("mystery liquid", "assets/ItemSprites/mysteryLiquid.png");
         rm.image("old boot", "assets/ItemSprites/oldBoot.png");
 
-
-        let itemData=rm.getObject("itemData");
-        console.log(itemData);
-
-        //Registers all the items in the json:
-        //should this be done in preload? I know that this is done in the scene in HW4
-        for(let i=0; i<itemData.numItems; i++ ){
-            //creates an item type
-            let itemType = new Item();
-
-            //initialize the item type with data
-            itemType.initialize(itemData.items[i]);
-
-            //Inserts into register, with its name in the json as the key
-            this.registerItem(itemData.items[i].name, itemType);
-
-
-        }
     }
     
     //Unused:
