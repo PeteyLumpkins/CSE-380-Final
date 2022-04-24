@@ -26,7 +26,9 @@ export default class PunchUp extends Punch {
             this.finished(PlayerStates.PUNCH_RIGHT);
         } else if (dir.y > 0) {
             this.finished(PlayerStates.PUNCH_DOWN);
-        } 
+        } else {
+            this.finished(PlayerStates.PUNCH_UP);
+        }
     }
 
     onExit(): Record<string, any> {

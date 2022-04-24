@@ -87,7 +87,7 @@ export default class Level1 extends GameLevel {
 
         let playerNode = this.add.animatedSprite("player", GameLayers.PRIMARY);
         let inventory = new Array<string>();
-        let stats = {"HEALTH": 20, "MONEY": 10};
+        let stats = {"HEALTH": 20, "MONEY": 10, "MOVE_SPEED": 1};
 
         this.player = new Player(playerNode, inventory, stats);
 
@@ -102,7 +102,7 @@ export default class Level1 extends GameLevel {
 
     initStore(): void {
     
-        let items = ["moldy_bread", "old_boot", "moldy_bread"];
+        let items = ["moldy_bread", "old_boot", "mystery_liquid"];
 
         this.store = this.add.animatedSprite("store_terminal", GameLayers.PRIMARY);
         this.store.position.set(1056, 1152);

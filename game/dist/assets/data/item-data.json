@@ -4,18 +4,15 @@
         "spriteKey": "old_boot",
         "cost": 1,
         "buffs": [
-            {"type": "HEALTH", "scale": 1}, 
-            {"type": "SPEED", "scale": 0.5},
-            {"type": "ATTACK", "scale": 2}
+            {"type": "MOVE_SPEED", "scale": 0.5}
         ]
     }, 
     "mystery_liquid" : {
         "name": "Mystery Liquid",
         "cost": 2,
         "buffs": [
-            {"type": "HEALTH", "scale": 1}, 
-            {"type": "SPEED", "scale": 2},
-            {"type": "ATTACK", "scale": 1}
+            {"type": "MOVE_SPEED", "scale": 2},
+            {"type": "ATTACK_DMG", "scale": 10}
         ]
     }, 
     "moldy_bread" : {
@@ -23,9 +20,7 @@
         "spriteKey": "moldy_bread",
         "cost": 3,
         "buffs": [
-            {"type": "HEALTH", "scale": 0.5}, 
-            {"type": "SPEED", "scale": 1},
-            {"type": "ATTACK", "scale": 1}
+            
         ]
     }
 }

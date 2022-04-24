@@ -129,7 +129,7 @@ export default class RatAI extends EnemyAI {
                         new RatAttack(3, [RatAIStatuses.IN_RANGE], [RatAIStatuses.GOAL_REACHED]),
                         new RatMove(4, [], [RatAIStatuses.IN_RANGE])
                     ],
-                    health: 20,
+                    health: 5,
                     sightRange: 100,
                     swarmRange: 50,
                     moveSpeed: 100,
@@ -147,7 +147,7 @@ export default class RatAI extends EnemyAI {
                         new RatAttack(3, [RatAIStatuses.IN_RANGE], [RatAIStatuses.GOAL_REACHED]),
                         new RatMove(4, [], [RatAIStatuses.IN_RANGE])
                     ],
-                    health: 10,
+                    health: 5,
                     sightRange: 200,
                     swarmRange: 50,
                     moveSpeed: 150,

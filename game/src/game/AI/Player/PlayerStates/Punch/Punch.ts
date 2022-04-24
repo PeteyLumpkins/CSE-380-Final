@@ -13,6 +13,7 @@ export default abstract class Punch extends PlayerState {
 
         let dir = this.getInputDirection();
         let attacking = this.isAttacking();
+        console.log(attacking);
 
         if (attacking) {
             this.attack(dir);

@@ -14,6 +14,7 @@ import {
 
 import { GameEvents, EnemyActions } from "../../GameEnums";
 import { PickupTypes } from "../Pickup/PickupTypes";
+import { PlayerStat } from "../../Player/PlayerStats";
 
 import PlayerStats from "../../Player/PlayerStats";
 import PlayerInventory from "../../Player/PlayerInventory";
@@ -45,9 +46,9 @@ export enum PlayerEvents {
 export default class PlayerController extends StateMachineAI {
 	// We want to be able to control our owner, so keep track of them
 
-	protected owner: AnimatedSprite;
-	protected playerInventory: PlayerInventory;
-	protected playerStats: PlayerStats;
+	owner: AnimatedSprite;
+	playerInventory: PlayerInventory;
+	playerStats: PlayerStats;
 	
 
 	initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
@@ -136,7 +137,12 @@ export default class PlayerController extends StateMachineAI {
 
 	// TODO: handles when an enemy trys to attack the player
 	private handleEnemyAttackEvent(event: GameEvent): void {
-		
+		/** Checks to see if player has a damage resisit buff applied? */
+		let damageResist = this.playerStats.getStat(PlayerStat.DMG_RESIST) !== null ? this.playerStats.getStat(PlayerStat.DMG_RESIST) : 1;
+		let damage = event.data.get("amount") / damageResist;
+
+		console.log("Taking damagee with damage resist appliied: " + damage);
+		this.playerStats.setStat(PlayerStat.HEALTH, this.playerStats.getStat(PlayerStat.HEALTH) - damage)
 	}
 
 	private dropItem(): number {

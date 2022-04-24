@@ -3,6 +3,17 @@ import Player from "./Player";
 
 import { PlayerEvents } from "../AI/Player/PlayerController";
 
+/**
+ * These are the keys that will be used to identify the different player stats.
+ */
+export enum PlayerStat {
+    HEALTH = "HEALTH",
+    MONEY = "MONEY",
+    MOVE_SPEED = "MOVE_SPEED",
+    ATTACK_DMG = "ATTACK_DMG",
+    DMG_RESIST = "DMG_RESIST",
+}
+
 export default class PlayerStats {
 
     private player: Player;
@@ -23,22 +34,21 @@ export default class PlayerStats {
     }
 
     setStat(key: string, value: any): void {
-        if (key in this.stats) {
-            this.stats[key] = value;
-            switch(key) {
-                case "MONEY": {
-                    this.emitter.fireEvent(PlayerEvents.MONEY_CHANGE, {amount: value});
-                    break;
-                }
-                case "HEALTH": {
-                    this.emitter.fireEvent(PlayerEvents.HEALTH_CHANGE, {amount: value});
-                    break;
-                }
-                default: {
-                    break;
-                }
+        this.stats[key] = value;
+        switch(key) {
+            case "MONEY": {
+                this.emitter.fireEvent(PlayerEvents.MONEY_CHANGE, {amount: value});
+                break;
+            }
+            case "HEALTH": {
+                this.emitter.fireEvent(PlayerEvents.HEALTH_CHANGE, {amount: value});
+                break;
+            }
+            default: {
+                break;
             }
         }
+    
     }
 
 }
