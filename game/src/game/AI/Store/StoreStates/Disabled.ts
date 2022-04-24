@@ -11,7 +11,7 @@ export default class Disabled extends StoreState {
     update(deltaT: number): void {
         super.update(deltaT);
 
-        if (this.inRange(this.parent.getPlayerPosition())) {
+        if (this.inRange(this.parent.target.position)) {
             this.finished(StoreStates.ENABLED);
         }
     }

@@ -45,7 +45,7 @@ export default class RatIdle extends RatState {
         super.update(deltaT);
 
         // If we're in range of the player - rat becomes active
-        if (this.inSightRange(this.parent.player.position)) {
+        if (this.inSightRange(this.parent.player.node.position)) {
             this.finished(RatAIStates.ACTIVE);
         }
     }

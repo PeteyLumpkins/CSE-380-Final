@@ -1,16 +1,10 @@
 import GoapActionPlanner from "../../../Wolfie2D/AI/GoapActionPlanner";
-import StateMachineAI from "../../../Wolfie2D/AI/StateMachineAI";
 import StateMachineGoapAI from "../../../Wolfie2D/AI/StateMachineGoapAI";
 import GoapAction from "../../../Wolfie2D/DataTypes/Interfaces/GoapAction";
-import AABB from "../../../Wolfie2D/DataTypes/Shapes/AABB";
 import Stack from "../../../Wolfie2D/DataTypes/Stack";
-import State from "../../../Wolfie2D/DataTypes/State/State";
-import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
-import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import GameNode from "../../../Wolfie2D/Nodes/GameNode";
-import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
-import OrthogonalTilemap from "../../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
-import NavigationPath from "../../../Wolfie2D/Pathfinding/NavigationPath";
+
+import Player from "../../Player/Player";
 
 import { EnemyStates, EnemyStatuses } from "../../GameEnums";
 
@@ -28,7 +22,7 @@ export default abstract class EnemyAI extends StateMachineGoapAI {
     owner: GameNode
 
     /** The player node */
-    player: GameNode;
+    player: Player;
 
     initializeAI(owner: GameNode, options: Record<string, any>): void {
         this.owner = owner;

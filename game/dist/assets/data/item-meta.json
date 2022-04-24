@@ -1,0 +1,14 @@
+[
+    {
+        "key": "old_boot",
+        "path": "assets/itemsprites/oldBoot.png"
+    }, 
+    {
+        "key": "mystery_liquid",
+        "path": "assets/itemsprites/mysteryLiquid.png"
+    }, 
+    {
+        "key": "moldy_bread",
+        "path": "assets/itemsprites/moldBread.png"
+    }
+]

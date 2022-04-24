@@ -3,7 +3,6 @@ import Scene from "../../Wolfie2D/Scene/Scene";
 import Updateable from "../../Wolfie2D/DataTypes/Interfaces/Updateable";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 
-import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
@@ -14,9 +13,11 @@ import Emitter from "../../Wolfie2D/Events/Emitter";
 import Receiver from "../../Wolfie2D/Events/Receiver";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 
-import { GameEvents, ItemSprites } from "../GameEnums";
-
 import Color from "../../Wolfie2D/Utils/Color";
+
+import { GameEvents } from "../GameEnums";
+
+import Player from "../Player/Player";
 
 
 export enum StoreEvent {
@@ -30,12 +31,11 @@ export default class StoreManager implements Updateable {
     private scene: Scene;
     private numItems: number;
 
-    private emitter: Emitter;
     private receiver: Receiver;
 
     /* Store related data */
-    protected storeItems: Array<Record<string,any>>;
-    protected playerMoney: number;
+    protected storeItems: Array<string>;
+    protected player: Player;
 
     /* Store UI Layers */
     private backgroundLayer: string;
@@ -67,7 +67,6 @@ export default class StoreManager implements Updateable {
             this.buttonLayer = buttonLayer;
 
             this.receiver = new Receiver();
-            this.emitter = new Emitter();
 
             this.receiver.subscribe(GameEvents.OPEN_STORE);
             this.receiver.subscribe(GameEvents.CLOSE_STORE);
@@ -118,14 +117,10 @@ export default class StoreManager implements Updateable {
 
     private handleOpenStoreEvent(event: GameEvent) {
         this.storeItems = event.data.get("items");
-        this.playerMoney = event.data.get("playerMoney");
+        this.player = event.data.get("player");
 
-        this.loadStoreItems(this.storeItems);
+        this.loadStoreItems();
         this.openStore();
-    }
-
-    private handleCloseStoreEvent(event: GameEvent) {
-        this.closeStore();
     }
 
     /**
@@ -139,44 +134,36 @@ export default class StoreManager implements Updateable {
      * }
      * @param items the items in the store
      */
-    private loadStoreItems(items: Array<Record<string,any>>): void {
+    private loadStoreItems(): void {
+
+        /* Initialization stuff for sprites position calculations*/
         let center = this.scene.getViewport().getCenter();
+        let origin = this.scene.getViewport().getOrigin();
         let scale = this.scene.getViewScale();
         let scalar = new Vec2(scale, scale);
         
         let spaceX = 150 / scale;
         let spaceY = 100 / scale;
-
         let startX = center.x - spaceX;
         let startY = center.y - spaceY;
 
+        /* Getting the item data */
+        let items = this.scene.load.getObject("item-data");
+
+
         for (let i = 0; i < this.numItems; i += 1, startX += spaceX) {
-            let oldItem = this.itemSprites[i];
-            let oldX = this.itemSprites[i].position.x;
-            let oldY = this.itemSprites[i].position.y;
+            let oldsprite = this.itemSprites[i];
 
-            console.log(`Old Position ${oldX},${oldY}`);
-            let origin = this.scene.getViewport().getOrigin();
-            console.log(`Start x: ${startX} y: ${startY}`);
-            console.log(origin);
-
-            this.itemSprites[i] = this.scene.add.sprite(items[i].spriteKey, this.itemLayer);
+            this.itemSprites[i] = this.scene.add.sprite(this.storeItems[i], this.itemLayer);
             this.itemSprites[i].position.set(startX, startY).sub(origin);
             this.itemSprites[i].scale.set(5, 5).div(scalar);
 
-            this.itemCostLabels[i].text = items[i].cost;
-            this.itemNameLabels[i].text = items[i].name;
+            this.itemCostLabels[i].text = items[this.storeItems[i]].cost;
+            this.itemNameLabels[i].text = items[this.storeItems[i]].name;
 
-            oldItem.destroy();
-        }
-    }
-
-    /**
-     * Destroys the items sprites in the store. 
-     */
-    private unloadItemSprites(): void { 
-        for (let i = 0; i < this.numItems; i++) {
-            this.itemSprites[i].destroy();
+            if (oldsprite !== undefined && oldsprite !== null ) {
+                oldsprite.destroy();
+            }
         }
     }
 
@@ -246,27 +233,19 @@ export default class StoreManager implements Updateable {
 
         /* STORE SPRITE POSITIONS */
         this.itemSprites = new Array<Sprite>();
-        
-        startX = center.x - 150;
-        startY = center.y - 100;
-        spaceX = 150;
+        this.closeStore();
+    }
 
-        for (let i = 0; i < this.numItems; i += 1, startX += spaceX) {
-            this.itemSprites[i] = this.scene.add.sprite(ItemSprites.MOLD_BREAD, this.itemLayer);
-            this.itemSprites[i].position.set(startX, startY).div(scalar);
-        }
-
+    private handleCloseStoreEvent(event: GameEvent) {
         this.closeStore();
     }
 
     private handleItemPurchase(index: number): void {
-        
-        console.log("Firing item purchased event!");
-        this.emitter.fireEvent(StoreEvent.ITEM_PURCHASED, {item: this.storeItems[index]});
+        let items = this.scene.load.getObject("item-data");
+        let itemData = items[this.storeItems[index]];
 
-        /* If inventory full -> can't add to inventory */
-
-        /* Otherwise, set item as purchased */
+        this.player.inventory.addItem(this.storeItems[index]);
+        this.player.stats.setStat("MONEY", this.player.stats.getStat("MONEY") - itemData.cost);
     }
 
 }

@@ -19,8 +19,12 @@ export default class RatDead extends RatState {
         let coin = this.owner.getScene().add.animatedSprite(GameSprites.COIN, GameLayers.PRIMARY);
         coin.position.set(this.owner.position.x, this.owner.position.y);
         coin.addAI(PickupAI, {
-            player: this.parent.player, 
-            range: 25,
+            canPickup: () => {
+                return this.parent.player.node.position.distanceTo(coin.position) <= 50;
+            },
+            pickup: () => {
+                return this.parent.player.node.position.distanceTo(coin.position) <= 50;
+            },
             data: {type: PickupTypes.MONEY, amount: 1}
         });
 
