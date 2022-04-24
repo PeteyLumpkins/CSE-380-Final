@@ -8,19 +8,13 @@ import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 
 import PlayerController from "../PlayerController";
 import { PlayerEvents } from "../../Player/PlayerController";
+import { PlayerStat } from "../../../Player/PlayerStats";
 
 export default abstract class PlayerState extends State {
 
 	parent: PlayerController;
-
     protected owner: AnimatedSprite;
-
     protected attackTimer: Timer;
-
-	// These values will scale the players stats
-    protected speedScale: number = 2;
-    protected healthScale: number = 1;
-    protected attackScale: number = 1;
 
 	constructor(parent: StateMachine, owner: AnimatedSprite){
 		super(parent);
@@ -39,8 +33,10 @@ export default abstract class PlayerState extends State {
 
 	// Gets called after the player has finished attacking
 	sendPlayerAttacked(position: Vec2) {
-		console.log("Firing attack event");
-		this.emitter.fireEvent(PlayerEvents.ATTACKED, {position: position, range: 50, damage: 5});
+		let damage = this.parent.playerStats.getStat(PlayerStat.ATTACK_DMG) !== null ? this.parent.playerStats.getStat(PlayerStat.ATTACK_DMG) : 1;
+
+		console.log("Sending attack with damage: " + damage);
+		this.emitter.fireEvent(PlayerEvents.ATTACKED, {position: position, range: 75, damage: damage});
 	}
 
 	/** 
@@ -61,7 +57,9 @@ export default abstract class PlayerState extends State {
      * Regardless of the players state (attacking or moving), they should be able to move
      */
 	update(deltaT: number): void {
-		this.owner.move(this.getInputDirection().mult(new Vec2(this.speedScale, this.speedScale))); 
+		let speedScale = this.parent.playerStats.getStat(PlayerStat.MOVE_SPEED) !== null ? this.parent.playerStats.getStat(PlayerStat.MOVE_SPEED) : 1;
+		console.log("Moving with a speed scale of: " + speedScale);
+		this.owner.move(this.getInputDirection().mult(new Vec2(speedScale, speedScale))); 
 	}
 
 }

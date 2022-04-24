@@ -26,6 +26,8 @@ export default class PunchLeft extends Punch {
             this.finished(PlayerStates.PUNCH_UP);
         } else if (dir.y > 0) {
             this.finished(PlayerStates.PUNCH_DOWN);
+        } else {
+            this.finished(PlayerStates.PUNCH_LEFT);
         }
     }
 
