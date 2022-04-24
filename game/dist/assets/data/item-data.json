@@ -1,0 +1,26 @@
+{
+    "old_boot" : {
+        "name": "Old Boot", 
+        "spriteKey": "old_boot",
+        "cost": 1,
+        "buffs": [
+            {"type": "MOVE_SPEED", "scale": 0.5}
+        ]
+    }, 
+    "mystery_liquid" : {
+        "name": "Mystery Liquid",
+        "cost": 2,
+        "buffs": [
+            {"type": "MOVE_SPEED", "scale": 2},
+            {"type": "ATTACK_DMG", "scale": 10}
+        ]
+    }, 
+    "moldy_bread" : {
+        "name": "Moldy Bread",
+        "spriteKey": "moldy_bread",
+        "cost": 3,
+        "buffs": [
+            
+        ]
+    }
+}

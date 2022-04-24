@@ -8,7 +8,7 @@ import Disabled from "./StoreStates/Disabled";
 import Enabled from "./StoreStates/Enabled";
 import Open from "./StoreStates/Open";
 
-import StoreItems from "./StoreItems";
+import Player from "../../Player/Player";
 import PlayerController from "../Player/PlayerController";
 
 import {StoreEvents} from "../../GameEnums";
@@ -21,23 +21,20 @@ export enum StoreStates {
 
 export default class StoreController extends StateMachineAI {
 
-    protected owner: AnimatedSprite;
-    protected player: GameNode;
+    owner: AnimatedSprite;
+    player: Player;
+    target: GameNode;
+    items: Array<string>;
+    range: number;
 
-    protected items: Array<Record<string,any>>;
-
-    protected range: Circle;
-
-    // TODO: The store controller takes and option that sets the radius of the
-    // of it's circle range or whatever
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
         
         this.owner = owner;
-        console.log("Options.radius: " + options.radius);
 
         this.items = options.items;
-        this.range = new Circle(owner.position, options.radius);
+        this.range = options.radius
         this.player = options.player;
+        this.target = this.player.node;
         
         this.addState(StoreStates.DISABLED, new Disabled(this, this.owner));
         this.addState(StoreStates.ENABLED, new Enabled(this, this.owner));
@@ -52,14 +49,6 @@ export default class StoreController extends StateMachineAI {
             this.handleEvent(this.receiver.getNextEvent());
         }
     }
-
-    getRange(): Circle { return this.range; }
-
-    getPlayerPosition(): Vec2 { return this.player.position; }
-
-    getPlayerMoney(): number { return (<PlayerController>this.player._ai).getPlayerMoney(); }
-
-    getStoreItems(): Record<string,any> { return this.items; }
     
     activate(options: Record<string, any>) {}  
     

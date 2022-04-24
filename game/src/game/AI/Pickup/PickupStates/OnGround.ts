@@ -12,19 +12,15 @@ export default class OnGround extends PickupState {
         }
     }
 
-    handleInput(): void {
-
-    }
+    handleInput(): void {}
 
     update(deltaT: number): void {
-        if (this.inRange(this.parent.getPlayerPosition())) {
-            this.finished(PickupStates.PICKED_UP);
+        if (this.parent.canPickup()) {
+            this.finished(PickupStates.CAN_PICKUP);
         }
     }
 
-    onExit(): Record<string, any> {
-        return {};
-    }
+    onExit(): Record<string, any> { return {}; }
 
 
 }

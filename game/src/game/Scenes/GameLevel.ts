@@ -11,12 +11,12 @@ import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import { GameEvents, GameLayers, GameSprites, GameData, StoreEvents, ItemSprites } from "../GameEnums";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import { PlayerEvents } from "../AI/Player/PlayerController";
-import GameStore from "../AI/Store/StoreItems";
 
 import InventoryManager from "../GameSystems/InventoryManager";
 import PauseManager from "../GameSystems/PauseManager";
 import StoreManager from "../GameSystems/StoreManager";
-import GameNode from "../../Wolfie2D/Nodes/GameNode";
+
+import Player from "../Player/Player";
 
 export enum UILayers {
     ITEM_BAR = "UI_LAYER_ITEM_BAR",
@@ -37,13 +37,12 @@ export enum UILayers {
 
 export default abstract class GameLevel extends Scene {
 
-    /* THE PLAYER GAME NODE */
-    protected player: AnimatedSprite;
+    /* THE PLAYER */
+    protected player: Player;
 
     /* PLAYER UI STATS */
     protected playerHealth: number = 20;
     protected playerHealthLabel: Label;
-
     protected playerMoney: number = 0;
     protected playerMoneyLabel: Label;
 
@@ -79,7 +78,6 @@ export default abstract class GameLevel extends Scene {
         this.addItemUILayers();
         this.inventoryManager = new InventoryManager(this, this.player, 9, 16, new Vec2(450, 24), UILayers.ITEM_SPRITES, "itembg", UILayers.ITEM_SLOTS);
 
-        this.initUIPrimary();
         this.pauseManager = new PauseManager(this, [GameLayers.PRIMARY], GameLayers.PAUSED);
 
         this.addStoreUILayers();

@@ -24,7 +24,7 @@ export default class RatActive extends RatState {
             return;
         }
 
-        if (!this.inAttackRange(this.parent.player.position)) {
+        if (!this.inAttackRange(this.parent.player.node.position)) {
             let i = this.parent.currentStatus.indexOf(RatAIStatuses.IN_RANGE);
             if (i != -1) {
                 this.parent.currentStatus.splice(i, 1);

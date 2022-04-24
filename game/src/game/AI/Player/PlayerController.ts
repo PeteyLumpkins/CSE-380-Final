@@ -2,6 +2,7 @@ import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import StateMachineAI from "../../../Wolfie2D/AI/StateMachineAI";
 import OrthogonalTilemap from "../../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
+import { StoreEvent } from "../../GameSystems/StoreManager";
 
 import {
 
@@ -12,7 +13,12 @@ import {
 } from "./PlayerStates/PlayerState";
 
 import { GameEvents, EnemyActions } from "../../GameEnums";
-import {PickupTypes} from "../Pickup/PickupTypes";
+import { PickupTypes } from "../Pickup/PickupTypes";
+import { PlayerStat } from "../../Player/PlayerStats";
+
+import PlayerStats from "../../Player/PlayerStats";
+import PlayerInventory from "../../Player/PlayerInventory";
+import Input from "../../../Wolfie2D/Input/Input";
 
 export enum PlayerStates {
 	IDLE_RIGHT = "IDLE_RIGHT_PLAYER_STATE",
@@ -39,23 +45,18 @@ export enum PlayerEvents {
 
 export default class PlayerController extends StateMachineAI {
 	// We want to be able to control our owner, so keep track of them
-	protected owner: AnimatedSprite;
-	protected tilemap: OrthogonalTilemap;
 
-	protected maxHealth: number;
-
-	protected health: number;
-	protected money: number;
-	protected inventory: Array<Record<string, any>>;
+	owner: AnimatedSprite;
+	playerInventory: PlayerInventory;
+	playerStats: PlayerStats;
+	
 
 	initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
 		this.owner = owner;
+		this.playerInventory = options.inventory;
+		this.playerStats = options.stats;
 
-		this.maxHealth = 20;
-		this.health = 20;
-		this.money = 0;
-		this.inventory = new Array<Record<string, any>>();
-
+	
         this.addState(PlayerStates.IDLE_LEFT, new IdleLeft(this, this.owner));
 		this.addState(PlayerStates.IDLE_RIGHT, new IdleRight(this, this.owner));
 		this.addState(PlayerStates.IDLE_DOWN, new IdleDown(this, this.owner));
@@ -75,14 +76,6 @@ export default class PlayerController extends StateMachineAI {
 
 		this.receiver.subscribe(GameEvents.PICKUP_ITEM);
 		this.receiver.subscribe(EnemyActions.ATTACK);
-	}
-
-	getPlayerMoney(): number { 
-		return this.money;
-	}
-
-	getPlayerInventory(): Array<Record<string,any>> {
-		return this.inventory;
 	}
 
 	activate(options: Record<string, any>): void {};
@@ -109,6 +102,11 @@ export default class PlayerController extends StateMachineAI {
 		// Updating the state machine will trigger the current state to be updated.
 		super.update(deltaT);
 
+		let droppedItem = this.dropItem();
+		if (droppedItem >= 0) {
+			this.handleItemDropEvent(droppedItem);
+		}
+
 		while(this.receiver.hasNextEvent()){
 			this.handleEvent(this.receiver.getNextEvent());
 		}
@@ -118,13 +116,14 @@ export default class PlayerController extends StateMachineAI {
 	// All item pickup events should have a "type"
 	private handleItemPickupEvent(event: GameEvent): void {
 		switch(event.data.get("type")) {
-
 			case PickupTypes.MONEY: {
-				this.money += event.data.get("amount");
-				this.emitter.fireEvent(PlayerEvents.MONEY_CHANGE, {amount: this.money});
+				this.playerStats.setStat("MONEY", this.playerStats.getStat("MONEY") + event.data.get("amount"));
 				break;
 			}
-
+			case PickupTypes.ITEM: {
+				this.playerInventory.addItem(event.data.get('itemKey'));
+				break;
+			}
 			default: {
 				console.log(`Unrecognized type on pickup event: ${event.data.get("type")}`);
 				break;
@@ -132,10 +131,53 @@ export default class PlayerController extends StateMachineAI {
 		}
 	}
 
+	private handleItemDropEvent(index: number): void {
+		this.playerInventory.removeItem(index - 1);
+	}
+
 	// TODO: handles when an enemy trys to attack the player
 	private handleEnemyAttackEvent(event: GameEvent): void {
-		this.health -= 1;
-		this.emitter.fireEvent(PlayerEvents.HEALTH_CHANGE, {amount: this.health});
+		/** Checks to see if player has a damage resisit buff applied? */
+		let damageResist = this.playerStats.getStat(PlayerStat.DMG_RESIST) !== null ? this.playerStats.getStat(PlayerStat.DMG_RESIST) : 1;
+		let damage = event.data.get("amount") / damageResist;
+
+		console.log("Taking damagee with damage resist appliied: " + damage);
+		this.playerStats.setStat(PlayerStat.HEALTH, this.playerStats.getStat(PlayerStat.HEALTH) - damage)
+	}
+
+	private dropItem(): number {
+		switch(true) {
+			case Input.isJustPressed("drop1"): {
+				return 1;
+			}
+			case Input.isJustPressed("drop2"): {
+				return 2;
+			}
+			case Input.isJustPressed("drop3"): {
+				return 3;
+			}
+			case Input.isJustPressed("drop4"): {
+				return 4;
+			}
+			case Input.isJustPressed("drop5"): {
+				return 5;
+			}
+			case Input.isJustPressed("drop6"): {
+				return 6;
+			}
+			case Input.isJustPressed("drop7"): {
+				return 7;
+			}
+			case Input.isJustPressed("drop8"): {
+				return 8;
+			}
+			case Input.isJustPressed("drop9"): {
+				return 9;
+			}
+			default: {
+				return -1;
+			}
+		}
 	}
 
 	destroy(): void {}

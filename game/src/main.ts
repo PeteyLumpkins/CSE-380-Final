@@ -24,7 +24,17 @@ import ItemRegistry from "./game/Registry/ItemRegistry";
             { name: "close", keys: ["e"]},
             { name: "nextlvl", keys: ["3"]},
             { name: "attack", keys: ["space"]},
-            { name: "dropItem", keys: ["1", "2", "3", "4", "5", "6", "7", "8", "9"]}
+
+            { name: "drop1", keys: ["1"]},
+            { name: "drop2", keys: ["2"]},
+            { name: "drop3", keys: ["3"]},
+            { name: "drop4", keys: ["4"]},
+            { name: "drop5", keys: ["5"]},
+            { name: "drop6", keys: ["6"]},
+            { name: "drop7", keys: ["7"]},
+            { name: "drop8", keys: ["8"]},
+            { name: "drop9", keys: ["9"]},
+            { name: "pickup", keys: ["q"]}
         ],
         useWebGL: false,                        // Tell the game we want to use webgl
         showDebug: false                       // Whether to show debug messages. You can change this to true if you want

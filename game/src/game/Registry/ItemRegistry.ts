@@ -6,16 +6,17 @@ import Item from "../Items/Item";
 export default class ItemRegistry extends Registry<Item>{
     public preload(): void{
 
-        const rm=ResourceManager.getInstance(); 
-        rm.object("itemData", "assets/data/itemscopy.json"); //LOADS THE JSON FILE, note: I made a copy of items.json to work with, based on HW4
-        rm.image("moldy bread", "assets/ItemSprites/moldBread.png");
-        rm.image("mystery liquid", "assets/ItemSprites/mysteryLiquid.png");
-        rm.image("old boot", "assets/ItemSprites/oldBoot.png");
-
+        let rm = ResourceManager.getInstance(); 
+        
     }
     
     //Unused:
-    public registerAndPreloadItem(key: string): void {}
+    public registerAndPreloadItem(key: string): void {
+        let rm = ResourceManager.getInstance();
+
+        console.log('Trying to load item meta data');
+        console.log(rm.getObject("item-meta"));
+    }
 
     //Used to register an item into the registry
     public registerItem(key: string, item:Item): void {
