@@ -20,16 +20,11 @@ export default abstract class StoreState extends State {
         this.justToggled = false;
 	}
 
-    handleInput(event: GameEvent): void {
+    handleInput(event: GameEvent): void {}
 
+    protected inRange(position: Vec2): boolean {
+        return this.owner.position.distanceTo(position) <= this.parent.range;
     }
 
-    // TODO: checks if player is within range of the store -> needs to be tested
-    protected inRange(playerPosition: Vec2): boolean {
-        return this.owner.position.distanceTo(playerPosition) <= this.parent.getRange().radius 
-    }
-
-    update(deltaT: number): void {
-        
-    }
+    update(deltaT: number): void {}
 }

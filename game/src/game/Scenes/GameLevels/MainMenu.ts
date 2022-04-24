@@ -37,6 +37,8 @@ export default class MainMenu extends Scene {
     private level1_preview: Sprite;
 
     loadScene(){
+        console.log("item meta data?");
+        console.log(this.load.getObject("item-meta"));
         this.load.image(MenuImages.BACKGROUND, "assets/images/background.jpeg");
         this.load.image(MenuImages.LOGO, "assets/images/logo_no_white.png");
     }
@@ -45,6 +47,8 @@ export default class MainMenu extends Scene {
         // When we return to main menu from the game -> need to reset the viewport bounds
         this.viewport.setBounds(0, 0, 1024, 1024);
         this.viewport.setZoomLevel(1);
+
+        console.log(this.load.getObject("item-meta"));
 
         // The background layer
         this.background = this.addLayer(MenuLayers.BACKGROUND, 0);

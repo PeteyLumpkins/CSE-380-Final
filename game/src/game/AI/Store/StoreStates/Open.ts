@@ -12,10 +12,9 @@ export default class Open extends StoreState {
      * the store layer visible and freeze the rest of the game (something like that).
      */
     onEnter(options: Record<string, any>): void {
-        console.log("Started open store state");
         this.emitter.fireEvent(GameEvents.OPEN_STORE, {
-            items: this.parent.getStoreItems(), 
-            playerMoney: this.parent.getPlayerMoney()
+            items: this.parent.items, 
+            player: this.parent.player
         });
     }
 
@@ -32,10 +31,9 @@ export default class Open extends StoreState {
     }
 
     /**
-     * TODO: Sends a signal to the scene that we are closing the store.
+     * Sends a signal to the scene that we are closing the store.
      */
     onExit(): Record<string, any> { 
-        console.log("Closing the store");
         this.emitter.fireEvent(GameEvents.CLOSE_STORE);
         return {}; 
     }

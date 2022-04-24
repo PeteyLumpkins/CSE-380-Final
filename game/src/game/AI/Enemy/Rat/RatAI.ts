@@ -11,6 +11,8 @@ import RatDead from "./RatStates/RatDead";
 import RatAttack from "./RatActions/RatAttack";
 import RatMove from "./RatActions/RatMove";
 
+import Player from "../../../Player/Player";
+
 export enum RatAIStates {
     IDLE = "RAT_IDLE_STATE",
     ACTIVE = "RAT_ACTIVE_STATE",
@@ -112,7 +114,7 @@ export default class RatAI extends EnemyAI {
      * @param options any custom options we want to tweak
      * @returns a set of options for a RatAI
      */
-    public static optionsBuilder(type: RatAIOptionType, player: GameNode): Record<string, any> {
+    public static optionsBuilder(type: RatAIOptionType, player: Player): Record<string, any> {
 
         let optionsTemplate: Record<string, any>;
 

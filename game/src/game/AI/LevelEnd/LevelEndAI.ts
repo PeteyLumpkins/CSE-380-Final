@@ -3,14 +3,8 @@ import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import GameNode from "../../../Wolfie2D/Nodes/GameNode";
 import Emitter from "../../../Wolfie2D/Events/Emitter";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
-import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
-
-import OnGround from "../Pickup/PickupStates/OnGround";
-import PickedUp from "../Pickup/PickupStates/PickedUp";
-import { EaseFunctionType } from "../../../Wolfie2D/Utils/EaseFunctions";
 
 import GameLevel from "../../Scenes/GameLevel";
-import { GameEvents } from "../../GameEnums";
 import InLevelEnd from "./LevelEndStates/InLevelEnd";
 import OutLevelEnd from "./LevelEndStates/OutLevelEnd";
 

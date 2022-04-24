@@ -16,8 +16,13 @@ import Updateable from "../../Wolfie2D/DataTypes/Interfaces/Updateable";
 import { StoreEvent } from "./StoreManager";
 import { GameLayers } from "../GameEnums";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
-import PlayerController from "../AI/Player/PlayerController";
 
+import PlayerController from "../AI/Player/PlayerController";
+import PickupAI from "../AI/Pickup/PickupAI";
+import { PickupTypes } from "../AI/Pickup/PickupTypes";
+
+import Player from "../Player/Player";
+import { InventoryEvent } from "../Player/PlayerInventory";
 
 /**
  * Manages the player inventory that is displayed in the GameLevel UI
@@ -26,12 +31,12 @@ export default class InventoryManager implements Updateable {
 
     /* Important stuff */
     private scene: Scene;
-    private player: GameNode;
+    private player: Player;
 
     /* Event handling stuff */
     private receiver: Receiver;
-    private emitter: Emitter;
 
+    /* Inventory UI stuff */
     private start: Vec2;
     private padding: number;
     private itemSlots: Array<Sprite>;
@@ -45,16 +50,14 @@ export default class InventoryManager implements Updateable {
 
     private size: number;
 
-    constructor(scene: Scene, player: GameNode, size: number, padding: number, start: Vec2, itemLayer: string, slotSprite: string, slotLayer: string) {
+    constructor(scene: Scene, player: Player, size: number, padding: number, start: Vec2, itemLayer: string, slotSprite: string, slotLayer: string) {
 
         this.scene = scene;
         this.player = player;
 
         this.receiver = new Receiver();
-        this.emitter = new Emitter();
 
-        this.receiver.subscribe(StoreEvent.ITEM_PURCHASED);
-        this.receiver.subscribe(GameEventType.KEY_DOWN);
+        this.receiver.subscribe(InventoryEvent.CHANGED);
 
         this.size = size;
         this.padding = padding;
@@ -97,28 +100,9 @@ export default class InventoryManager implements Updateable {
 
     private handleEvent(event: GameEvent): void {
         switch(event.type) {
-            case StoreEvent.ITEM_PURCHASED: {
-                this.handleAddItemEvent(event);
+            case InventoryEvent.CHANGED: {
+                this.handleItemChangeEvent(event);
                 break;
-            }
-            case GameEventType.KEY_DOWN: {
-                console.log("Caught a key down in the inventory manager!");
-                switch(event.data.get("key")) {
-                    case "1": 
-                    case "2": 
-                    case "3": 
-                    case "4": 
-                    case "5": 
-                    case "6": 
-                    case "7": 
-                    case "8": 
-                    case "9": 
-                        this.handleDropItemEvent(event);
-                        break;
-                    default:
-                        break;
-
-                }
             }
             default: {
                 break;
@@ -126,31 +110,8 @@ export default class InventoryManager implements Updateable {
         }
     }
 
-    private handleAddItemEvent(event: GameEvent): void {
-        let item = event.data.get("item");
-        let inv = (<PlayerController>this.player._ai).getPlayerInventory();
-        inv.push(item);
-        this.updateInventoryUI();
-    }
-
-    private handleDropItemEvent(event: GameEvent): void {
-        console.log("Handling an item drop in inventory manager");
-        let index = parseInt(event.data.get("key")) - 1;
-        let inv = (<PlayerController>this.player._ai).getPlayerInventory();
-
-        if (inv[index] !== undefined && inv[index] !== null) {
-            let itemDrop = this.scene.add.sprite(inv[index].spriteKey, GameLayers.PRIMARY);
-            itemDrop.position.set(this.player.position.x, this.player.position.y);
-            itemDrop.scale.set(2, 2);
-
-            inv.splice(index, 1);
-            this.updateInventoryUI();
-        }
-    }
-
-    private updateInventoryUI():void {
-
-        let inv = (<PlayerController>this.player._ai).getPlayerInventory()
+    private handleItemChangeEvent(event: GameEvent): void {
+        let inv = this.player.inventory.getCopy();
         let scale = this.scene.getViewScale();
         let scalar = new Vec2(scale, scale);
 
@@ -164,7 +125,7 @@ export default class InventoryManager implements Updateable {
                 continue;
             }
             let oldSprite = this.itemSprites[i]
-            this.itemSprites[i] = this.scene.add.sprite(inv[i].spriteKey, this.itemLayer);
+            this.itemSprites[i] = this.scene.add.sprite(inv[i], this.itemLayer);
             this.itemSprites[i].position.set(this.start.x + i*(this.itemSlots[0].size.x + this.padding), this.start.y).div(scalar);
             if (oldSprite !== undefined) {
                 oldSprite.destroy();
@@ -177,11 +138,9 @@ export default class InventoryManager implements Updateable {
      * Updates the inventory being displayed in the UI
      */
     update(deltaT: number): void {
-
         while (this.receiver.hasNextEvent()) {
             this.handleEvent(this.receiver.getNextEvent())
         }
-        let inventory = (<PlayerController>this.player._ai).getPlayerInventory();
     }
 
 }

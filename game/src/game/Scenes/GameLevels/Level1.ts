@@ -13,11 +13,13 @@ import { RatAIOptionType } from "../../AI/Enemy/Rat/RatAI";
 
 import GameLevel from "../GameLevel";
 import LevelEndAI from "../../AI/LevelEnd/LevelEndAI";
-import GameStore from "../../AI/Store/StoreItems";
 
 import RatAI from "../../AI/Enemy/Rat/RatAI";
 import RatAttack from "../../AI/Enemy/Rat/RatActions/RatAttack";
 import RatMove from "../../AI/Enemy/Rat/RatActions/RatMove";
+
+import items from "./items.json";
+import Player from "../../Player/Player";
 
 
 export default class Level1 extends GameLevel {
@@ -29,7 +31,12 @@ export default class Level1 extends GameLevel {
     private PLAYER_SPAWN: Vec2 = new Vec2(448, 480);
 
     loadScene(){
+        
         this.load.tilemap("level", "assets/tilemaps/prototypeMap.json");
+
+        for (let i = 0; i < items.length; i++) {
+            this.load.image(items[i].key, items[i].path);
+        }
 
         this.load.image("itembg", "assets/sprites/itembg.png");
         this.load.image("itembarbg", "assets/sprites/itembarbg.png");
@@ -41,14 +48,15 @@ export default class Level1 extends GameLevel {
         this.load.spritesheet("rat", "assets/spritesheets/enemies/rat.json");
         this.load.spritesheet("whiteRat", "assets/spritesheets/enemies/whiteRat.json");
         this.load.spritesheet(GameSprites.COIN, "assets/spritesheets/coin.json");
+        this.load.object('item-data', 'assets/data/item-data.json');
         // this.load.spritesheet("bat", "assets/spritesheets/WhiffleBat.json");
 
         this.load.object(GameData.NAVMESH, "assets/data/navmeshLevel1.json"); 
-        this.load.object(GameData.STORE_ITEMS, "assets/data/items.json");
+        this.load.object(GameData.STORE_ITEMS, "assets/data/item-data.json");
         this.load.object("enemyData", "assets/data/enemyLevel1.json");
 
-        this.load.image(ItemSprites.MOLD_BREAD, "assets/itemsprites/moldBread.png");
-        this.load.image(ItemSprites.OLD_BOOT, "assets/itemsprites/oldBoot.png");
+        // this.load.image(ItemSprites.MOLD_BREAD, "assets/itemsprites/moldBread.png");
+        // this.load.image(ItemSprites.OLD_BOOT, "assets/itemsprites/oldBoot.png");
         this.load.image(GameSprites.LADDER, "assets/sprites/EndOfLevel.png");
     }
 
@@ -57,7 +65,7 @@ export default class Level1 extends GameLevel {
      * health and buffs through the game levels.
      */
     startScene(){
-
+        console.log(this.load.getObject("item-meta"));
         this.addLayer(GameLayers.PRIMARY, 5);
         
         let bgPipe = this.add.animatedSprite("brokenGreenPipe", GameLayers.PRIMARY);
@@ -77,37 +85,24 @@ export default class Level1 extends GameLevel {
         let scale = this.viewport.getZoomLevel();
         let scalar = new Vec2(scale, scale);
 
-        this.player = this.add.animatedSprite("player", GameLayers.PRIMARY);
-		
-		this.player.position.set(448, 480);
+        let playerNode = this.add.animatedSprite("player", GameLayers.PRIMARY);
+        let inventory = new Array<string>();
+        let stats = {"HEALTH": 20, "MONEY": 10};
 
-		let playerCollider = new AABB(Vec2.ZERO, new Vec2(this.player.sizeWithZoom.x, this.player.sizeWithZoom.y).div(scalar).div(new Vec2(2, 2)));
-        this.player.addPhysics();
-		this.player.setCollisionShape(playerCollider);
-        
-		// Add a playerController to the player
-		this.player.addAI(PlayerController);
-        this.viewport.follow(this.player);
+        this.player = new Player(playerNode, inventory, stats);
+
+		playerNode.position.set(448, 480);
+		let playerCollider = new AABB(Vec2.ZERO, new Vec2(playerNode.sizeWithZoom.x, playerNode.sizeWithZoom.y).div(scalar).div(new Vec2(2, 2)));
+        playerNode.addPhysics();
+		playerNode.setCollisionShape(playerCollider);
+		playerNode.addAI(PlayerController, {inventory: this.player.inventory, stats: this.player.stats});
+
+        this.viewport.follow(playerNode);
     }
 
     initStore(): void {
-        let items = [
-            { 
-                "name": "Moldy bread",
-                "cost": 2,
-                "spriteKey": ItemSprites.MOLD_BREAD
-            },
-            {   
-                "name": "More Moldy Bread",
-                "cost": 3,
-                "spriteKey": ItemSprites.OLD_BOOT
-            },
-            { 
-                "name": "Old Boot",
-                "cost": 5,
-                "spriteKey": ItemSprites.MOLD_BREAD
-            }
-        ];
+    
+        let items = ["moldy_bread", "old_boot", "moldy_bread"];
 
         this.store = this.add.animatedSprite("store_terminal", GameLayers.PRIMARY);
         this.store.position.set(1056, 1152);
@@ -163,7 +158,7 @@ export default class Level1 extends GameLevel {
     initLevelLinks(): void {
         this.nextLevel = this.add.sprite(GameSprites.LADDER, GameLayers.PRIMARY);
         this.nextLevel.position.set(2960, 595);
-        this.nextLevel.addAI(LevelEndAI, {player: this.player, range: 25, nextLevel: Level1});
+        this.nextLevel.addAI(LevelEndAI, {player: this.player.node, range: 25, nextLevel: Level1});
     }
 
     initEnemies(): void {

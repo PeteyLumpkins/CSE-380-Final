@@ -12,7 +12,7 @@ export default class Enabled extends StoreState {
     // FIXME: for some reason the store isn't opening when I press the "open" key
     update(deltaT: number): void {
 
-        if (!this.inRange(this.parent.getPlayerPosition())) {
+        if (!this.inRange(this.parent.target.position)) {
             this.finished(StoreStates.DISABLED);
         } else if (Input.isPressed("open")) {
             if (!this.justToggled) {

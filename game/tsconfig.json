@@ -5,6 +5,8 @@
     ],
     "compilerOptions": {
         "noImplicitAny": true,
-        "target": "es2016"
+        "target": "es2016",
+        "resolveJsonModule": true,
+        "esModuleInterop": true
     }
 }
