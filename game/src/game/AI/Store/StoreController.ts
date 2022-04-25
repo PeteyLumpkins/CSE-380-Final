@@ -9,7 +9,7 @@ import Enabled from "./StoreStates/Enabled";
 import Open from "./StoreStates/Open";
 
 import Player from "../../Player/Player";
-import PlayerController from "../Player/PlayerController";
+import StoreItems from "../../Store/StoreItems"
 
 import {StoreEvents} from "../../GameEnums";
 
@@ -24,7 +24,7 @@ export default class StoreController extends StateMachineAI {
     owner: AnimatedSprite;
     player: Player;
     target: GameNode;
-    items: Array<string>;
+    items: StoreItems;
     range: number;
 
     initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {

@@ -20,6 +20,7 @@ import RatMove from "../../AI/Enemy/Rat/RatActions/RatMove";
 
 import items from "./items.json";
 import Player from "../../Player/Player";
+import StoreItems from "../../Store/StoreItems";
 
 
 export default class Level1 extends GameLevel {
@@ -115,12 +116,18 @@ export default class Level1 extends GameLevel {
 
     initStore(): void {
     
-        let items = ["moldy_bread", "old_boot", "mystery_liquid"];
+        let storeItems = new StoreItems(
+            [
+                {key: "moldy_bread", count: 1},
+                {key: "old_boot", count: 1},
+                {key: "mystery_liquid", count: 1}
+            ]
+        )
 
         this.store = this.add.animatedSprite("store_terminal", GameLayers.PRIMARY);
         this.store.position.set(1056, 1152);
         this.store.scale.set(0.4, 0.4);
-        this.store.addAI(StoreController, {radius: 100, player: this.player, items: items});
+        this.store.addAI(StoreController, {radius: 100, player: this.player, items: storeItems});
     }
 
     initMap(): void {

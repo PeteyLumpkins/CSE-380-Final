@@ -16,7 +16,7 @@ export default abstract class Punch extends PlayerState {
         console.log(attacking);
 
         if (attacking) {
-            this.attack(dir);
+            this.attack();
         } else if (dir.isZero()) {
             this.idle();
         } else {
@@ -38,7 +38,12 @@ export default abstract class Punch extends PlayerState {
         }
     }
 
-    abstract attack(dir: Vec2): void;
+    attack(): void {
+        if (!this.attackTimer.isStopped()) {
+            return;
+        }
+        this.attackTimer.start();
+    }
 
 }
 

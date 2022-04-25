@@ -31,7 +31,6 @@ export default class InventoryManager implements Updateable {
 
     /* Important stuff */
     private scene: Scene;
-    private player: Player;
 
     /* Event handling stuff */
     private receiver: Receiver;
@@ -50,10 +49,9 @@ export default class InventoryManager implements Updateable {
 
     private size: number;
 
-    constructor(scene: Scene, player: Player, size: number, padding: number, start: Vec2, itemLayer: string, slotSprite: string, slotLayer: string) {
+    constructor(scene: Scene, size: number, padding: number, start: Vec2, itemLayer: string, slotSprite: string, slotLayer: string) {
 
         this.scene = scene;
-        this.player = player;
 
         this.receiver = new Receiver();
 
@@ -111,7 +109,7 @@ export default class InventoryManager implements Updateable {
     }
 
     private handleItemChangeEvent(event: GameEvent): void {
-        let inv = this.player.inventory.getCopy();
+        let inv = event.data.get("items");
         let scale = this.scene.getViewScale();
         let scalar = new Vec2(scale, scale);
 

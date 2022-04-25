@@ -76,7 +76,7 @@ export default abstract class GameLevel extends Scene {
         this.initUIPrimary();
 
         this.addItemUILayers();
-        this.inventoryManager = new InventoryManager(this, this.player, 9, 16, new Vec2(450, 24), UILayers.ITEM_SPRITES, "itembg", UILayers.ITEM_SLOTS);
+        this.inventoryManager = new InventoryManager(this, 9, 16, new Vec2(450, 24), UILayers.ITEM_SPRITES, "itembg", UILayers.ITEM_SLOTS);
 
         this.pauseManager = new PauseManager(this, [GameLayers.PRIMARY], GameLayers.PAUSED);
 

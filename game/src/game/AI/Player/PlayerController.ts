@@ -2,7 +2,6 @@ import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import StateMachineAI from "../../../Wolfie2D/AI/StateMachineAI";
 import OrthogonalTilemap from "../../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
-import { StoreEvent } from "../../GameSystems/StoreManager";
 
 import {
 
@@ -15,6 +14,7 @@ import {
 import { GameEvents, EnemyActions } from "../../GameEnums";
 import { PickupTypes } from "../Pickup/PickupTypes";
 import { PlayerStat } from "../../Player/PlayerStats";
+import { StoreEvent } from "../../GameSystems/StoreManager";
 import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 
 import PlayerStats from "../../Player/PlayerStats";
@@ -50,7 +50,6 @@ export default class PlayerController extends StateMachineAI {
 	owner: AnimatedSprite;
 	playerInventory: PlayerInventory;
 	playerStats: PlayerStats;
-	
 
 	initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
 		this.owner = owner;
@@ -75,6 +74,7 @@ export default class PlayerController extends StateMachineAI {
 		
         this.initialize(PlayerStates.IDLE_RIGHT);
 
+		this.receiver.subscribe(StoreEvent.ITEM_PURCHASED);
 		this.receiver.subscribe(GameEvents.PICKUP_ITEM);
 		this.receiver.subscribe(EnemyActions.ATTACK);
 	}
@@ -89,6 +89,10 @@ export default class PlayerController extends StateMachineAI {
 			}
 			case EnemyActions.ATTACK: {
 				this.handleEnemyAttackEvent(event);
+				break;
+			}
+			case StoreEvent.ITEM_PURCHASED: {
+				this.handleItemPurchaseEvent(event);
 				break;
 			}
 			default: {
@@ -112,6 +116,29 @@ export default class PlayerController extends StateMachineAI {
 			this.handleEvent(this.receiver.getNextEvent());
 		}
 
+	}
+
+	private handleItemPurchaseEvent(event: GameEvent): void {
+		console.log("Item purchase event caught in player constroller!");
+		
+		let cost = event.data.get("cost");
+		let itemKey = event.data.get("itemKey");
+		let buy = event.data.get("buy");
+
+		if (cost <= this.playerStats.getStat("MONEY")) {
+
+			// Update players money
+			this.playerStats.setStat("MONEY", this.playerStats.getStat("MONEY") - cost);
+
+			// Add item to players inventory
+			this.playerInventory.addItem(itemKey);
+
+			// Buy is a callback function to the store we're buying from
+			buy();
+
+		} else {
+			// Not enough money - invalid purchase
+		}
 	}
 
 	// All item pickup events should have a "type"

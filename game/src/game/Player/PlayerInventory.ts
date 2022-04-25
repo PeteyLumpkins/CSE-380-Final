@@ -63,7 +63,7 @@ export default class Inventory {
         } else {
             this.inventory.push(itemKey);
             this.player.addBuffs(itemKey);
-            this.emitter.fireEvent(InventoryEvent.CHANGED);
+            this.emitter.fireEvent(InventoryEvent.CHANGED, {items: this.getCopy()});
         }
     }
 
@@ -90,7 +90,7 @@ export default class Inventory {
                 }
             });
 
-            this.emitter.fireEvent(InventoryEvent.CHANGED);
+            this.emitter.fireEvent(InventoryEvent.CHANGED, {items: this.getCopy()});
         }
     }
 
