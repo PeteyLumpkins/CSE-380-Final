@@ -15,6 +15,7 @@ import {
 import { GameEvents, EnemyActions } from "../../GameEnums";
 import { PickupTypes } from "../Pickup/PickupTypes";
 import { PlayerStat } from "../../Player/PlayerStats";
+import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 
 import PlayerStats from "../../Player/PlayerStats";
 import PlayerInventory from "../../Player/PlayerInventory";
@@ -117,10 +118,12 @@ export default class PlayerController extends StateMachineAI {
 	private handleItemPickupEvent(event: GameEvent): void {
 		switch(event.data.get("type")) {
 			case PickupTypes.MONEY: {
+				this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "coinSound", loop: false, holdReference: true});
 				this.playerStats.setStat("MONEY", this.playerStats.getStat("MONEY") + event.data.get("amount"));
 				break;
 			}
 			case PickupTypes.ITEM: {
+				// Add item pickup sound affect here
 				this.playerInventory.addItem(event.data.get('itemKey'));
 				break;
 			}

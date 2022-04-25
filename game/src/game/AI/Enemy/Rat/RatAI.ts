@@ -3,6 +3,7 @@ import GameNode from "../../../../Wolfie2D/Nodes/GameNode";
 import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
 
 import { PlayerEvents } from "../../Player/PlayerController";
+import { GameEventType } from "../../../../Wolfie2D/Events/GameEventType";
 
 import RatIdle from "./RatStates/RatIdle";
 import RatActive from "./RatStates/RatActive";
@@ -71,8 +72,8 @@ export default class RatAI extends EnemyAI {
     }
 
     handlePlayerAttackEvent(event: GameEvent): void {
-
         if (this.owner.position.distanceTo(event.data.get("position")) <= event.data.get("range")) {
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "hitSound", loop: false, holdReference: true});
             this.health -= event.data.get("damage");
         }
     }
