@@ -26,8 +26,8 @@ export default class Player {
 
         // Should be a stat for each of the stats a player
         for (let buff of buffs) {
-            console.log(buff.type + " " + buff.value);
-            this.stats.setStat(buff.type, this.stats.getStat(buff.type)*buff.scale);
+            console.log(buff.type + " " + buff.scale);
+            this.stats.setStat(buff.type, (this.stats.getStat(buff.type) !== null ? this.stats.getStat(buff.type) : 1)*buff.scale);
         }
     }
 
@@ -43,7 +43,7 @@ export default class Player {
 
         // Should be a case for each of the stats a player can have
         for (let buff of buffs) {
-            this.stats.setStat(buff.type, this.stats.getStat(buff.type)/buff.scale);
+            this.stats.setStat(buff.type, (this.stats.getStat(buff.type) !== null ? this.stats.getStat(buff.type) : 1)/buff.scale);
         }
     }
 

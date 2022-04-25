@@ -3,12 +3,12 @@ import OrthogonalTilemap from "../../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilema
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import StoreController from "../../AI/Store/StoreController";
 import PlayerController from "../../AI/Player/PlayerController";
-import { GameSprites, GameData, ItemSprites, GameLayers } from "../../GameEnums";
+import { GameSprites, GameData, GameLayers } from "../../GameEnums";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import PositionGraph from "../../../Wolfie2D/DataTypes/Graphs/PositionGraph";
 import Navmesh from "../../../Wolfie2D/Pathfinding/Navmesh";
 import { GraphicType } from "../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
-
+import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 import { RatAIOptionType } from "../../AI/Enemy/Rat/RatAI";
 
 import GameLevel from "../GameLevel";
@@ -58,6 +58,18 @@ export default class Level1 extends GameLevel {
         // this.load.image(ItemSprites.MOLD_BREAD, "assets/itemsprites/moldBread.png");
         // this.load.image(ItemSprites.OLD_BOOT, "assets/itemsprites/oldBoot.png");
         this.load.image(GameSprites.LADDER, "assets/sprites/EndOfLevel.png");
+
+        this.load.audio("level1", "assets/music/Level1-1.wav");
+        this.load.audio("hitSound", "assets/soundEffects/smack.wav");
+        this.load.audio("coinSound", "assets/soundEffects/coin.wav");
+        this.load.audio("footstep", "assets/soundEffects/footstep1.wav");
+        this.load.audio("buySound", "assets/soundEffects/shopBuy.wav");
+        this.load.audio("textbox", "assets/soundEffects/textbox.wav");
+
+    }
+
+    unloadScene(): void {
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level1"});
     }
 
     /**
@@ -75,6 +87,7 @@ export default class Level1 extends GameLevel {
         // this.itemBarBackground = this.add.sprite("itembarbg", GameLayers.UI);
         // this.itemBarBackground.position.set(this.viewport.getCenter().x, 32);
         super.startScene();
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level1", loop: true, holdReference: true});
     }
 
     initViewport(): void {

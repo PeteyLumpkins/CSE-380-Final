@@ -8,6 +8,7 @@ import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 
 import PlayerController from "../PlayerController";
 import { PlayerEvents } from "../../Player/PlayerController";
+import { GameEventType } from "../../../../Wolfie2D/Events/GameEventType";
 import { PlayerStat } from "../../../Player/PlayerStats";
 
 export default abstract class PlayerState extends State {
@@ -58,8 +59,12 @@ export default abstract class PlayerState extends State {
      */
 	update(deltaT: number): void {
 		let speedScale = this.parent.playerStats.getStat(PlayerStat.MOVE_SPEED) !== null ? this.parent.playerStats.getStat(PlayerStat.MOVE_SPEED) : 1;
-		console.log("Moving with a speed scale of: " + speedScale);
-		this.owner.move(this.getInputDirection().mult(new Vec2(speedScale, speedScale))); 
+		let dir = this.getInputDirection()
+		if (!dir.isZero) {
+			this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "footstep", loop: false, holdReference: true});
+		}
+		this.owner.move(dir.mult(new Vec2(speedScale, speedScale))); 
+		
 	}
 
 }

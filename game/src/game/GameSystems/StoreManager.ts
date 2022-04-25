@@ -15,6 +15,7 @@ import GameEvent from "../../Wolfie2D/Events/GameEvent";
 
 import Color from "../../Wolfie2D/Utils/Color";
 
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import { GameEvents } from "../GameEnums";
 
 import Player from "../Player/Player";
@@ -31,6 +32,7 @@ export default class StoreManager implements Updateable {
     private scene: Scene;
     private numItems: number;
 
+    private emitter: Emitter;
     private receiver: Receiver;
 
     /* Store related data */
@@ -67,6 +69,7 @@ export default class StoreManager implements Updateable {
             this.buttonLayer = buttonLayer;
 
             this.receiver = new Receiver();
+            this.emitter = new Emitter();
 
             this.receiver.subscribe(GameEvents.OPEN_STORE);
             this.receiver.subscribe(GameEvents.CLOSE_STORE);
@@ -100,16 +103,17 @@ export default class StoreManager implements Updateable {
         switch(event.type) {
             case GameEvents.OPEN_STORE: {
                 console.log("Open store event caught!");
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "textbox", loop: false, holdReference: true});
                 this.handleOpenStoreEvent(event);
                 break;
             }
             case GameEvents.CLOSE_STORE: {
                 console.log("Close store event caught!");
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "textbox", loop: false, holdReference: true});
                 this.handleCloseStoreEvent(event);
                 break;
             }
             default: {
-                console.log("")
                 break;
             }
         }
@@ -243,6 +247,8 @@ export default class StoreManager implements Updateable {
     private handleItemPurchase(index: number): void {
         let items = this.scene.load.getObject("item-data");
         let itemData = items[this.storeItems[index]];
+
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "buySound", loop: false, holdReference: true});
 
         this.player.inventory.addItem(this.storeItems[index]);
         this.player.stats.setStat("MONEY", this.player.stats.getStat("MONEY") - itemData.cost);
