@@ -32,7 +32,7 @@ export default class Level1 extends GameLevel {
 
     loadScene(){
         
-        this.load.tilemap("level", "assets/tilemaps/prototypeMap.json");
+        this.load.tilemap("level", "assets/tilemaps/levelOne.json");
 
         for (let i = 0; i < items.length; i++) {
             this.load.image(items[i].key, items[i].path);
