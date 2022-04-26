@@ -18,7 +18,7 @@ import Color from "../../Wolfie2D/Utils/Color";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import { GameEvents } from "../GameEnums";
 
-import Player from "../Player/Player";
+import StoreItems from "../Store/StoreItems";
 
 
 export enum StoreEvent {
@@ -36,8 +36,7 @@ export default class StoreManager implements Updateable {
     private receiver: Receiver;
 
     /* Store related data */
-    protected storeItems: Array<string>;
-    protected player: Player;
+    protected storeItems: StoreItems;
 
     /* Store UI Layers */
     private backgroundLayer: string;
@@ -121,7 +120,7 @@ export default class StoreManager implements Updateable {
 
     private handleOpenStoreEvent(event: GameEvent) {
         this.storeItems = event.data.get("items");
-        this.player = event.data.get("player");
+        console.log(this.storeItems);
 
         this.loadStoreItems();
         this.openStore();
@@ -154,16 +153,15 @@ export default class StoreManager implements Updateable {
         /* Getting the item data */
         let items = this.scene.load.getObject("item-data");
 
-
         for (let i = 0; i < this.numItems; i += 1, startX += spaceX) {
             let oldsprite = this.itemSprites[i];
 
-            this.itemSprites[i] = this.scene.add.sprite(this.storeItems[i], this.itemLayer);
+            this.itemSprites[i] = this.scene.add.sprite(this.storeItems.getItem(i).key, this.itemLayer);
             this.itemSprites[i].position.set(startX, startY).sub(origin);
             this.itemSprites[i].scale.set(5, 5).div(scalar);
 
-            this.itemCostLabels[i].text = items[this.storeItems[i]].cost;
-            this.itemNameLabels[i].text = items[this.storeItems[i]].name;
+            this.itemCostLabels[i].text = items[this.storeItems.getItem(i).key].cost;
+            this.itemNameLabels[i].text = items[this.storeItems.getItem(i).key].name;
 
             if (oldsprite !== undefined && oldsprite !== null ) {
                 oldsprite.destroy();
@@ -246,12 +244,18 @@ export default class StoreManager implements Updateable {
 
     private handleItemPurchase(index: number): void {
         let items = this.scene.load.getObject("item-data");
-        let itemData = items[this.storeItems[index]];
+        
+        let item = this.storeItems.getItem(index)
+        let key = item.key;
+        let cost = items[key].cost;
 
-        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "buySound", loop: false, holdReference: true});
-
-        this.player.inventory.addItem(this.storeItems[index]);
-        this.player.stats.setStat("MONEY", this.player.stats.getStat("MONEY") - itemData.cost);
+        this.emitter.fireEvent(StoreEvent.ITEM_PURCHASED, {
+            itemKey: key,
+            cost: cost, 
+            buy: () => {
+                this.storeItems.removeItem(index);
+            }
+        });
     }
 
 }

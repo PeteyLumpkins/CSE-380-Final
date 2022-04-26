@@ -21,14 +21,14 @@ export default class RatMoveAction extends GoapAction {
         //Check if preconditions are met for this action to be performed
         if (this.checkPreconditions(statuses)){
             let enemy = <RatAI>actor;
-            let distance = enemy.owner.position.distanceTo(enemy.player.node.position);
+            let distance = enemy.owner.position.distanceTo(enemy.target.position);
 
             // Trigger the attack action
             if (distance <= enemy.attackRange){
                 return this.effects;
             }
 
-            this.path = enemy.owner.getScene().getNavigationManager().getPath("navmesh", enemy.owner.position, enemy.player.node.position, true)
+            this.path = enemy.owner.getScene().getNavigationManager().getPath("navmesh", enemy.owner.position, enemy.target.position, true)
             enemy.owner.moveOnPath(enemy.moveSpeed * deltaT, this.path);
             return null;
         }

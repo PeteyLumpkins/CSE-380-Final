@@ -19,7 +19,10 @@ import RatAttack from "../../AI/Enemy/Rat/RatActions/RatAttack";
 import RatMove from "../../AI/Enemy/Rat/RatActions/RatMove";
 
 import items from "./items.json";
-import Player from "../../Player/Player";
+
+import PlayerStats from "../../AI/Player/PlayerStats";
+import PlayerInventory from "../../AI/Player/PlayerInventory";
+import StoreItems from "../../Store/StoreItems";
 
 
 export default class Level1 extends GameLevel {
@@ -59,7 +62,7 @@ export default class Level1 extends GameLevel {
         // this.load.image(ItemSprites.OLD_BOOT, "assets/itemsprites/oldBoot.png");
         this.load.image(GameSprites.LADDER, "assets/sprites/EndOfLevel.png");
 
-        this.load.audio("level1", "assets/music/Level1-1.wav");
+        this.load.audio("level1", "assets/music/Level1.wav");
         this.load.audio("hitSound", "assets/soundEffects/smack.wav");
         this.load.audio("coinSound", "assets/soundEffects/coin.wav");
         this.load.audio("footstep", "assets/soundEffects/footstep1.wav");
@@ -98,29 +101,33 @@ export default class Level1 extends GameLevel {
         let scale = this.viewport.getZoomLevel();
         let scalar = new Vec2(scale, scale);
 
-        let playerNode = this.add.animatedSprite("player", GameLayers.PRIMARY);
+        this.player = this.add.animatedSprite("player", GameLayers.PRIMARY);
+		this.player.position.set(448, 480);
+		let playerCollider = new AABB(Vec2.ZERO, new Vec2(this.player.sizeWithZoom.x, this.player.sizeWithZoom.y).div(scalar).div(new Vec2(2, 2)));
+        this.player.addPhysics();
+		this.player.setCollisionShape(playerCollider);
+
         let inventory = new Array<string>();
         let stats = {"HEALTH": 20, "MONEY": 10, "MOVE_SPEED": 1};
+		this.player.addAI(PlayerController, {inventory: new PlayerInventory(inventory, 9), stats: new PlayerStats(stats)});
 
-        this.player = new Player(playerNode, inventory, stats);
-
-		playerNode.position.set(448, 480);
-		let playerCollider = new AABB(Vec2.ZERO, new Vec2(playerNode.sizeWithZoom.x, playerNode.sizeWithZoom.y).div(scalar).div(new Vec2(2, 2)));
-        playerNode.addPhysics();
-		playerNode.setCollisionShape(playerCollider);
-		playerNode.addAI(PlayerController, {inventory: this.player.inventory, stats: this.player.stats});
-
-        this.viewport.follow(playerNode);
+        this.viewport.follow(this.player);
     }
 
     initStore(): void {
     
-        let items = ["moldy_bread", "old_boot", "mystery_liquid"];
+        let storeItems = new StoreItems(
+            [
+                {key: "moldy_bread", count: 1},
+                {key: "old_boot", count: 1},
+                {key: "mystery_liquid", count: 1}
+            ]
+        )
 
         this.store = this.add.animatedSprite("store_terminal", GameLayers.PRIMARY);
         this.store.position.set(1056, 1152);
         this.store.scale.set(0.4, 0.4);
-        this.store.addAI(StoreController, {radius: 100, player: this.player, items: items});
+        this.store.addAI(StoreController, {radius: 100, target: this.player, items: storeItems});
     }
 
     initMap(): void {
@@ -171,7 +178,7 @@ export default class Level1 extends GameLevel {
     initLevelLinks(): void {
         this.nextLevel = this.add.sprite(GameSprites.LADDER, GameLayers.PRIMARY);
         this.nextLevel.position.set(2960, 595);
-        this.nextLevel.addAI(LevelEndAI, {player: this.player.node, range: 25, nextLevel: Level1});
+        this.nextLevel.addAI(LevelEndAI, {player: this.player, range: 25, nextLevel: Level1});
     }
 
     initEnemies(): void {
