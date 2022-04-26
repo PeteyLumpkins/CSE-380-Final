@@ -7,6 +7,7 @@ import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import GameNode from "../../Wolfie2D/Nodes/GameNode";
 
 import { GameEvents, GameLayers, GameSprites, GameData, StoreEvents, ItemSprites } from "../GameEnums";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
@@ -16,7 +17,6 @@ import InventoryManager from "../GameSystems/InventoryManager";
 import PauseManager from "../GameSystems/PauseManager";
 import StoreManager from "../GameSystems/StoreManager";
 
-import Player from "../Player/Player";
 
 export enum UILayers {
     ITEM_BAR = "UI_LAYER_ITEM_BAR",
@@ -38,7 +38,7 @@ export enum UILayers {
 export default abstract class GameLevel extends Scene {
 
     /* THE PLAYER */
-    protected player: Player;
+    protected player: AnimatedSprite;
 
     /* PLAYER UI STATS */
     protected playerHealth: number = 20;

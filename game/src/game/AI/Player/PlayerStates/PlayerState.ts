@@ -9,7 +9,7 @@ import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 import PlayerController from "../PlayerController";
 import { PlayerEvents } from "../../Player/PlayerController";
 import { GameEventType } from "../../../../Wolfie2D/Events/GameEventType";
-import { PlayerStat } from "../../../Player/PlayerStats";
+import { PlayerStat } from "../PlayerStats";
 
 export default abstract class PlayerState extends State {
 

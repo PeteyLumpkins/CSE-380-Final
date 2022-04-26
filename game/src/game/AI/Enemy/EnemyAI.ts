@@ -4,8 +4,6 @@ import GoapAction from "../../../Wolfie2D/DataTypes/Interfaces/GoapAction";
 import Stack from "../../../Wolfie2D/DataTypes/Stack";
 import GameNode from "../../../Wolfie2D/Nodes/GameNode";
 
-import Player from "../../Player/Player";
-
 import { EnemyStates, EnemyStatuses } from "../../GameEnums";
 
 /**
@@ -22,11 +20,12 @@ export default abstract class EnemyAI extends StateMachineGoapAI {
     owner: GameNode
 
     /** The player node */
-    player: Player;
+    target: GameNode;
 
     initializeAI(owner: GameNode, options: Record<string, any>): void {
         this.owner = owner;
-        this.player = options.player;
+        console.log(options.target);
+        this.target = options.target;
 
         /* States */
         this.initStates();

@@ -1,17 +1,12 @@
 import StateMachineAI from "../../../Wolfie2D/AI/StateMachineAI";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import GameNode from "../../../Wolfie2D/Nodes/GameNode";
-import Circle from "../../../Wolfie2D/DataTypes/Shapes/Circle";
-import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 
 import Disabled from "./StoreStates/Disabled";
 import Enabled from "./StoreStates/Enabled";
 import Open from "./StoreStates/Open";
 
-import Player from "../../Player/Player";
 import StoreItems from "../../Store/StoreItems"
-
-import {StoreEvents} from "../../GameEnums";
 
 export enum StoreStates {
     DISABLED = "STORE_DISABLED",
@@ -22,7 +17,6 @@ export enum StoreStates {
 export default class StoreController extends StateMachineAI {
 
     owner: AnimatedSprite;
-    player: Player;
     target: GameNode;
     items: StoreItems;
     range: number;
@@ -33,8 +27,7 @@ export default class StoreController extends StateMachineAI {
 
         this.items = options.items;
         this.range = options.radius
-        this.player = options.player;
-        this.target = this.player.node;
+        this.target = options.target;
         
         this.addState(StoreStates.DISABLED, new Disabled(this, this.owner));
         this.addState(StoreStates.ENABLED, new Enabled(this, this.owner));

@@ -1,10 +1,7 @@
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
-import GameNode from "../../Wolfie2D/Nodes/GameNode";
 
-import Input from "../../Wolfie2D/Input/Input";
-import Emitter from "../../Wolfie2D/Events/Emitter";
 import Receiver from "../../Wolfie2D/Events/Receiver";
 import GameEvent from "../../Wolfie2D/Events/GameEvent";
 
@@ -12,17 +9,7 @@ import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import Color from "../../Wolfie2D/Utils/Color";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Updateable from "../../Wolfie2D/DataTypes/Interfaces/Updateable";
-
-import { StoreEvent } from "./StoreManager";
-import { GameLayers } from "../GameEnums";
-import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
-
-import PlayerController from "../AI/Player/PlayerController";
-import PickupAI from "../AI/Pickup/PickupAI";
-import { PickupTypes } from "../AI/Pickup/PickupTypes";
-
-import Player from "../Player/Player";
-import { InventoryEvent } from "../Player/PlayerInventory";
+import { InventoryEvent } from "../AI/Player/PlayerInventory";
 
 /**
  * Manages the player inventory that is displayed in the GameLevel UI
