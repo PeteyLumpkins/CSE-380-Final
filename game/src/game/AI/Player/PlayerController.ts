@@ -128,9 +128,9 @@ export default class PlayerController extends StateMachineAI {
 			this.playerStats.setStat("MONEY", this.playerStats.getStat("MONEY") - cost);
 			this.addItem(itemKey);
 			buy();
+			this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "buySound", loop: false, holdReference: true});
 		} else {
-			// Not enough money - invalid purchase
-			// Play invalid purchase sound here
+			this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "invalidbuy", loop: false, holdReference: true});
 		}
 	}
 
@@ -144,6 +144,7 @@ export default class PlayerController extends StateMachineAI {
 			}
 			case PickupTypes.ITEM: {
 				// Add item pickup sound affect here
+				this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "itempickup", loop: false, holdReference: true});
 				let item = event.data.get('itemKey');
 				this.addItem(item);
 				break;
@@ -157,6 +158,7 @@ export default class PlayerController extends StateMachineAI {
 
 	private handleItemDropEvent(index: number): void {
 		this.removeItem(index);
+		this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "itemdrop", loop: false, holdReference: true});
 	}
 
 	// TODO: handles when an enemy trys to attack the player
@@ -210,6 +212,7 @@ export default class PlayerController extends StateMachineAI {
 			let buffs = this.owner.getScene().load.getObject("item-data")[itemKey].buffs;
 			this.playerStats.removeBuffs(buffs);
 			this.addItemDrop(itemKey);
+			
 		}
 	}
 

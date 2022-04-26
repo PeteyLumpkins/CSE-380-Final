@@ -18,7 +18,7 @@ import Color from "../../Wolfie2D/Utils/Color";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import { GameEvents } from "../GameEnums";
 
-import StoreItems from "../Store/StoreItems";
+import StoreItems from "../AI/Store/StoreItems";
 
 
 export enum StoreEvent {

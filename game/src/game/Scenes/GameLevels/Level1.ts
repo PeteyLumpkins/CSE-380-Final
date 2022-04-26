@@ -15,14 +15,12 @@ import GameLevel from "../GameLevel";
 import LevelEndAI from "../../AI/LevelEnd/LevelEndAI";
 
 import RatAI from "../../AI/Enemy/Rat/RatAI";
-import RatAttack from "../../AI/Enemy/Rat/RatActions/RatAttack";
-import RatMove from "../../AI/Enemy/Rat/RatActions/RatMove";
 
 import items from "./items.json";
 
 import PlayerStats from "../../AI/Player/PlayerStats";
 import PlayerInventory from "../../AI/Player/PlayerInventory";
-import StoreItems from "../../Store/StoreItems";
+import StoreItems from "../../AI/Store/StoreItems";
 
 
 export default class Level1 extends GameLevel {
@@ -68,6 +66,10 @@ export default class Level1 extends GameLevel {
         this.load.audio("footstep", "assets/soundEffects/footstep1.wav");
         this.load.audio("buySound", "assets/soundEffects/shopBuy.wav");
         this.load.audio("textbox", "assets/soundEffects/textbox.wav");
+
+        this.load.audio("itemdrop", "assets/soundEffects/itemDrop.wav");
+        this.load.audio("itempickup", "assets/soundEffects/itemPickup.wav");
+        this.load.audio("invalidbuy", "assets/soundEffects/invalidStore.wav");
 
     }
 
