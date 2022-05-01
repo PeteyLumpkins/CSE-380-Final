@@ -18,7 +18,6 @@ import RatAI from "../../AI/Enemy/Rat/RatAI";
 
 import items from "./items.json";
 
-import Player from "../../Player/Player";
 import Level2 from "./Level2";
 
 import PlayerStats from "../../AI/Player/PlayerStats";
@@ -73,10 +72,15 @@ export default class Level1 extends GameLevel {
         this.load.audio("itemdrop", "assets/soundEffects/itemDrop.wav");
         this.load.audio("itempickup", "assets/soundEffects/itemPickup.wav");
         this.load.audio("invalidbuy", "assets/soundEffects/invalidStore.wav");
-
     }
 
     unloadScene(): void {
+        this.load.keepSpritesheet("player");
+        this.load.keepSpritesheet("store_terminal");
+        this.load.keepImage("itembg");
+        this.load.keepImage("itembarbg");
+        this.load.keepSpritesheet(GameSprites.STORE_BG);
+
         this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level1"});
     }
 
@@ -85,15 +89,12 @@ export default class Level1 extends GameLevel {
      * health and buffs through the game levels.
      */
     startScene(){
-        console.log(this.load.getObject("item-meta"));
         this.addLayer(GameLayers.PRIMARY, 5);
         
         let bgPipe = this.add.animatedSprite("brokenGreenPipe", GameLayers.PRIMARY);
         bgPipe.animation.play("idle", true);
         bgPipe.position.set(880, 432);
 
-        // this.itemBarBackground = this.add.sprite("itembarbg", GameLayers.UI);
-        // this.itemBarBackground.position.set(this.viewport.getCenter().x, 32);
         super.startScene();
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level1", loop: true, holdReference: true});
     }
@@ -128,7 +129,7 @@ export default class Level1 extends GameLevel {
                 {key: "old_boot", count: 1},
                 {key: "mystery_liquid", count: 1}
             ]
-        )
+        );
 
         this.store = this.add.animatedSprite("store_terminal", GameLayers.PRIMARY);
         this.store.position.set(1056, 1152);
@@ -186,7 +187,7 @@ export default class Level1 extends GameLevel {
         this.nextLevel = this.add.sprite(GameSprites.LADDER, GameLayers.PRIMARY);
         this.nextLevel.position.set(2960, 595);
 
-        this.nextLevel.addAI(LevelEndAI, {player: this.player.node, range: 25, nextLevel: Level2});
+        this.nextLevel.addAI(LevelEndAI, {player: this.player, range: 25, nextLevel: Level2});
     }
 
     initEnemies(): void {
