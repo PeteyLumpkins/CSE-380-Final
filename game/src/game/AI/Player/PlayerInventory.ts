@@ -12,12 +12,22 @@ export default class Inventory {
     /* The maximum number of items allowed in the inventory */
     private maxItems: number;
 
+    // Previous carry in 
+    private prevInventory: Array<string>;
+
     /* Emitter to fire off inventory changed events */
     private emitter: Emitter;
 
-    constructor(inventory: Array<string>, maxItems: number) {
+    constructor(inventory: Array<string>, maxItems: number, options: Array<string>) {
         this.inventory = inventory;
         this.maxItems = maxItems;
+
+        // TODO: i dont know if it should be in here that the previous invetory is passed into the new one and each item is added
+        this.prevInventory = options;
+        for(let item in this.prevInventory){
+            this.addItem(item);
+            console.log("Carryin from previous in PlayerInventory.ts of " + item);
+        }
 
         this.emitter = new Emitter();
     }

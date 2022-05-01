@@ -1,12 +1,12 @@
 import StateMachineAI from "../../../Wolfie2D/AI/StateMachineAI";
+import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
+import Emitter from "../../../Wolfie2D/Events/Emitter";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import GameNode from "../../../Wolfie2D/Nodes/GameNode";
-import Emitter from "../../../Wolfie2D/Events/Emitter";
-import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
-
 import GameLevel from "../../Scenes/GameLevel";
 import InLevelEnd from "./LevelEndStates/InLevelEnd";
 import OutLevelEnd from "./LevelEndStates/OutLevelEnd";
+
 
 export enum LevelEndStates {
     INSIDE = "LEVEL_END_STATE_INSIDE",
@@ -20,7 +20,7 @@ export default class LevelEndAI extends StateMachineAI {
     protected player: GameNode;
     nextLevel: new (...args: any) => GameLevel;
     protected range: number;
-    public playerSpawn: Vec2;
+    public playerSpawn: Vec2;   // ! Needs to be public for it to work in the InLevelEnd?
 
     protected emitter: Emitter;
 
@@ -47,6 +47,9 @@ export default class LevelEndAI extends StateMachineAI {
     getRange(): number { return this.range; }
 
     getPlayerPosition(): Vec2 { return this.player.position; }
+
+    getPlayer(): GameNode { return this.player; }
+
 
     destroy(): void {}
 
