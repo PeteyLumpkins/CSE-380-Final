@@ -21,7 +21,7 @@ export default class InLevelEnd extends LevelEndState {
 
         if (this.nextLevel()) {
             console.log("Firing next level event");
-            this.emitter.fireEvent(GameEvents.CHANGE_LEVEL, {"level": this.parent.nextLevel});
+            this.emitter.fireEvent(GameEvents.CHANGE_LEVEL, {"level": this.parent.nextLevel, "spawn": this.parent.playerSpawn});
         }
     }
 

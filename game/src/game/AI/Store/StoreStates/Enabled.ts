@@ -6,7 +6,7 @@ export default class Enabled extends StoreState {
 
     onEnter(options: Record<string, any>): void {
         console.log("Started enabled store state");
-        this.owner.animation.play("enabled");
+        this.owner.animation.play("idle");
     }
 
     // FIXME: for some reason the store isn't opening when I press the "open" key
