@@ -20,6 +20,7 @@ import RatMove from "../../AI/Enemy/Rat/RatActions/RatMove";
 
 import items from "./items.json";
 import Player from "../../Player/Player";
+import Level2 from "./Level2";
 
 
 export default class Level1 extends GameLevel {
@@ -87,7 +88,7 @@ export default class Level1 extends GameLevel {
 
         let playerNode = this.add.animatedSprite("player", GameLayers.PRIMARY);
         let inventory = new Array<string>();
-        let stats = {"HEALTH": 20, "MONEY": 10, "MOVE_SPEED": 1};
+        let stats = {"HEALTH": 20, "MONEY": 10, "MOVE_SPEED": 3};
 
         this.player = new Player(playerNode, inventory, stats);
 
@@ -158,7 +159,7 @@ export default class Level1 extends GameLevel {
     initLevelLinks(): void {
         this.nextLevel = this.add.sprite(GameSprites.LADDER, GameLayers.PRIMARY);
         this.nextLevel.position.set(2960, 595);
-        this.nextLevel.addAI(LevelEndAI, {player: this.player.node, range: 25, nextLevel: Level1});
+        this.nextLevel.addAI(LevelEndAI, {player: this.player.node, range: 25, nextLevel: Level2});
     }
 
     initEnemies(): void {
