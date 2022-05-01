@@ -20,10 +20,10 @@ export default class RatDead extends RatState {
         coin.position.set(this.owner.position.x, this.owner.position.y);
         coin.addAI(PickupAI, {
             canPickup: () => {
-                return this.parent.player.node.position.distanceTo(coin.position) <= 50;
+                return this.parent.target.position.distanceTo(coin.position) <= 50;
             },
             pickup: () => {
-                return this.parent.player.node.position.distanceTo(coin.position) <= 50;
+                return this.parent.target.position.distanceTo(coin.position) <= 50;
             },
             data: {type: PickupTypes.MONEY, amount: 1}
         });

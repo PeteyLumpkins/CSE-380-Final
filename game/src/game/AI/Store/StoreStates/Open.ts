@@ -13,8 +13,7 @@ export default class Open extends StoreState {
      */
     onEnter(options: Record<string, any>): void {
         this.emitter.fireEvent(GameEvents.OPEN_STORE, {
-            items: this.parent.items, 
-            player: this.parent.player
+            items: this.parent.items
         });
     }
 
