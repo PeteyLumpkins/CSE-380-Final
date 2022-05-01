@@ -13,6 +13,7 @@ import items from "./items.json";
 import LevelEndAI from "../../AI/LevelEnd/LevelEndAI";
 
 import Level1 from "./Level1";
+import StoreItems from "../../AI/Store/StoreItems";
 
 
 
@@ -20,7 +21,7 @@ import Level1 from "./Level1";
 
 export default class Shop extends GameLevel {
     protected walls: OrthogonalTilemap;
-
+    protected prevInventory: Array<string>;
     loadScene(): void {
         this.load.tilemap("level", "assets/tilemaps/shopLevel.json");
 
@@ -49,6 +50,7 @@ export default class Shop extends GameLevel {
     unloadScene(): void {
         this.load.keepImage("itembg");
         this.load.keepImage("itembarbg");
+        console.log("Unloading!");
 
     }
 
@@ -72,7 +74,7 @@ export default class Shop extends GameLevel {
 
         let inventory = new Array<string>();
         let stats = {"HEALTH": 20, "MONEY": 10, "MOVE_SPEED": 1};
-		this.player.addAI(PlayerController, {inventory: new PlayerInventory(inventory, 9), stats: new PlayerStats(stats)});
+		this.player.addAI(PlayerController, {inventory: new PlayerInventory(inventory, 9, this.prevInventory), stats: new PlayerStats(stats)});
 
         this.viewport.follow(this.player);
     }
@@ -107,7 +109,7 @@ export default class Shop extends GameLevel {
         // Set the viewport bounds to the tilemap
         let tilemapSize: Vec2 = this.walls.size;
 
-        this.viewport.setZoomLevel(2);
+        this.viewport.setZoomLevel(1);
         this.viewport.setCenter((tilemapSize.x / 2), (tilemapSize.y / 2));
         this.viewport.setBounds(0, 0, tilemapSize.x, tilemapSize.y);
     }

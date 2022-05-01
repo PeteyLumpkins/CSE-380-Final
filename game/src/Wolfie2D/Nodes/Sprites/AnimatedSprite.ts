@@ -7,6 +7,7 @@ import Vec2 from "../../DataTypes/Vec2";
 export default class AnimatedSprite extends Sprite {
     /** The number of columns in this sprite sheet */
     protected numCols: number;
+    node: any;
 
     get cols(): number {
         return this.numCols;
