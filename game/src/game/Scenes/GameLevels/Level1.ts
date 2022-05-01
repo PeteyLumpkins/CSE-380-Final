@@ -23,7 +23,7 @@ import Level2 from "./Level2";
 import PlayerStats from "../../AI/Player/PlayerStats";
 import PlayerInventory from "../../AI/Player/PlayerInventory";
 
-import StoreItems from "../../Store/StoreItems";
+import StoreItems from "../../AI/Store/StoreItems";
 import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
 import Shop from "./Shop";
 
@@ -131,18 +131,18 @@ export default class Level1 extends GameLevel {
 
     initStore(): void {
     
-        let storeItems = new StoreItems(
-            [
-                {key: "moldy_bread", count: 1},
-                {key: "old_boot", count: 1},
-                {key: "mystery_liquid", count: 1}
-            ]
-        );
+        // let storeItems = new StoreItems(
+        //     [
+        //         {key: "moldy_bread", count: 1},
+        //         {key: "old_boot", count: 1},
+        //         {key: "mystery_liquid", count: 1}
+        //     ]
+        // );
 
-        this.store = this.add.animatedSprite("store_terminal", GameLayers.PRIMARY);
-        this.store.position.set(1056, 1152);
-        this.store.scale.set(0.4, 0.4);
-        this.store.addAI(StoreController, {radius: 100, target: this.player, items: storeItems});
+        // this.store = this.add.animatedSprite("store_terminal", GameLayers.PRIMARY);
+        // this.store.position.set(1056, 1152);
+        // this.store.scale.set(0.4, 0.4);
+        // this.store.addAI(StoreController, {radius: 100, target: this.player, items: storeItems});
 
     }
 
@@ -190,7 +190,6 @@ export default class Level1 extends GameLevel {
         let navmesh = new Navmesh(this.navmeshGraph);
 
         this.navManager.addNavigableEntity("navmesh", navmesh);
-        this.drawHitbox();
     }
 
     initLevelLinks(): void {

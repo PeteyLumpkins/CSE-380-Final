@@ -6,8 +6,9 @@ import PlayerInventory from "../../AI/Player/PlayerInventory";
 import PlayerStats from "../../AI/Player/PlayerStats";
 import StoreController from "../../AI/Store/StoreController";
 import { GameData, GameLayers, GameSprites, ItemSprites } from "../../GameEnums";
-import StoreItems from "../../Store/StoreItems";
 import GameLevel from "../GameLevel";
+
+import StoreItems from "../../AI/Store/StoreItems";
 import items from "./items.json";
 import LevelEndAI from "../../AI/LevelEnd/LevelEndAI";
 
