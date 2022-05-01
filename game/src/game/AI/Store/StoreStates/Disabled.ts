@@ -5,7 +5,7 @@ import { StoreStates }  from "../StoreController";
 export default class Disabled extends StoreState {
 
     onEnter(options: Record<string, any>): void {
-        this.owner.animation.play("disabled");
+        this.owner.animation.play("idle");
     }
 
     update(deltaT: number): void {

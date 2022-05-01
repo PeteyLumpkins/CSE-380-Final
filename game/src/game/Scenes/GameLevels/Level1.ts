@@ -23,6 +23,8 @@ import items from "./items.json";
 import PlayerStats from "../../AI/Player/PlayerStats";
 import PlayerInventory from "../../AI/Player/PlayerInventory";
 import StoreItems from "../../Store/StoreItems";
+import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
+import Shop from "./Shop";
 
 
 export default class Level1 extends GameLevel {
@@ -102,13 +104,14 @@ export default class Level1 extends GameLevel {
         let scalar = new Vec2(scale, scale);
 
         this.player = this.add.animatedSprite("player", GameLayers.PRIMARY);
-		this.player.position.set(448, 480);
+        this.player.position.set(this.PLAYER_SPAWN.x, this.PLAYER_SPAWN.y);
+		// this.player.position.set(448, 480)  ;
 		let playerCollider = new AABB(Vec2.ZERO, new Vec2(this.player.sizeWithZoom.x, this.player.sizeWithZoom.y).div(scalar).div(new Vec2(2, 2)));
         this.player.addPhysics();
 		this.player.setCollisionShape(playerCollider);
 
         let inventory = new Array<string>();
-        let stats = {"HEALTH": 20, "MONEY": 10, "MOVE_SPEED": 1};
+        let stats = {"HEALTH": 20, "MONEY": 10, "MOVE_SPEED": 4};
 		this.player.addAI(PlayerController, {inventory: new PlayerInventory(inventory, 9), stats: new PlayerStats(stats)});
 
         this.viewport.follow(this.player);
@@ -116,21 +119,22 @@ export default class Level1 extends GameLevel {
 
     initStore(): void {
     
-        let storeItems = new StoreItems(
-            [
-                {key: "moldy_bread", count: 1},
-                {key: "old_boot", count: 1},
-                {key: "mystery_liquid", count: 1}
-            ]
-        )
+        // let storeItems = new StoreItems(
+        //     [
+        //         {key: "moldy_bread", count: 1},
+        //         {key: "old_boot", count: 1},
+        //         {key: "mystery_liquid", count: 1}
+        //     ]
+        // )
 
-        this.store = this.add.animatedSprite("store_terminal", GameLayers.PRIMARY);
-        this.store.position.set(1056, 1152);
-        this.store.scale.set(0.4, 0.4);
-        this.store.addAI(StoreController, {radius: 100, target: this.player, items: storeItems});
+        // this.store = this.add.animatedSprite("store_terminal", GameLayers.PRIMARY);
+        // this.store.position.set(1056, 1152);
+        // this.store.scale.set(0.4, 0.4);
+        // this.store.addAI(StoreController, {radius: 100, target: this.player, items: storeItems});
     }
 
     initMap(): void {
+
         let tilemapLayers = this.add.tilemap("level");
         // FIXME: the player should be able to move under the pipes but for some reason it doesn't work,
         // I'm not sure what's up with the layering.
@@ -176,6 +180,10 @@ export default class Level1 extends GameLevel {
     }
 
     initLevelLinks(): void {
+        this.shop = this.add.sprite(GameSprites.LADDER, GameLayers.PRIMARY);
+        this.shop.position.set(1056, 1184);
+        this.shop.addAI(LevelEndAI, {player: this.player, range: 25, nextLevel: Shop});
+
         this.nextLevel = this.add.sprite(GameSprites.LADDER, GameLayers.PRIMARY);
         this.nextLevel.position.set(2960, 595);
         this.nextLevel.addAI(LevelEndAI, {player: this.player, range: 25, nextLevel: Level1});

@@ -20,6 +20,7 @@ export default class LevelEndAI extends StateMachineAI {
     protected player: GameNode;
     nextLevel: new (...args: any) => GameLevel;
     protected range: number;
+    public playerSpawn: Vec2;
 
     protected emitter: Emitter;
 
@@ -32,12 +33,15 @@ export default class LevelEndAI extends StateMachineAI {
         this.player = options.player;
         this.range = options.range;
         this.nextLevel = options.nextLevel;
+        this.playerSpawn = options.spawn;
 
         this.emitter = new Emitter();
 
         this.addState(LevelEndStates.INSIDE, new InLevelEnd(this, this.owner));
         this.addState(LevelEndStates.OUTSIDE, new OutLevelEnd(this, this.owner));
         this.initialize(LevelEndStates.OUTSIDE);
+
+
     }   
 
     getRange(): number { return this.range; }

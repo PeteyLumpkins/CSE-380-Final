@@ -10,6 +10,10 @@ import Level1 from "./Level1";
 import Label from "../../../Wolfie2D/Nodes/UIElements/Label";
 import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 
+
+//! TODO: Testing purposes for the shop level
+import Shop from "./Shop";
+
 /** 
  * TODO: The position of the logo should be moved on each of the screens so that it 
  * doesn't overlap any of the buttons or text on the screens.
@@ -90,7 +94,7 @@ export default class MainMenu extends Scene {
             let event = this.receiver.getNextEvent();
 
             if(event.type === MenuEvents.PLAY_GAME){
-                this.sceneManager.changeToScene(Level1, {});
+                this.sceneManager.changeToScene(Shop, {});
             }
 
             if(event.type === MenuEvents.CONTROLS){

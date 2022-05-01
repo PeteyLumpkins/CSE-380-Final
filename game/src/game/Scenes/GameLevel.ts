@@ -54,6 +54,9 @@ export default abstract class GameLevel extends Scene {
     protected nextLevel: Sprite;
     protected prevLevel: Sprite;
 
+    /* SHOP LEVEL LINK*/
+    protected shop: Sprite;
+
     /* THE ARRAY OF ENEMY NODES */
     protected enemies: Array<AnimatedSprite>;
 
@@ -220,7 +223,9 @@ export default abstract class GameLevel extends Scene {
     protected eventHandlers = {
 
         changeLevel: (ev: GameEvent) => { 
-            this.sceneManager.changeToScene(ev.data.get("level")); 
+            this.sceneManager.changeToScene(ev.data.get("level"));
+            console.log("HELLO!" + ev.data.get("spawn"));
+            this.player.position.set(ev.data.get("spawn").x,ev.data.get("spawn").y);
         },
     
         pause: (ev : GameEvent) => {
