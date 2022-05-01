@@ -46,6 +46,9 @@ export default abstract class GameLevel extends Scene {
     protected playerMoney: number = 0;
     protected playerMoneyLabel: Label;
 
+    //! Keep position of ladder entry from previous level
+    protected playerSpawn: Vec2;
+    
     /* MORE UI COMPONENTS */
     protected itemBarBackground: Sprite;
     protected pauseButton: Button;
@@ -227,9 +230,8 @@ export default abstract class GameLevel extends Scene {
     protected eventHandlers = {
 
         changeLevel: (ev: GameEvent) => { 
-            this.sceneManager.changeToScene(ev.data.get("level"));
-            console.log("HELLO!" + ev.data.get("spawn"));
-            this.player.position.set(ev.data.get("spawn").x,ev.data.get("spawn").y);
+            this.sceneManager.changeToScene(ev.data.get("level"), {spawn: ev.data.get("spawn"), stats: ev.data.get("inventory")});   // Send player spawn as data into the new level
+
         },
     
         pause: (ev : GameEvent) => {

@@ -19,9 +19,14 @@ export default class InLevelEnd extends LevelEndState {
             this.finished(LevelEndStates.OUTSIDE);
         }
 
+        // TODO: Retreive Inventory and send it over to the next scene
         if (this.nextLevel()) {
             console.log("Firing next level event");
-            this.emitter.fireEvent(GameEvents.CHANGE_LEVEL, {"level": this.parent.nextLevel, "spawn": this.parent.playerSpawn});
+            this.emitter.fireEvent(GameEvents.CHANGE_LEVEL, {
+                "level": this.parent.nextLevel, 
+                "spawn": this.parent.playerSpawn,   // Spawn vector is passed into the event handler and then sent to the initScene of next level
+                "inventory": this.parent.getPlayer()
+            });
         }
     }
 
