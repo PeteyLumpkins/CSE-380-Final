@@ -20,10 +20,6 @@ export default abstract class RatState extends State {
         this.attackCooldownTimer = new Timer(1000);
     }
 
-    handleInput(event: GameEvent): void {
-
-    }
-
     update(deltaT: number): void {
 
         if (this.isDead()) {
