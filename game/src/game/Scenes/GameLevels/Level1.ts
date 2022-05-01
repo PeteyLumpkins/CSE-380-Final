@@ -15,16 +15,18 @@ import GameLevel from "../GameLevel";
 import LevelEndAI from "../../AI/LevelEnd/LevelEndAI";
 
 import RatAI from "../../AI/Enemy/Rat/RatAI";
-import RatAttack from "../../AI/Enemy/Rat/RatActions/RatAttack";
-import RatMove from "../../AI/Enemy/Rat/RatActions/RatMove";
 
 import items from "./items.json";
 
+import Level2 from "./Level2";
+
 import PlayerStats from "../../AI/Player/PlayerStats";
 import PlayerInventory from "../../AI/Player/PlayerInventory";
+
 import StoreItems from "../../Store/StoreItems";
 import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
 import Shop from "./Shop";
+
 
 
 export default class Level1 extends GameLevel {
@@ -71,9 +73,18 @@ export default class Level1 extends GameLevel {
         this.load.audio("buySound", "assets/soundEffects/shopBuy.wav");
         this.load.audio("textbox", "assets/soundEffects/textbox.wav");
 
+        this.load.audio("itemdrop", "assets/soundEffects/itemDrop.wav");
+        this.load.audio("itempickup", "assets/soundEffects/itemPickup.wav");
+        this.load.audio("invalidbuy", "assets/soundEffects/invalidStore.wav");
     }
 
     unloadScene(): void {
+        this.load.keepSpritesheet("player");
+        this.load.keepSpritesheet("store_terminal");
+        this.load.keepImage("itembg");
+        this.load.keepImage("itembarbg");
+        this.load.keepSpritesheet(GameSprites.STORE_BG);
+
         this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level1"});
     }
 
@@ -82,15 +93,12 @@ export default class Level1 extends GameLevel {
      * health and buffs through the game levels.
      */
     startScene(){
-        console.log(this.load.getObject("item-meta"));
         this.addLayer(GameLayers.PRIMARY, 5);
         
         let bgPipe = this.add.animatedSprite("brokenGreenPipe", GameLayers.PRIMARY);
         bgPipe.animation.play("idle", true);
         bgPipe.position.set(880, 432);
 
-        // this.itemBarBackground = this.add.sprite("itembarbg", GameLayers.UI);
-        // this.itemBarBackground.position.set(this.viewport.getCenter().x, 32);
         super.startScene();
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level1", loop: true, holdReference: true});
     }
@@ -104,33 +112,38 @@ export default class Level1 extends GameLevel {
         let scalar = new Vec2(scale, scale);
 
         this.player = this.add.animatedSprite("player", GameLayers.PRIMARY);
+
         this.player.position.set(this.PLAYER_SPAWN.x, this.PLAYER_SPAWN.y);
 		// this.player.position.set(448, 480)  ;
 		let playerCollider = new AABB(Vec2.ZERO, new Vec2(this.player.sizeWithZoom.x, this.player.sizeWithZoom.y).div(scalar).div(new Vec2(2, 2)));
+
         this.player.addPhysics();
 		this.player.setCollisionShape(playerCollider);
 
         let inventory = new Array<string>();
-        let stats = {"HEALTH": 20, "MONEY": 10, "MOVE_SPEED": 4};
-		this.player.addAI(PlayerController, {inventory: new PlayerInventory(inventory, 9), stats: new PlayerStats(stats)});
 
+
+        let stats = {"HEALTH": 20, "MONEY": 10, "MOVE_SPEED": 1};
+		this.player.addAI(PlayerController, {inventory: new PlayerInventory(inventory, 9), stats: new PlayerStats(stats)});
         this.viewport.follow(this.player);
+
     }
 
     initStore(): void {
     
-        // let storeItems = new StoreItems(
-        //     [
-        //         {key: "moldy_bread", count: 1},
-        //         {key: "old_boot", count: 1},
-        //         {key: "mystery_liquid", count: 1}
-        //     ]
-        // )
+        let storeItems = new StoreItems(
+            [
+                {key: "moldy_bread", count: 1},
+                {key: "old_boot", count: 1},
+                {key: "mystery_liquid", count: 1}
+            ]
+        );
 
-        // this.store = this.add.animatedSprite("store_terminal", GameLayers.PRIMARY);
-        // this.store.position.set(1056, 1152);
-        // this.store.scale.set(0.4, 0.4);
-        // this.store.addAI(StoreController, {radius: 100, target: this.player, items: storeItems});
+        this.store = this.add.animatedSprite("store_terminal", GameLayers.PRIMARY);
+        this.store.position.set(1056, 1152);
+        this.store.scale.set(0.4, 0.4);
+        this.store.addAI(StoreController, {radius: 100, target: this.player, items: storeItems});
+
     }
 
     initMap(): void {
@@ -177,6 +190,7 @@ export default class Level1 extends GameLevel {
         let navmesh = new Navmesh(this.navmeshGraph);
 
         this.navManager.addNavigableEntity("navmesh", navmesh);
+        this.drawHitbox();
     }
 
     initLevelLinks(): void {
@@ -186,7 +200,8 @@ export default class Level1 extends GameLevel {
 
         this.nextLevel = this.add.sprite(GameSprites.LADDER, GameLayers.PRIMARY);
         this.nextLevel.position.set(2960, 595);
-        this.nextLevel.addAI(LevelEndAI, {player: this.player, range: 25, nextLevel: Level1});
+
+        this.nextLevel.addAI(LevelEndAI, {player: this.player, range: 25, nextLevel: Level2});
     }
 
     initEnemies(): void {
@@ -204,5 +219,54 @@ export default class Level1 extends GameLevel {
             console.log(this.enemies[i]);
         }
 
+    }
+
+    drawHitbox(): void {
+
+        let ry = this.player.position.y;
+        let rx = this.player.boundary.topRight.x - this.player.boundary.halfSize.x / 3;
+
+        let box = new AABB(new Vec2(rx, ry), new Vec2(this.player.boundary.halfSize.x / 3, this.player.boundary.halfSize.y / 3));
+
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.topLeft, end: box.topRight});
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.topRight, end: box.bottomRight});
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.bottomRight, end: box.bottomLeft});
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.bottomLeft, end: box.topLeft});
+
+
+
+        let ly = this.player.position.y;
+        let lx = this.player.boundary.topLeft.x + this.player.boundary.halfSize.x / 3;
+
+        box = new AABB(new Vec2(lx, ly), new Vec2(this.player.boundary.halfSize.x / 3, this.player.boundary.halfSize.y / 3));
+
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.topLeft, end: box.topRight});
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.topRight, end: box.bottomRight});
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.bottomRight, end: box.bottomLeft});
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.bottomLeft, end: box.topLeft});
+
+
+
+        let uy = this.player.boundary.topRight.y + this.player.boundary.halfSize.y / 3;
+        let ux = this.player.position.x;
+
+        box = new AABB(new Vec2(ux, uy), new Vec2(this.player.boundary.halfSize.x / 3, this.player.boundary.halfSize.y / 3));
+
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.topLeft, end: box.topRight});
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.topRight, end: box.bottomRight});
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.bottomRight, end: box.bottomLeft});
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.bottomLeft, end: box.topLeft});
+
+
+
+        let dy = this.player.boundary.bottomRight.y - this.player.boundary.halfSize.y / 3;
+        let dx = this.player.position.x;
+
+        box = new AABB(new Vec2(dx, dy), new Vec2(this.player.boundary.halfSize.x / 3, this.player.boundary.halfSize.y / 3));
+
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.topLeft, end: box.topRight});
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.topRight, end: box.bottomRight});
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.bottomRight, end: box.bottomLeft});
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.bottomLeft, end: box.topLeft});
     }
 }

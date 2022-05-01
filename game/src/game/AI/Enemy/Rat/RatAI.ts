@@ -1,6 +1,7 @@
 import EnemyAI from "../EnemyAI";
 import GameNode from "../../../../Wolfie2D/Nodes/GameNode";
 import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
+import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 
 import { PlayerEvents } from "../../Player/PlayerController";
 import { GameEventType } from "../../../../Wolfie2D/Events/GameEventType";
@@ -56,7 +57,6 @@ export default class RatAI extends EnemyAI {
     }
 
     handleEvent(event: GameEvent): void {
-        super.handleEvent(event);
         switch(event.type) {
             case PlayerEvents.ATTACKED: {
                 console.log("Caught player attacked event in RatAI");
@@ -71,10 +71,15 @@ export default class RatAI extends EnemyAI {
     }
 
     handlePlayerAttackEvent(event: GameEvent): void {
-        if (this.owner.position.distanceTo(event.data.get("position")) <= event.data.get("range")) {
+        if (this.owner.collisionShape.overlaps(event.data.get("hitbox"))) {
             this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "hitSound", loop: false, holdReference: true});
             this.health -= event.data.get("damage");
+            // this.owner.move(event.data.get("dir").mult(new Vec2(500, 500)));
         }
+    }
+
+    handleKnockBack(dir: Vec2): void {
+        this.owner.move(dir.mult(new Vec2(100, 100)));
     }
 
     /** Initialize custom attributes for Rat */
@@ -133,7 +138,7 @@ export default class RatAI extends EnemyAI {
                     sightRange: 100,
                     swarmRange: 50,
                     moveSpeed: 100,
-                    attackRange: 25, 
+                    attackRange: 50, 
                     attackDamage: 2
                 }
                 break;
@@ -151,7 +156,7 @@ export default class RatAI extends EnemyAI {
                     sightRange: 200,
                     swarmRange: 50,
                     moveSpeed: 150,
-                    attackRange: 25, 
+                    attackRange: 50, 
                     attackDamage: 2
                 }
                 break;

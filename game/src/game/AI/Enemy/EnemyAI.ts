@@ -24,7 +24,6 @@ export default abstract class EnemyAI extends StateMachineGoapAI {
 
     initializeAI(owner: GameNode, options: Record<string, any>): void {
         this.owner = owner;
-        console.log(options.target);
         this.target = options.target;
 
         /* States */

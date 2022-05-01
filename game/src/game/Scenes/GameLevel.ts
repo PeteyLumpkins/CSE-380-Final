@@ -81,7 +81,10 @@ export default abstract class GameLevel extends Scene {
         this.addItemUILayers();
         this.inventoryManager = new InventoryManager(this, 9, 16, new Vec2(450, 24), UILayers.ITEM_SPRITES, "itembg", UILayers.ITEM_SLOTS);
 
-        this.pauseManager = new PauseManager(this, [GameLayers.PRIMARY], GameLayers.PAUSED);
+        let pausedLayers = [
+            GameLayers.PRIMARY, 
+        ];
+        this.pauseManager = new PauseManager(this, pausedLayers, GameLayers.PAUSED);
 
         this.addStoreUILayers();
         this.storeManager = new StoreManager(
@@ -138,6 +141,7 @@ export default abstract class GameLevel extends Scene {
         /* Set layer depths */
         this.getLayer(UILayers.ITEM_SLOTS).setDepth(1);
         this.getLayer(UILayers.ITEM_SPRITES).setDepth(2);
+        this.getLayer(UILayers.PAUSED).setDepth(5);
     }
 
     private addStoreUILayers(): void {

@@ -1,9 +1,5 @@
 import Game from "./Wolfie2D/Loop/Game";
 import MainMenu from "./game/Scenes/GameLevels/MainMenu";
-import Level1 from "./game/Scenes/GameLevels/Level1";
-import GameLevel from "./game/Scenes/GameLevel";
-import RegistryManager from "./Wolfie2D/Registry/RegistryManager";
-import ItemRegistry from "./game/Registry/ItemRegistry";
 
 // The main function is your entrypoint into Wolfie2D. Specify your first scene and any options here.
 (function main(){
@@ -39,9 +35,6 @@ import ItemRegistry from "./game/Registry/ItemRegistry";
         useWebGL: false,                        // Tell the game we want to use webgl
         showDebug: false                       // Whether to show debug messages. You can change this to true if you want
     }
-    // Sets up custom registries like HW4:
-    let itemRegistry = new ItemRegistry();
-    RegistryManager.addCustomRegistry("items", itemRegistry);
 
     // Create a game with the options specified
     const game = new Game(options);

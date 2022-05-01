@@ -22,7 +22,7 @@ export default class RatAttackAction extends GoapAction {
     performAction(statuses: Array<string>, actor: StateMachineGoapAI, deltaT: number, target?: StateMachineGoapAI): Array<string> {
         //Check if preconditions are met for this action to be performed
         if (this.checkPreconditions(statuses)){
-            this.emitter.fireEvent(EnemyActions.ATTACK);
+            this.emitter.fireEvent(EnemyActions.ATTACK, {amount: 1});
             return this.effects;
         }
         return null;

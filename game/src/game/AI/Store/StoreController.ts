@@ -6,7 +6,7 @@ import Disabled from "./StoreStates/Disabled";
 import Enabled from "./StoreStates/Enabled";
 import Open from "./StoreStates/Open";
 
-import StoreItems from "../../Store/StoreItems"
+import StoreItems from "./StoreItems"
 
 export enum StoreStates {
     DISABLED = "STORE_DISABLED",
