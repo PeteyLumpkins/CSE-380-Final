@@ -7,6 +7,7 @@ export default class PunchDown extends Punch {
 
     onEnter(options: Record<string, any>): void {
         super.onEnter(options);
+        this.attackType = PlayerStates.PUNCH_DOWN;
         this.owner.animation.play("PUNCH_DOWN");
     }
 

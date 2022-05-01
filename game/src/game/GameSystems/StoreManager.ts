@@ -193,9 +193,12 @@ export default class StoreManager implements Updateable {
             this.itemBuyButtons[i] = <Button>this.scene.add.uiElement(UIElementType.BUTTON, this.buttonLayer, {position: new Vec2(startX, startY).div(scalar), text: "Buy Item " + (i + 1)});
             this.itemBuyButtons[i].size.set(100, 25);
             this.itemBuyButtons[i].scale.div(scalar);
+            this.itemBuyButtons[i].borderColor = Color.WHITE;
+            this.itemBuyButtons[i].textColor = Color.WHITE;
             this.itemBuyButtons[i].borderWidth = 2;
             this.itemBuyButtons[i].fontSize = 16;
-            this.itemBuyButtons[i].backgroundColor = Color.BLACK;
+            this.itemBuyButtons[i].font = "Courier";
+            this.itemBuyButtons[i].backgroundColor = Color.TRANSPARENT;
             this.itemBuyButtons[i].onClick = () => {
                 this.handleItemPurchase(i);
             };
@@ -216,6 +219,7 @@ export default class StoreManager implements Updateable {
             this.itemNameLabels[i] = <Label>this.scene.add.uiElement(UIElementType.LABEL, this.nameLayer, {position: new Vec2(startX, startY).div(scalar), text: ""});
             this.itemNameLabels[i].fontSize = 18;
             this.itemNameLabels[i].textColor = Color.WHITE;
+            this.itemNameLabels[i].font = "Courier";
             this.itemNameLabels[i].scale.div(scalar);
         }
 
@@ -230,6 +234,7 @@ export default class StoreManager implements Updateable {
             this.itemCostLabels[i] = <Label>this.scene.add.uiElement(UIElementType.LABEL, this.costLayer, {position: new Vec2(startX, startY).div(scalar), text: ""});
             this.itemCostLabels[i].fontSize = 18;
             this.itemCostLabels[i].textColor = Color.WHITE;
+            this.itemCostLabels[i].font = "Courier";
             this.itemCostLabels[i].scale.div(scalar);
         }
 

@@ -105,14 +105,13 @@ export default class Level1 extends GameLevel {
 
         this.player = this.add.animatedSprite("player", GameLayers.PRIMARY);
 		this.player.position.set(448, 480);
-		let playerCollider = new AABB(Vec2.ZERO, new Vec2(this.player.sizeWithZoom.x, this.player.sizeWithZoom.y).div(scalar).div(new Vec2(2, 2)));
+		let playerCollider = new AABB(Vec2.ZERO, new Vec2(this.player.sizeWithZoom.x, this.player.sizeWithZoom.y).div(scalar).div(new Vec2(3, 3)));
         this.player.addPhysics();
 		this.player.setCollisionShape(playerCollider);
 
         let inventory = new Array<string>();
         let stats = {"HEALTH": 20, "MONEY": 10, "MOVE_SPEED": 1};
 		this.player.addAI(PlayerController, {inventory: new PlayerInventory(inventory, 9), stats: new PlayerStats(stats)});
-
         this.viewport.follow(this.player);
     }
 
@@ -175,6 +174,7 @@ export default class Level1 extends GameLevel {
         let navmesh = new Navmesh(this.navmeshGraph);
 
         this.navManager.addNavigableEntity("navmesh", navmesh);
+        this.drawHitbox();
     }
 
     initLevelLinks(): void {
@@ -198,5 +198,54 @@ export default class Level1 extends GameLevel {
             console.log(this.enemies[i]);
         }
 
+    }
+
+    drawHitbox(): void {
+
+        let ry = this.player.position.y;
+        let rx = this.player.boundary.topRight.x - this.player.boundary.halfSize.x / 3;
+
+        let box = new AABB(new Vec2(rx, ry), new Vec2(this.player.boundary.halfSize.x / 3, this.player.boundary.halfSize.y / 3));
+
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.topLeft, end: box.topRight});
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.topRight, end: box.bottomRight});
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.bottomRight, end: box.bottomLeft});
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.bottomLeft, end: box.topLeft});
+
+
+
+        let ly = this.player.position.y;
+        let lx = this.player.boundary.topLeft.x + this.player.boundary.halfSize.x / 3;
+
+        box = new AABB(new Vec2(lx, ly), new Vec2(this.player.boundary.halfSize.x / 3, this.player.boundary.halfSize.y / 3));
+
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.topLeft, end: box.topRight});
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.topRight, end: box.bottomRight});
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.bottomRight, end: box.bottomLeft});
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.bottomLeft, end: box.topLeft});
+
+
+
+        let uy = this.player.boundary.topRight.y + this.player.boundary.halfSize.y / 3;
+        let ux = this.player.position.x;
+
+        box = new AABB(new Vec2(ux, uy), new Vec2(this.player.boundary.halfSize.x / 3, this.player.boundary.halfSize.y / 3));
+
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.topLeft, end: box.topRight});
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.topRight, end: box.bottomRight});
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.bottomRight, end: box.bottomLeft});
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.bottomLeft, end: box.topLeft});
+
+
+
+        let dy = this.player.boundary.bottomRight.y - this.player.boundary.halfSize.y / 3;
+        let dx = this.player.position.x;
+
+        box = new AABB(new Vec2(dx, dy), new Vec2(this.player.boundary.halfSize.x / 3, this.player.boundary.halfSize.y / 3));
+
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.topLeft, end: box.topRight});
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.topRight, end: box.bottomRight});
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.bottomRight, end: box.bottomLeft});
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.bottomLeft, end: box.topLeft});
     }
 }
