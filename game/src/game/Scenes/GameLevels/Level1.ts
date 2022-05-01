@@ -27,6 +27,8 @@ import Shop from "./Shop";
 import StoreItems from "../../AI/Store/StoreItems";
 
 
+
+
 export default class Level1 extends GameLevel {
 
     // The wall layer of the tilemap to use for bullet visualization
@@ -75,10 +77,15 @@ export default class Level1 extends GameLevel {
         this.load.audio("itemdrop", "assets/soundEffects/itemDrop.wav");
         this.load.audio("itempickup", "assets/soundEffects/itemPickup.wav");
         this.load.audio("invalidbuy", "assets/soundEffects/invalidStore.wav");
-
     }
 
     unloadScene(): void {
+        this.load.keepSpritesheet("player");
+        this.load.keepSpritesheet("store_terminal");
+        this.load.keepImage("itembg");
+        this.load.keepImage("itembarbg");
+        this.load.keepSpritesheet(GameSprites.STORE_BG);
+
         this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level1"});
         console.log("Unloading!");
     }
@@ -88,15 +95,12 @@ export default class Level1 extends GameLevel {
      * health and buffs through the game levels.
      */
     startScene(){
-        console.log(this.load.getObject("item-meta"));
         this.addLayer(GameLayers.PRIMARY, 5);
         
         let bgPipe = this.add.animatedSprite("brokenGreenPipe", GameLayers.PRIMARY);
         bgPipe.animation.play("idle", true);
         bgPipe.position.set(880, 432);
 
-        // this.itemBarBackground = this.add.sprite("itembarbg", GameLayers.UI);
-        // this.itemBarBackground.position.set(this.viewport.getCenter().x, 32);
         super.startScene();
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level1", loop: true, holdReference: true});
     }
@@ -127,8 +131,11 @@ export default class Level1 extends GameLevel {
 
         let stats = {"HEALTH": 20, "MONEY": 10, "MOVE_SPEED": 5};
 
-		this.player.addAI(PlayerController, {inventory: new PlayerInventory(inventory, 9, this.prevInventory),
-                                                stats: new PlayerStats(stats)});
+		this.player.addAI(PlayerController, {
+            inventory: new PlayerInventory(inventory, 9, this.prevInventory),                             
+            stats: new PlayerStats(stats) // Passed through here?
+        });  
+
         // Create new player inventory and then transfer items ( if any from previous )
 
 
@@ -140,18 +147,19 @@ export default class Level1 extends GameLevel {
 
     initStore(): void {
     
-        // let storeItems = new StoreItems(
-        //     [
-        //         {key: "moldy_bread", count: 1},
-        //         {key: "old_boot", count: 1},
-        //         {key: "mystery_liquid", count: 1}
-        //     ]
-        // )
+        let storeItems = new StoreItems(
+            [
+                {key: "moldy_bread", count: 1},
+                {key: "old_boot", count: 1},
+                {key: "mystery_liquid", count: 1}
+            ]
+        );
 
-        // this.store = this.add.animatedSprite("store_terminal", GameLayers.PRIMARY);
-        // this.store.position.set(1056, 1152);
-        // this.store.scale.set(0.4, 0.4);
-        // this.store.addAI(StoreController, {radius: 100, target: this.player, items: storeItems});
+        this.store = this.add.animatedSprite("store_terminal", GameLayers.PRIMARY);
+        this.store.position.set(1056, 1152);
+        this.store.scale.set(0.4, 0.4);
+        this.store.addAI(StoreController, {radius: 100, target: this.player, items: storeItems});
+
     }
 
     initMap(): void {
