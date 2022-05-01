@@ -1,6 +1,8 @@
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import StateMachineAI from "../../../Wolfie2D/AI/StateMachineAI";
+import AABB from "../../../Wolfie2D/DataTypes/Shapes/AABB";
+import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 
 import {
 
@@ -45,11 +47,16 @@ export enum PlayerEvents {
 }
 
 export default class PlayerController extends StateMachineAI {
-	// We want to be able to control our owner, so keep track of them
-
+	
+	/* PLAYER GAME NODE */
 	owner: AnimatedSprite;
+
+	/* PLAYER INVENTORY */
 	playerInventory: PlayerInventory;
+
+	/* PLAYER STATS */
 	playerStats: PlayerStats;
+
 
 	initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
 		this.owner = owner;
@@ -76,6 +83,45 @@ export default class PlayerController extends StateMachineAI {
 		this.receiver.subscribe(StoreEvent.ITEM_PURCHASED);
 		this.receiver.subscribe(GameEvents.PICKUP_ITEM);
 		this.receiver.subscribe(EnemyActions.ATTACK);
+	}
+
+	/**
+	 * 
+	 * @returns the downward attack hitbox of the player
+	 */
+	getDownHitbox(): AABB {
+		let y = this.owner.boundary.bottomRight.y - this.owner.boundary.halfSize.y / 3;
+        let x = this.owner.position.x;
+        return new AABB(new Vec2(x, y), new Vec2(this.owner.boundary.halfSize.x / 3, this.owner.boundary.halfSize.y / 3));
+	}
+
+	/**
+	 * Computes and returns the left attack hitbox of the player as an AABB 
+	 * 
+	 * @returns the left attack hitbox of the player
+	 */
+	getLeftHitbox(): AABB {
+		let y = this.owner.position.y;
+        let x = this.owner.boundary.topLeft.x + this.owner.boundary.halfSize.x / 3;
+        return new AABB(new Vec2(x, y), new Vec2(this.owner.boundary.halfSize.x / 3, this.owner.boundary.halfSize.y / 3));
+	}
+
+	/**
+	 * @returns the right attack hitbox of the player
+	 */
+	getRightHitbox(): AABB {
+		let y = this.owner.position.y;
+        let x = this.owner.boundary.topRight.x - this.owner.boundary.halfSize.x / 3;
+        return new AABB(new Vec2(x, y), new Vec2(this.owner.boundary.halfSize.x / 3, this.owner.boundary.halfSize.y / 3));
+	}
+
+	/**
+	 * @returns the upper attack hitbox of the player
+	 */
+	getUpHitbox(): AABB {
+		let y = this.owner.boundary.topRight.y + this.owner.boundary.halfSize.y / 3;
+        let x = this.owner.position.x;
+        return new AABB(new Vec2(x, y), new Vec2(this.owner.boundary.halfSize.x / 3, this.owner.boundary.halfSize.y / 3));
 	}
 
 	activate(options: Record<string, any>): void {};
@@ -128,9 +174,9 @@ export default class PlayerController extends StateMachineAI {
 			this.playerStats.setStat("MONEY", this.playerStats.getStat("MONEY") - cost);
 			this.addItem(itemKey);
 			buy();
+			this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "buySound", loop: false, holdReference: true});
 		} else {
-			// Not enough money - invalid purchase
-			// Play invalid purchase sound here
+			this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "invalidbuy", loop: false, holdReference: true});
 		}
 	}
 
@@ -144,6 +190,7 @@ export default class PlayerController extends StateMachineAI {
 			}
 			case PickupTypes.ITEM: {
 				// Add item pickup sound affect here
+				this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "itempickup", loop: false, holdReference: true});
 				let item = event.data.get('itemKey');
 				this.addItem(item);
 				break;
@@ -157,12 +204,14 @@ export default class PlayerController extends StateMachineAI {
 
 	private handleItemDropEvent(index: number): void {
 		this.removeItem(index);
+		this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "itemdrop", loop: false, holdReference: true});
 	}
 
 	// TODO: handles when an enemy trys to attack the player
 	private handleEnemyAttackEvent(event: GameEvent): void {
 		/** Checks to see if player has a damage resisit buff applied? */
 		let damageResist = this.playerStats.getStat(PlayerStat.DMG_RESIST) !== null ? this.playerStats.getStat(PlayerStat.DMG_RESIST) : 1;
+		console.log("Damage resist: " + damageResist);
 		let damage = event.data.get("amount") / damageResist;
 
 		console.log("Taking damagee with damage resist appliied: " + damage);
@@ -210,6 +259,7 @@ export default class PlayerController extends StateMachineAI {
 			let buffs = this.owner.getScene().load.getObject("item-data")[itemKey].buffs;
 			this.playerStats.removeBuffs(buffs);
 			this.addItemDrop(itemKey);
+			
 		}
 	}
 
