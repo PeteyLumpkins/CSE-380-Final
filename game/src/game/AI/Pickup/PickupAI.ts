@@ -2,6 +2,7 @@ import StateMachineAI from "../../../Wolfie2D/AI/StateMachineAI";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import GameNode from "../../../Wolfie2D/Nodes/GameNode";
 import Emitter from "../../../Wolfie2D/Events/Emitter";
+import Scene from "../../../Wolfie2D/Scene/Scene";
 
 import OnGround from "../Pickup/PickupStates/OnGround";
 import CanPickup from "./PickupStates/CanPickup";
@@ -9,6 +10,7 @@ import PickedUp from "../Pickup/PickupStates/PickedUp";
 
 import { EaseFunctionType } from "../../../Wolfie2D/Utils/EaseFunctions";
 import { GameEvents } from "../../GameEnums";
+import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 
 export enum PickupStates {
     ON_GROUND = "PICKUP_ON_GROUND",

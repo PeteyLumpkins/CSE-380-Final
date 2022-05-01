@@ -1,8 +1,8 @@
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import StateMachineAI from "../../../Wolfie2D/AI/StateMachineAI";
-import OrthogonalTilemap from "../../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
-import { StoreEvent } from "../../GameSystems/StoreManager";
+import AABB from "../../../Wolfie2D/DataTypes/Shapes/AABB";
+import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 
 import {
 
@@ -14,10 +14,13 @@ import {
 
 import { GameEvents, EnemyActions } from "../../GameEnums";
 import { PickupTypes } from "../Pickup/PickupTypes";
-import { PlayerStat } from "../../Player/PlayerStats";
+import { PlayerStat } from "./PlayerStats";
+import { StoreEvent } from "../../GameSystems/StoreManager";
+import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 
-import PlayerStats from "../../Player/PlayerStats";
-import PlayerInventory from "../../Player/PlayerInventory";
+import PlayerStats from "./PlayerStats";
+import PickupAI from "../Pickup/PickupAI";
+import PlayerInventory from "./PlayerInventory";
 import Input from "../../../Wolfie2D/Input/Input";
 
 export enum PlayerStates {
@@ -44,19 +47,22 @@ export enum PlayerEvents {
 }
 
 export default class PlayerController extends StateMachineAI {
-	// We want to be able to control our owner, so keep track of them
-
-	owner: AnimatedSprite;
-	playerInventory: PlayerInventory;
-	playerStats: PlayerStats;
 	
+	/* PLAYER GAME NODE */
+	owner: AnimatedSprite;
+
+	/* PLAYER INVENTORY */
+	playerInventory: PlayerInventory;
+
+	/* PLAYER STATS */
+	playerStats: PlayerStats;
+
 
 	initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
 		this.owner = owner;
 		this.playerInventory = options.inventory;
 		this.playerStats = options.stats;
 
-	
         this.addState(PlayerStates.IDLE_LEFT, new IdleLeft(this, this.owner));
 		this.addState(PlayerStates.IDLE_RIGHT, new IdleRight(this, this.owner));
 		this.addState(PlayerStates.IDLE_DOWN, new IdleDown(this, this.owner));
@@ -74,8 +80,48 @@ export default class PlayerController extends StateMachineAI {
 		
         this.initialize(PlayerStates.IDLE_RIGHT);
 
+		this.receiver.subscribe(StoreEvent.ITEM_PURCHASED);
 		this.receiver.subscribe(GameEvents.PICKUP_ITEM);
 		this.receiver.subscribe(EnemyActions.ATTACK);
+	}
+
+	/**
+	 * 
+	 * @returns the downward attack hitbox of the player
+	 */
+	getDownHitbox(): AABB {
+		let y = this.owner.boundary.bottomRight.y - this.owner.boundary.halfSize.y / 3;
+        let x = this.owner.position.x;
+        return new AABB(new Vec2(x, y), new Vec2(this.owner.boundary.halfSize.x / 3, this.owner.boundary.halfSize.y / 3));
+	}
+
+	/**
+	 * Computes and returns the left attack hitbox of the player as an AABB 
+	 * 
+	 * @returns the left attack hitbox of the player
+	 */
+	getLeftHitbox(): AABB {
+		let y = this.owner.position.y;
+        let x = this.owner.boundary.topLeft.x + this.owner.boundary.halfSize.x / 3;
+        return new AABB(new Vec2(x, y), new Vec2(this.owner.boundary.halfSize.x / 3, this.owner.boundary.halfSize.y / 3));
+	}
+
+	/**
+	 * @returns the right attack hitbox of the player
+	 */
+	getRightHitbox(): AABB {
+		let y = this.owner.position.y;
+        let x = this.owner.boundary.topRight.x - this.owner.boundary.halfSize.x / 3;
+        return new AABB(new Vec2(x, y), new Vec2(this.owner.boundary.halfSize.x / 3, this.owner.boundary.halfSize.y / 3));
+	}
+
+	/**
+	 * @returns the upper attack hitbox of the player
+	 */
+	getUpHitbox(): AABB {
+		let y = this.owner.boundary.topRight.y + this.owner.boundary.halfSize.y / 3;
+        let x = this.owner.position.x;
+        return new AABB(new Vec2(x, y), new Vec2(this.owner.boundary.halfSize.x / 3, this.owner.boundary.halfSize.y / 3));
 	}
 
 	activate(options: Record<string, any>): void {};
@@ -90,6 +136,10 @@ export default class PlayerController extends StateMachineAI {
 				this.handleEnemyAttackEvent(event);
 				break;
 			}
+			case StoreEvent.ITEM_PURCHASED: {
+				this.handleItemPurchaseEvent(event);
+				break;
+			}
 			default: {
 				console.log("Caught unhandled event in event handler for player controller");
 				break;
@@ -102,9 +152,9 @@ export default class PlayerController extends StateMachineAI {
 		// Updating the state machine will trigger the current state to be updated.
 		super.update(deltaT);
 
-		let droppedItem = this.dropItem();
-		if (droppedItem >= 0) {
-			this.handleItemDropEvent(droppedItem);
+		let droppedItemIndex = this.itemDropped();
+		if (droppedItemIndex >= 1) {
+			this.handleItemDropEvent(droppedItemIndex - 1);
 		}
 
 		while(this.receiver.hasNextEvent()){
@@ -113,15 +163,36 @@ export default class PlayerController extends StateMachineAI {
 
 	}
 
+	private handleItemPurchaseEvent(event: GameEvent): void {
+		console.log("Item purchase event caught in player constroller!");
+		
+		let cost = event.data.get("cost");
+		let itemKey = event.data.get("itemKey");
+		let buy = event.data.get("buy");
+
+		if (cost <= this.playerStats.getStat("MONEY")) {
+			this.playerStats.setStat("MONEY", this.playerStats.getStat("MONEY") - cost);
+			this.addItem(itemKey);
+			buy();
+			this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "buySound", loop: false, holdReference: true});
+		} else {
+			this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "invalidbuy", loop: false, holdReference: true});
+		}
+	}
+
 	// All item pickup events should have a "type"
 	private handleItemPickupEvent(event: GameEvent): void {
 		switch(event.data.get("type")) {
 			case PickupTypes.MONEY: {
+				this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "coinSound", loop: false, holdReference: true});
 				this.playerStats.setStat("MONEY", this.playerStats.getStat("MONEY") + event.data.get("amount"));
 				break;
 			}
 			case PickupTypes.ITEM: {
-				this.playerInventory.addItem(event.data.get('itemKey'));
+				// Add item pickup sound affect here
+				this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "itempickup", loop: false, holdReference: true});
+				let item = event.data.get('itemKey');
+				this.addItem(item);
 				break;
 			}
 			default: {
@@ -132,20 +203,22 @@ export default class PlayerController extends StateMachineAI {
 	}
 
 	private handleItemDropEvent(index: number): void {
-		this.playerInventory.removeItem(index - 1);
+		this.removeItem(index);
+		this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "itemdrop", loop: false, holdReference: true});
 	}
 
 	// TODO: handles when an enemy trys to attack the player
 	private handleEnemyAttackEvent(event: GameEvent): void {
 		/** Checks to see if player has a damage resisit buff applied? */
 		let damageResist = this.playerStats.getStat(PlayerStat.DMG_RESIST) !== null ? this.playerStats.getStat(PlayerStat.DMG_RESIST) : 1;
+		console.log("Damage resist: " + damageResist);
 		let damage = event.data.get("amount") / damageResist;
 
 		console.log("Taking damagee with damage resist appliied: " + damage);
 		this.playerStats.setStat(PlayerStat.HEALTH, this.playerStats.getStat(PlayerStat.HEALTH) - damage)
 	}
 
-	private dropItem(): number {
+	private itemDropped(): number {
 		switch(true) {
 			case Input.isJustPressed("drop1"): {
 				return 1;
@@ -178,6 +251,46 @@ export default class PlayerController extends StateMachineAI {
 				return -1;
 			}
 		}
+	}
+
+	private removeItem(index: number): void {
+		let itemKey = this.playerInventory.removeItem(index);
+		if (itemKey !== null) {
+			let buffs = this.owner.getScene().load.getObject("item-data")[itemKey].buffs;
+			this.playerStats.removeBuffs(buffs);
+			this.addItemDrop(itemKey);
+			
+		}
+	}
+
+	// Handles adding an item to the player's inventory and adding the buffs to the player's stats
+	private addItem(itemKey: string): void {
+		let item = this.playerInventory.addItem(itemKey);
+		if (item === null) {
+			this.addItemDrop(itemKey);
+		} else {
+			let buffs = this.owner.getScene().load.getObject("item-data")[itemKey].buffs;
+			this.playerStats.addBuffs(buffs);
+		}
+	}
+
+	// Drops the item with the given itemkey at the players feet basically
+	private addItemDrop(itemKey: string): void {
+		let itemDrop = this.owner.getScene().add.sprite(itemKey, this.owner.getLayer().getName())
+		itemDrop.position.set(this.owner.position.x, this.owner.position.y);
+		itemDrop.scale.set(2, 2);
+		itemDrop.addAI(PickupAI, {
+			canPickup: () => {
+				return this.owner.position.distanceTo(itemDrop.position) <= 50;
+			},
+			pickup: () => {
+				return Input.isPressed("pickup");
+			},
+			data: {
+				type: PickupTypes.ITEM,
+				itemKey: itemKey
+			}
+		});
 	}
 
 	destroy(): void {}

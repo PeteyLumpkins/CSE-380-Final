@@ -5,23 +5,26 @@ import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
 import Input from "../../../../Wolfie2D/Input/Input";
 import Timer from "../../../../Wolfie2D/Timing/Timer";
 import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
+import AABB from "../../../../Wolfie2D/DataTypes/Shapes/AABB";
 
 import PlayerController from "../PlayerController";
-import { PlayerEvents } from "../../Player/PlayerController";
-import { PlayerStat } from "../../../Player/PlayerStats";
+import { PlayerEvents, PlayerStates } from "../../Player/PlayerController";
+import { GameEventType } from "../../../../Wolfie2D/Events/GameEventType";
+import { PlayerStat } from "../PlayerStats";
 
 export default abstract class PlayerState extends State {
 
 	parent: PlayerController;
     protected owner: AnimatedSprite;
-    protected attackTimer: Timer;
+
+	protected attackTimer: Timer;
+	protected attackType: string;
 
 	constructor(parent: StateMachine, owner: AnimatedSprite){
 		super(parent);
 		this.owner = owner;
 
-		// I think timer takes what milliseconds right?
-		this.attackTimer = new Timer(100, () => {
+		this.attackTimer = new Timer(880/2, () => {
 			console.log("Player attack timer ended");
 			this.sendPlayerAttacked(this.owner.position);
 		});
@@ -35,8 +38,35 @@ export default abstract class PlayerState extends State {
 	sendPlayerAttacked(position: Vec2) {
 		let damage = this.parent.playerStats.getStat(PlayerStat.ATTACK_DMG) !== null ? this.parent.playerStats.getStat(PlayerStat.ATTACK_DMG) : 1;
 
-		console.log("Sending attack with damage: " + damage);
-		this.emitter.fireEvent(PlayerEvents.ATTACKED, {position: position, range: 75, damage: damage});
+		let dir = Vec2.ZERO;
+		let hitbox = null;
+		switch(this.attackType) {
+			case PlayerStates.PUNCH_DOWN: {
+				hitbox = this.parent.getDownHitbox();
+				dir.y = -1;
+				break;
+			}
+			case PlayerStates.PUNCH_LEFT: {
+				hitbox = this.parent.getLeftHitbox();
+				dir.x = -1;
+				break;
+			}
+			case PlayerStates.PUNCH_RIGHT: {
+				hitbox = this.parent.getRightHitbox();
+				dir.x = 1;
+				break;
+			}
+			case PlayerStates.PUNCH_UP: {
+				hitbox = this.parent.getUpHitbox();
+				dir.y = 1;
+				break;
+			}
+			default: {
+				console.log("Unknown attack type while sending attack?");
+				break;
+			}
+		}
+		this.emitter.fireEvent(PlayerEvents.ATTACKED, {position: position, dir: dir, hitbox: hitbox, damage: damage});
 	}
 
 	/** 
@@ -50,7 +80,7 @@ export default abstract class PlayerState extends State {
 	}
 
 	isAttacking(): boolean {
-		return Input.isPressed("attack") || !this.attackTimer.isStopped();
+		return Input.isPressed("attack");
 	}
 
     /** 
@@ -58,8 +88,12 @@ export default abstract class PlayerState extends State {
      */
 	update(deltaT: number): void {
 		let speedScale = this.parent.playerStats.getStat(PlayerStat.MOVE_SPEED) !== null ? this.parent.playerStats.getStat(PlayerStat.MOVE_SPEED) : 1;
-		console.log("Moving with a speed scale of: " + speedScale);
-		this.owner.move(this.getInputDirection().mult(new Vec2(speedScale, speedScale))); 
+		let dir = this.getInputDirection()
+		if (!dir.isZero) {
+			this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "footstep", loop: false, holdReference: true});
+		}
+		this.owner.move(dir.mult(new Vec2(speedScale, speedScale))); 
+		
 	}
 
 }

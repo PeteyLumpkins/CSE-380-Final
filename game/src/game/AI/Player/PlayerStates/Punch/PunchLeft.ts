@@ -7,6 +7,7 @@ export default class PunchLeft extends Punch {
 
     onEnter(options: Record<string, any>): void {
         super.onEnter(options);
+        this.attackType = PlayerStates.PUNCH_LEFT;
         this.owner.animation.play("PUNCH_LEFT");
     }
 
@@ -14,24 +15,7 @@ export default class PunchLeft extends Punch {
         this.finished(PlayerStates.IDLE_LEFT);
     }
 
-    attack(dir: Vec2): void {
-
-        if (!this.attackTimer.isStopped()) {
-            return;
-        }
-        
-        if (dir.x > 0) {
-            this.finished(PlayerStates.PUNCH_RIGHT);
-        } else if (dir.y < 0) {
-            this.finished(PlayerStates.PUNCH_UP);
-        } else if (dir.y > 0) {
-            this.finished(PlayerStates.PUNCH_DOWN);
-        } else {
-            this.finished(PlayerStates.PUNCH_LEFT);
-        }
-    }
-
     onExit(): Record<string, any> {
-        return
+        return;
     }
 }

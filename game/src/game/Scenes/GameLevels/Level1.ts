@@ -3,24 +3,27 @@ import OrthogonalTilemap from "../../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilema
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import StoreController from "../../AI/Store/StoreController";
 import PlayerController from "../../AI/Player/PlayerController";
-import { GameSprites, GameData, ItemSprites, GameLayers } from "../../GameEnums";
+import { GameSprites, GameData, GameLayers } from "../../GameEnums";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import PositionGraph from "../../../Wolfie2D/DataTypes/Graphs/PositionGraph";
 import Navmesh from "../../../Wolfie2D/Pathfinding/Navmesh";
 import { GraphicType } from "../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
-
+import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 import { RatAIOptionType } from "../../AI/Enemy/Rat/RatAI";
 
 import GameLevel from "../GameLevel";
 import LevelEndAI from "../../AI/LevelEnd/LevelEndAI";
 
 import RatAI from "../../AI/Enemy/Rat/RatAI";
-import RatAttack from "../../AI/Enemy/Rat/RatActions/RatAttack";
-import RatMove from "../../AI/Enemy/Rat/RatActions/RatMove";
 
 import items from "./items.json";
+
 import Player from "../../Player/Player";
 import Level2 from "./Level2";
+
+import PlayerStats from "../../AI/Player/PlayerStats";
+import PlayerInventory from "../../AI/Player/PlayerInventory";
+import StoreItems from "../../AI/Store/StoreItems";
 
 
 export default class Level1 extends GameLevel {
@@ -59,6 +62,22 @@ export default class Level1 extends GameLevel {
         // this.load.image(ItemSprites.MOLD_BREAD, "assets/itemsprites/moldBread.png");
         // this.load.image(ItemSprites.OLD_BOOT, "assets/itemsprites/oldBoot.png");
         this.load.image(GameSprites.LADDER, "assets/sprites/EndOfLevel.png");
+
+        this.load.audio("level1", "assets/music/Level1.wav");
+        this.load.audio("hitSound", "assets/soundEffects/smack.wav");
+        this.load.audio("coinSound", "assets/soundEffects/coin.wav");
+        this.load.audio("footstep", "assets/soundEffects/footstep1.wav");
+        this.load.audio("buySound", "assets/soundEffects/shopBuy.wav");
+        this.load.audio("textbox", "assets/soundEffects/textbox.wav");
+
+        this.load.audio("itemdrop", "assets/soundEffects/itemDrop.wav");
+        this.load.audio("itempickup", "assets/soundEffects/itemPickup.wav");
+        this.load.audio("invalidbuy", "assets/soundEffects/invalidStore.wav");
+
+    }
+
+    unloadScene(): void {
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level1"});
     }
 
     /**
@@ -76,6 +95,7 @@ export default class Level1 extends GameLevel {
         // this.itemBarBackground = this.add.sprite("itembarbg", GameLayers.UI);
         // this.itemBarBackground.position.set(this.viewport.getCenter().x, 32);
         super.startScene();
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level1", loop: true, holdReference: true});
     }
 
     initViewport(): void {
@@ -86,29 +106,34 @@ export default class Level1 extends GameLevel {
         let scale = this.viewport.getZoomLevel();
         let scalar = new Vec2(scale, scale);
 
-        let playerNode = this.add.animatedSprite("player", GameLayers.PRIMARY);
+        this.player = this.add.animatedSprite("player", GameLayers.PRIMARY);
+		this.player.position.set(448, 480);
+		let playerCollider = new AABB(Vec2.ZERO, new Vec2(this.player.sizeWithZoom.x, this.player.sizeWithZoom.y).div(scalar).div(new Vec2(3, 3)));
+        this.player.addPhysics();
+		this.player.setCollisionShape(playerCollider);
+
         let inventory = new Array<string>();
-        let stats = {"HEALTH": 20, "MONEY": 10, "MOVE_SPEED": 3};
 
-        this.player = new Player(playerNode, inventory, stats);
+        let stats = {"HEALTH": 20, "MONEY": 10, "MOVE_SPEED": 1};
+		this.player.addAI(PlayerController, {inventory: new PlayerInventory(inventory, 9), stats: new PlayerStats(stats)});
+        this.viewport.follow(this.player);
 
-		playerNode.position.set(448, 480);
-		let playerCollider = new AABB(Vec2.ZERO, new Vec2(playerNode.sizeWithZoom.x, playerNode.sizeWithZoom.y).div(scalar).div(new Vec2(2, 2)));
-        playerNode.addPhysics();
-		playerNode.setCollisionShape(playerCollider);
-		playerNode.addAI(PlayerController, {inventory: this.player.inventory, stats: this.player.stats});
-
-        this.viewport.follow(playerNode);
     }
 
     initStore(): void {
     
-        let items = ["moldy_bread", "old_boot", "mystery_liquid"];
+        let storeItems = new StoreItems(
+            [
+                {key: "moldy_bread", count: 1},
+                {key: "old_boot", count: 1},
+                {key: "mystery_liquid", count: 1}
+            ]
+        )
 
         this.store = this.add.animatedSprite("store_terminal", GameLayers.PRIMARY);
         this.store.position.set(1056, 1152);
         this.store.scale.set(0.4, 0.4);
-        this.store.addAI(StoreController, {radius: 100, player: this.player, items: items});
+        this.store.addAI(StoreController, {radius: 100, target: this.player, items: storeItems});
     }
 
     initMap(): void {
@@ -154,11 +179,13 @@ export default class Level1 extends GameLevel {
         let navmesh = new Navmesh(this.navmeshGraph);
 
         this.navManager.addNavigableEntity("navmesh", navmesh);
+        this.drawHitbox();
     }
 
     initLevelLinks(): void {
         this.nextLevel = this.add.sprite(GameSprites.LADDER, GameLayers.PRIMARY);
         this.nextLevel.position.set(2960, 595);
+
         this.nextLevel.addAI(LevelEndAI, {player: this.player.node, range: 25, nextLevel: Level2});
     }
 
@@ -177,5 +204,54 @@ export default class Level1 extends GameLevel {
             console.log(this.enemies[i]);
         }
 
+    }
+
+    drawHitbox(): void {
+
+        let ry = this.player.position.y;
+        let rx = this.player.boundary.topRight.x - this.player.boundary.halfSize.x / 3;
+
+        let box = new AABB(new Vec2(rx, ry), new Vec2(this.player.boundary.halfSize.x / 3, this.player.boundary.halfSize.y / 3));
+
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.topLeft, end: box.topRight});
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.topRight, end: box.bottomRight});
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.bottomRight, end: box.bottomLeft});
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.bottomLeft, end: box.topLeft});
+
+
+
+        let ly = this.player.position.y;
+        let lx = this.player.boundary.topLeft.x + this.player.boundary.halfSize.x / 3;
+
+        box = new AABB(new Vec2(lx, ly), new Vec2(this.player.boundary.halfSize.x / 3, this.player.boundary.halfSize.y / 3));
+
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.topLeft, end: box.topRight});
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.topRight, end: box.bottomRight});
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.bottomRight, end: box.bottomLeft});
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.bottomLeft, end: box.topLeft});
+
+
+
+        let uy = this.player.boundary.topRight.y + this.player.boundary.halfSize.y / 3;
+        let ux = this.player.position.x;
+
+        box = new AABB(new Vec2(ux, uy), new Vec2(this.player.boundary.halfSize.x / 3, this.player.boundary.halfSize.y / 3));
+
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.topLeft, end: box.topRight});
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.topRight, end: box.bottomRight});
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.bottomRight, end: box.bottomLeft});
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.bottomLeft, end: box.topLeft});
+
+
+
+        let dy = this.player.boundary.bottomRight.y - this.player.boundary.halfSize.y / 3;
+        let dx = this.player.position.x;
+
+        box = new AABB(new Vec2(dx, dy), new Vec2(this.player.boundary.halfSize.x / 3, this.player.boundary.halfSize.y / 3));
+
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.topLeft, end: box.topRight});
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.topRight, end: box.bottomRight});
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.bottomRight, end: box.bottomLeft});
+        this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.bottomLeft, end: box.topLeft});
     }
 }

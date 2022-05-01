@@ -8,6 +8,7 @@ import { MenuImages, MenuEvents, MenuLayers } from "../../GameEnums";
 import GameLevel from "../GameLevel";
 import Level1 from "./Level1";
 import Label from "../../../Wolfie2D/Nodes/UIElements/Label";
+import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 
 /** 
  * TODO: The position of the logo should be moved on each of the screens so that it 
@@ -37,18 +38,15 @@ export default class MainMenu extends Scene {
     private level1_preview: Sprite;
 
     loadScene(){
-        console.log("item meta data?");
-        console.log(this.load.getObject("item-meta"));
         this.load.image(MenuImages.BACKGROUND, "assets/images/background.jpeg");
         this.load.image(MenuImages.LOGO, "assets/images/logo_no_white.png");
+        this.load.audio("menu", "assets/music/menu.wav");
     }
 
     startScene(){
         // When we return to main menu from the game -> need to reset the viewport bounds
         this.viewport.setBounds(0, 0, 1024, 1024);
         this.viewport.setZoomLevel(1);
-
-        console.log(this.load.getObject("item-meta"));
 
         // The background layer
         this.background = this.addLayer(MenuLayers.BACKGROUND, 0);
@@ -83,6 +81,8 @@ export default class MainMenu extends Scene {
         this.receiver.subscribe(MenuEvents.CONTROLS);
         this.receiver.subscribe(MenuEvents.MAIN_MENU);
         this.receiver.subscribe(MenuEvents.LEVELS);
+
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "menu", loop: true, holdReference: true});
     }
 
     updateScene(){
@@ -294,5 +294,9 @@ export default class MainMenu extends Scene {
         levelsBack.borderColor = Color.WHITE;
         levelsBack.backgroundColor = Color.TRANSPARENT;
         levelsBack.onClickEventId = MenuEvents.MAIN_MENU;
+    }
+
+    unloadScene() {
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "menu"});
     }
 }

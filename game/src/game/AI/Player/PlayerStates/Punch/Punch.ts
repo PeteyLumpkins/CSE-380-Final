@@ -1,11 +1,14 @@
 import Vec2 from "../../../../../Wolfie2D/DataTypes/Vec2";
+import Timer from "../../../../../Wolfie2D/Timing/Timer";
+
 import { PlayerStates } from "../../PlayerController";
 import PlayerState from "../PlayerState";
 
 export default abstract class Punch extends PlayerState {
 
     onEnter(options: Record<string, any> ): void {
-        this.attackTimer.start(880/2);
+        this.attackTimer.start();
+
     }
 
     update(deltaT: number): void {
@@ -16,11 +19,14 @@ export default abstract class Punch extends PlayerState {
         console.log(attacking);
 
         if (attacking) {
-            this.attack(dir);
-        } else if (dir.isZero()) {
-            this.idle();
+            this.attack();
         } else {
-            this.move(dir);
+            this.attackTimer.reset();
+            if (dir.isZero()) {
+                this.idle();
+            } else {
+                this.move(dir);
+            }
         }
     }
 
@@ -38,7 +44,12 @@ export default abstract class Punch extends PlayerState {
         }
     }
 
-    abstract attack(dir: Vec2): void;
+    attack(): void {
+        if (!this.attackTimer.isStopped()) {
+            return;
+        }
+        this.attackTimer.start();
+    }
 
 }
 

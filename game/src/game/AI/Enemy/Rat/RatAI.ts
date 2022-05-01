@@ -1,8 +1,10 @@
 import EnemyAI from "../EnemyAI";
 import GameNode from "../../../../Wolfie2D/Nodes/GameNode";
 import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
+import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
 
 import { PlayerEvents } from "../../Player/PlayerController";
+import { GameEventType } from "../../../../Wolfie2D/Events/GameEventType";
 
 import RatIdle from "./RatStates/RatIdle";
 import RatActive from "./RatStates/RatActive";
@@ -11,7 +13,6 @@ import RatDead from "./RatStates/RatDead";
 import RatAttack from "./RatActions/RatAttack";
 import RatMove from "./RatActions/RatMove";
 
-import Player from "../../../Player/Player";
 
 export enum RatAIStates {
     IDLE = "RAT_IDLE_STATE",
@@ -56,7 +57,6 @@ export default class RatAI extends EnemyAI {
     }
 
     handleEvent(event: GameEvent): void {
-        super.handleEvent(event);
         switch(event.type) {
             case PlayerEvents.ATTACKED: {
                 console.log("Caught player attacked event in RatAI");
@@ -71,10 +71,15 @@ export default class RatAI extends EnemyAI {
     }
 
     handlePlayerAttackEvent(event: GameEvent): void {
-
-        if (this.owner.position.distanceTo(event.data.get("position")) <= event.data.get("range")) {
+        if (this.owner.collisionShape.overlaps(event.data.get("hitbox"))) {
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "hitSound", loop: false, holdReference: true});
             this.health -= event.data.get("damage");
+            // this.owner.move(event.data.get("dir").mult(new Vec2(500, 500)));
         }
+    }
+
+    handleKnockBack(dir: Vec2): void {
+        this.owner.move(dir.mult(new Vec2(100, 100)));
     }
 
     /** Initialize custom attributes for Rat */
@@ -114,7 +119,7 @@ export default class RatAI extends EnemyAI {
      * @param options any custom options we want to tweak
      * @returns a set of options for a RatAI
      */
-    public static optionsBuilder(type: RatAIOptionType, player: Player): Record<string, any> {
+    public static optionsBuilder(type: RatAIOptionType, target: GameNode): Record<string, any> {
 
         let optionsTemplate: Record<string, any>;
 
@@ -122,7 +127,7 @@ export default class RatAI extends EnemyAI {
 
             case RatAIOptionType.DEFAULT: {
                 optionsTemplate = {
-                    player: player,
+                    target: target,
                     goal: RatAIStatuses.GOAL_REACHED,
                     statuses: new Array<RatAIStatuses>(),
                     actions: [
@@ -133,14 +138,14 @@ export default class RatAI extends EnemyAI {
                     sightRange: 100,
                     swarmRange: 50,
                     moveSpeed: 100,
-                    attackRange: 25, 
+                    attackRange: 50, 
                     attackDamage: 2
                 }
                 break;
             }
             case RatAIOptionType.FAST: {
                 optionsTemplate = {
-                    player: player,
+                    target: target,
                     goal: RatAIStatuses.GOAL_REACHED,
                     statuses: new Array<RatAIStatuses>(),
                     actions: [
@@ -151,7 +156,7 @@ export default class RatAI extends EnemyAI {
                     sightRange: 200,
                     swarmRange: 50,
                     moveSpeed: 150,
-                    attackRange: 25, 
+                    attackRange: 50, 
                     attackDamage: 2
                 }
                 break;

@@ -13,7 +13,7 @@ export default class RatActive extends RatState {
     }
 
     handleInput(event: GameEvent): void {
-        super.handleInput(event);
+        
     }
 
     update(deltaT: number): void {
@@ -24,7 +24,7 @@ export default class RatActive extends RatState {
             return;
         }
 
-        if (!this.inAttackRange(this.parent.player.node.position)) {
+        if (!this.inAttackRange(this.parent.target.position)) {
             let i = this.parent.currentStatus.indexOf(RatAIStatuses.IN_RANGE);
             if (i != -1) {
                 this.parent.currentStatus.splice(i, 1);
@@ -38,10 +38,6 @@ export default class RatActive extends RatState {
        
         if (result !== null) {
             this.parent.plan.pop();
-
-            if (result.toString() === EnemyActions.ATTACK) {
-                this.attackCooldownTimer.start();
-            }
 
             // Adds statuses to the current status of the
             if (!result.includes(RatAIStatuses.GOAL_REACHED)) {

@@ -15,9 +15,10 @@ import GameEvent from "../../Wolfie2D/Events/GameEvent";
 
 import Color from "../../Wolfie2D/Utils/Color";
 
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import { GameEvents } from "../GameEnums";
 
-import Player from "../Player/Player";
+import StoreItems from "../AI/Store/StoreItems";
 
 
 export enum StoreEvent {
@@ -31,11 +32,11 @@ export default class StoreManager implements Updateable {
     private scene: Scene;
     private numItems: number;
 
+    private emitter: Emitter;
     private receiver: Receiver;
 
     /* Store related data */
-    protected storeItems: Array<string>;
-    protected player: Player;
+    protected storeItems: StoreItems;
 
     /* Store UI Layers */
     private backgroundLayer: string;
@@ -67,6 +68,7 @@ export default class StoreManager implements Updateable {
             this.buttonLayer = buttonLayer;
 
             this.receiver = new Receiver();
+            this.emitter = new Emitter();
 
             this.receiver.subscribe(GameEvents.OPEN_STORE);
             this.receiver.subscribe(GameEvents.CLOSE_STORE);
@@ -100,16 +102,17 @@ export default class StoreManager implements Updateable {
         switch(event.type) {
             case GameEvents.OPEN_STORE: {
                 console.log("Open store event caught!");
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "textbox", loop: false, holdReference: true});
                 this.handleOpenStoreEvent(event);
                 break;
             }
             case GameEvents.CLOSE_STORE: {
                 console.log("Close store event caught!");
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "textbox", loop: false, holdReference: true});
                 this.handleCloseStoreEvent(event);
                 break;
             }
             default: {
-                console.log("")
                 break;
             }
         }
@@ -117,7 +120,7 @@ export default class StoreManager implements Updateable {
 
     private handleOpenStoreEvent(event: GameEvent) {
         this.storeItems = event.data.get("items");
-        this.player = event.data.get("player");
+        console.log(this.storeItems);
 
         this.loadStoreItems();
         this.openStore();
@@ -150,16 +153,15 @@ export default class StoreManager implements Updateable {
         /* Getting the item data */
         let items = this.scene.load.getObject("item-data");
 
-
         for (let i = 0; i < this.numItems; i += 1, startX += spaceX) {
             let oldsprite = this.itemSprites[i];
 
-            this.itemSprites[i] = this.scene.add.sprite(this.storeItems[i], this.itemLayer);
+            this.itemSprites[i] = this.scene.add.sprite(this.storeItems.getItem(i).key, this.itemLayer);
             this.itemSprites[i].position.set(startX, startY).sub(origin);
             this.itemSprites[i].scale.set(5, 5).div(scalar);
 
-            this.itemCostLabels[i].text = items[this.storeItems[i]].cost;
-            this.itemNameLabels[i].text = items[this.storeItems[i]].name;
+            this.itemCostLabels[i].text = items[this.storeItems.getItem(i).key].cost;
+            this.itemNameLabels[i].text = items[this.storeItems.getItem(i).key].name;
 
             if (oldsprite !== undefined && oldsprite !== null ) {
                 oldsprite.destroy();
@@ -191,9 +193,12 @@ export default class StoreManager implements Updateable {
             this.itemBuyButtons[i] = <Button>this.scene.add.uiElement(UIElementType.BUTTON, this.buttonLayer, {position: new Vec2(startX, startY).div(scalar), text: "Buy Item " + (i + 1)});
             this.itemBuyButtons[i].size.set(100, 25);
             this.itemBuyButtons[i].scale.div(scalar);
+            this.itemBuyButtons[i].borderColor = Color.WHITE;
+            this.itemBuyButtons[i].textColor = Color.WHITE;
             this.itemBuyButtons[i].borderWidth = 2;
             this.itemBuyButtons[i].fontSize = 16;
-            this.itemBuyButtons[i].backgroundColor = Color.BLACK;
+            this.itemBuyButtons[i].font = "Courier";
+            this.itemBuyButtons[i].backgroundColor = Color.TRANSPARENT;
             this.itemBuyButtons[i].onClick = () => {
                 this.handleItemPurchase(i);
             };
@@ -214,6 +219,7 @@ export default class StoreManager implements Updateable {
             this.itemNameLabels[i] = <Label>this.scene.add.uiElement(UIElementType.LABEL, this.nameLayer, {position: new Vec2(startX, startY).div(scalar), text: ""});
             this.itemNameLabels[i].fontSize = 18;
             this.itemNameLabels[i].textColor = Color.WHITE;
+            this.itemNameLabels[i].font = "Courier";
             this.itemNameLabels[i].scale.div(scalar);
         }
 
@@ -228,6 +234,7 @@ export default class StoreManager implements Updateable {
             this.itemCostLabels[i] = <Label>this.scene.add.uiElement(UIElementType.LABEL, this.costLayer, {position: new Vec2(startX, startY).div(scalar), text: ""});
             this.itemCostLabels[i].fontSize = 18;
             this.itemCostLabels[i].textColor = Color.WHITE;
+            this.itemCostLabels[i].font = "Courier";
             this.itemCostLabels[i].scale.div(scalar);
         }
 
@@ -242,10 +249,18 @@ export default class StoreManager implements Updateable {
 
     private handleItemPurchase(index: number): void {
         let items = this.scene.load.getObject("item-data");
-        let itemData = items[this.storeItems[index]];
+        
+        let item = this.storeItems.getItem(index)
+        let key = item.key;
+        let cost = items[key].cost;
 
-        this.player.inventory.addItem(this.storeItems[index]);
-        this.player.stats.setStat("MONEY", this.player.stats.getStat("MONEY") - itemData.cost);
+        this.emitter.fireEvent(StoreEvent.ITEM_PURCHASED, {
+            itemKey: key,
+            cost: cost, 
+            buy: () => {
+                this.storeItems.removeItem(index);
+            }
+        });
     }
 
 }
