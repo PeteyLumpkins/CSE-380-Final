@@ -18,6 +18,9 @@ import RatAI from "../../AI/Enemy/Rat/RatAI";
 
 import items from "./items.json";
 
+import Player from "../../Player/Player";
+import Level2 from "./Level2";
+
 import PlayerStats from "../../AI/Player/PlayerStats";
 import PlayerInventory from "../../AI/Player/PlayerInventory";
 import StoreItems from "../../AI/Store/StoreItems";
@@ -110,9 +113,11 @@ export default class Level1 extends GameLevel {
 		this.player.setCollisionShape(playerCollider);
 
         let inventory = new Array<string>();
+
         let stats = {"HEALTH": 20, "MONEY": 10, "MOVE_SPEED": 1};
 		this.player.addAI(PlayerController, {inventory: new PlayerInventory(inventory, 9), stats: new PlayerStats(stats)});
         this.viewport.follow(this.player);
+
     }
 
     initStore(): void {
@@ -180,7 +185,8 @@ export default class Level1 extends GameLevel {
     initLevelLinks(): void {
         this.nextLevel = this.add.sprite(GameSprites.LADDER, GameLayers.PRIMARY);
         this.nextLevel.position.set(2960, 595);
-        this.nextLevel.addAI(LevelEndAI, {player: this.player, range: 25, nextLevel: Level1});
+
+        this.nextLevel.addAI(LevelEndAI, {player: this.player.node, range: 25, nextLevel: Level2});
     }
 
     initEnemies(): void {

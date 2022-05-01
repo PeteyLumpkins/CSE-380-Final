@@ -104,31 +104,31 @@
             "name": "WALK_RIGHT",
             "repeat": true,
             "frames": [ 
-                {"index": 36, "duration": 8}, 
                 {"index": 39, "duration": 8}, 
                 {"index": 40, "duration": 8}, 
-                {"index": 39, "duration": 8}, 
-                {"index": 36, "duration": 8}, 
                 {"index": 41, "duration": 8}, 
-                {"index": 42, "duration": 8},
-                {"index": 41, "duration": 8}
+                {"index": 42, "duration": 8}, 
+                {"index": 43, "duration": 8}, 
+                {"index": 44, "duration": 8}, 
+                {"index": 45, "duration": 8},
+                {"index": 39, "duration": 8}
             ]
         },
         {
             "name": "PUNCH_RIGHT",
             "repeat": true,
             "frames": [ 
-                {"index": 43, "duration": 2}, 
-                {"index": 44, "duration": 2}, 
-                {"index": 45, "duration": 2}, 
                 {"index": 46, "duration": 2}, 
                 {"index": 47, "duration": 2}, 
                 {"index": 48, "duration": 2}, 
                 {"index": 49, "duration": 2}, 
-                {"index": 45, "duration": 2}, 
                 {"index": 50, "duration": 2}, 
                 {"index": 51, "duration": 2}, 
-                {"index": 52, "duration": 2}
+                {"index": 52, "duration": 2}, 
+                {"index": 48, "duration": 2}, 
+                {"index": 53, "duration": 2}, 
+                {"index": 54, "duration": 2}, 
+                {"index": 55, "duration": 2}
 
             ]
         },
@@ -137,24 +137,24 @@
             "name": "IDLE_LEFT",
             "repeat": true,
             "frames": [ 
-                {"index": 53, "duration": 16}, 
-                {"index": 54, "duration": 16}, 
-                {"index": 55, "duration": 16}, 
-                {"index": 53, "duration": 16}
+                {"index": 56, "duration": 16}, 
+                {"index": 57, "duration": 16}, 
+                {"index": 58, "duration": 16}, 
+                {"index": 56, "duration": 16}
             ]
         },
         { 
             "name": "WALK_LEFT",
             "repeat": true,
             "frames": [ 
-                {"index": 53, "duration": 8}, 
-                {"index": 56, "duration": 8}, 
-                {"index": 57, "duration": 8}, 
-                {"index": 56, "duration": 8},
-                {"index": 53, "duration": 8}, 
-                {"index": 58, "duration": 8}, 
                 {"index": 59, "duration": 8}, 
-                {"index": 60, "duration": 8}
+                {"index": 60, "duration": 8}, 
+                {"index": 61, "duration": 8}, 
+                {"index": 62, "duration": 8},
+                {"index": 63, "duration": 8}, 
+                {"index": 64, "duration": 8}, 
+                {"index": 65, "duration": 8}, 
+                {"index": 59, "duration": 8}
 
             ]
         },
@@ -162,17 +162,17 @@
             "name": "PUNCH_LEFT",
             "repeat": true,
             "frames": [ 
-                {"index": 60, "duration": 2}, 
-                {"index": 61, "duration": 2}, 
-                {"index": 62, "duration": 2}, 
-                {"index": 63, "duration": 2}, 
-                {"index": 64, "duration": 2}, 
-                {"index": 65, "duration": 2}, 
                 {"index": 66, "duration": 2}, 
-                {"index": 62, "duration": 2}, 
                 {"index": 67, "duration": 2}, 
                 {"index": 68, "duration": 2}, 
-                {"index": 69, "duration": 2}
+                {"index": 69, "duration": 2}, 
+                {"index": 70, "duration": 2}, 
+                {"index": 71, "duration": 2}, 
+                {"index": 72, "duration": 2}, 
+                {"index": 68, "duration": 2}, 
+                {"index": 73, "duration": 2}, 
+                {"index": 74, "duration": 2}, 
+                {"index": 75, "duration": 2}
 
             ]
         }
