@@ -85,7 +85,9 @@ export default class Level1 extends GameLevel {
         this.load.keepImage("itembg");
         this.load.keepImage("itembarbg");
         this.load.keepSpritesheet(GameSprites.STORE_BG);
-
+        this.load.keepSpritesheet(GameSprites.COIN);
+        this.load.keepObject("item-data");
+        this.load.keepObject(GameData.STORE_ITEMS);
         this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level1"});
         console.log("Unloading!");
     }
@@ -147,18 +149,18 @@ export default class Level1 extends GameLevel {
 
     initStore(): void {
     
-        let storeItems = new StoreItems(
-            [
-                {key: "moldy_bread", count: 1},
-                {key: "old_boot", count: 1},
-                {key: "mystery_liquid", count: 1}
-            ]
-        );
+        // let storeItems = new StoreItems(
+        //     [
+        //         {key: "moldy_bread", count: 1},
+        //         {key: "old_boot", count: 1},
+        //         {key: "mystery_liquid", count: 1}
+        //     ]
+        // );
 
-        this.store = this.add.animatedSprite("store_terminal", GameLayers.PRIMARY);
-        this.store.position.set(1056, 1152);
-        this.store.scale.set(0.4, 0.4);
-        this.store.addAI(StoreController, {radius: 100, target: this.player, items: storeItems});
+        // this.store = this.add.animatedSprite("store_terminal", GameLayers.PRIMARY);
+        // this.store.position.set(1056, 1152);
+        // this.store.scale.set(0.4, 0.4);
+        // this.store.addAI(StoreController, {radius: 100, target: this.player, items: storeItems});
 
     }
 
