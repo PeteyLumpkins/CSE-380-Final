@@ -36,7 +36,7 @@ export default class InventoryManager implements Updateable {
 
     private size: number;
 
-    constructor(scene: Scene, size: number, padding: number, start: Vec2, itemLayer: string, slotSprite: string, slotLayer: string) {
+    constructor(scene: Scene, items: Array<string>, size: number, padding: number, start: Vec2, itemLayer: string, slotSprite: string, slotLayer: string) {
 
         this.scene = scene;
 
@@ -81,12 +81,14 @@ export default class InventoryManager implements Updateable {
             this.itemSlotNums[i].font = "Courier";
             this.itemSlotNums[i].textColor = Color.WHITE;
         }
+
+        this.loadItems(items);
     }
 
     private handleEvent(event: GameEvent): void {
         switch(event.type) {
             case InventoryEvent.CHANGED: {
-                this.handleItemChangeEvent(event);
+                this.loadItems(event.data.get("items"));
                 break;
             }
             default: {
@@ -95,8 +97,7 @@ export default class InventoryManager implements Updateable {
         }
     }
 
-    private handleItemChangeEvent(event: GameEvent): void {
-        let inv = event.data.get("items");
+    private loadItems(inv: Array<string>): void {
         let scale = this.scene.getViewScale();
         let scalar = new Vec2(scale, scale);
 

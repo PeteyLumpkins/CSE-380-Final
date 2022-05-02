@@ -1,7 +1,6 @@
 import GameLevel from "../GameLevel";
 import AABB from "../../../Wolfie2D/DataTypes/Shapes/AABB";
 import OrthogonalTilemap from "../../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
-import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import StoreController from "../../AI/Store/StoreController";
 import PlayerController from "../../AI/Player/PlayerController";
 import { GameSprites, GameData, ItemSprites, GameLayers } from "../../GameEnums";
@@ -56,6 +55,8 @@ export default class Level2 extends GameLevel {
 		this.player.setCollisionShape(playerCollider);
 
         let inventory = new Array<string>();
+
+        console.log(this.sceneOptions);
 
         let stats = {"HEALTH": 20, "MONEY": 10, "MOVE_SPEED": 1};
 		this.player.addAI(PlayerController, {inventory: new PlayerInventory(inventory, 9), stats: new PlayerStats(stats)});

@@ -22,16 +22,9 @@ import Level2 from "./Level2";
 
 import PlayerStats from "../../AI/Player/PlayerStats";
 import PlayerInventory from "../../AI/Player/PlayerInventory";
-<<<<<<< HEAD
-
-import StoreItems from "../../AI/Store/StoreItems";
-=======
->>>>>>> 56ec0feb8f56276ad8a6d8903300468e7b965d88
 import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
 import Shop from "./Shop";
 import StoreItems from "../../AI/Store/StoreItems";
-
-
 
 
 export default class Level1 extends GameLevel {
@@ -40,8 +33,7 @@ export default class Level1 extends GameLevel {
     protected walls: OrthogonalTilemap;
     protected navmeshGraph: PositionGraph;
 
-    private PLAYER_SPAWN: Vec2 = new Vec2(448, 480);    // Default Spawn
-    private prevInventory: Array<string>;               // Carry in inventory from previous level 
+    // private PLAYER_SPAWN: Vec2 = new Vec2(448, 480);    // Default Spawn
 
     loadScene(){
         
@@ -110,35 +102,33 @@ export default class Level1 extends GameLevel {
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level1", loop: true, holdReference: true});
     }
 
+    initScene(init: Record<string, any>): void {
+        this.playerSpawn = init.spawn !== undefined ? init.spawn : Vec2.ZERO;
+        this.startingItems = init.inventory !== undefined ? init.inventory : [];
+        this.startingStats = init.stats !== undefined ? init.stats : {};
+    }
 
     initViewport(): void {
         this.viewport.setZoomLevel(1);
     }
-
-
-    initScene(init: Record<string, any>): void {
-            this.PLAYER_SPAWN = init.spawn;
-            console.log("Inside initScene: " + this.PLAYER_SPAWN);
-    }
-
 
     initPlayer(): void {
         let scale = this.viewport.getZoomLevel();
         let scalar = new Vec2(scale, scale);
 
         this.player = this.add.animatedSprite("player", GameLayers.PRIMARY);
-		this.player.position.set(this.PLAYER_SPAWN.x, this.PLAYER_SPAWN.y);     // Variable Spawn as shop location is different
+		this.player.position.set(this.playerSpawn.x, this.playerSpawn.y);     
 		let playerCollider = new AABB(Vec2.ZERO, new Vec2(this.player.sizeWithZoom.x, this.player.sizeWithZoom.y).div(scalar).div(new Vec2(3, 3)));
         this.player.addPhysics();
 		this.player.setCollisionShape(playerCollider);
 
-        let inventory = new Array<string>();
+        console.log(this.sceneOptions);
 
         let stats = {"HEALTH": 20, "MONEY": 10, "MOVE_SPEED": 5};
 
 		this.player.addAI(PlayerController, {
-            inventory: new PlayerInventory(inventory, 9, this.prevInventory),                             
-            stats: new PlayerStats(stats) // Passed through here?
+            inventory: new PlayerInventory(this.startingItems, 9),                             
+            stats: new PlayerStats(this.startingStats) // Passed through here?
         });  
 
         // Create new player inventory and then transfer items ( if any from previous )
@@ -147,8 +137,6 @@ export default class Level1 extends GameLevel {
         this.viewport.follow(this.player);
 
     }
-
-    
 
     initStore(): void {
     
@@ -216,12 +204,12 @@ export default class Level1 extends GameLevel {
     initLevelLinks(): void {
         this.shop = this.add.sprite(GameSprites.LADDER, GameLayers.PRIMARY);
         this.shop.position.set(1056, 1184);
-        this.shop.addAI(LevelEndAI, {player: this.player, range: 25, nextLevel: Shop});
+        this.shop.addAI(LevelEndAI, {player: this.player, range: 25, spawn: new Vec2(160, 352), nextLevel: Shop});
 
         this.nextLevel = this.add.sprite(GameSprites.LADDER, GameLayers.PRIMARY);
         this.nextLevel.position.set(2960, 595);
 
-        this.nextLevel.addAI(LevelEndAI, {player: this.player, range: 25, nextLevel: Level2});
+        this.nextLevel.addAI(LevelEndAI, {player: this.player, range: 25, spawn: new Vec2(448, 480), nextLevel: Level2});
     }
 
     initEnemies(): void {

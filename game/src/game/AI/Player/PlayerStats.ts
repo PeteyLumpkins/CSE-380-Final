@@ -72,4 +72,8 @@ export default class PlayerStats {
     
     }
 
+    getCopy(): Record<string, any> { 
+        return JSON.parse(JSON.stringify(this.stats));
+    }
+
 }

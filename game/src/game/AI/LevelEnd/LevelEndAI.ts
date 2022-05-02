@@ -32,6 +32,7 @@ export default class LevelEndAI extends StateMachineAI {
 
         this.player = options.player;
         this.range = options.range;
+
         this.nextLevel = options.nextLevel;
         this.playerSpawn = options.spawn;
 
@@ -49,7 +50,6 @@ export default class LevelEndAI extends StateMachineAI {
     getPlayerPosition(): Vec2 { return this.player.position; }
 
     getPlayer(): GameNode { return this.player; }
-
 
     destroy(): void {}
 

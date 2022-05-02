@@ -13,6 +13,7 @@ import { GameEvents, GameLayers, GameSprites, GameData, StoreEvents, ItemSprites
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import { PlayerEvents } from "../AI/Player/PlayerController";
 
+import PlayerController from "../AI/Player/PlayerController";
 import InventoryManager from "../GameSystems/InventoryManager";
 import PauseManager from "../GameSystems/PauseManager";
 import StoreManager from "../GameSystems/StoreManager";
@@ -39,15 +40,14 @@ export default abstract class GameLevel extends Scene {
 
     /* THE PLAYER */
     protected player: AnimatedSprite;
+    protected playerSpawn: Vec2;
+    protected startingItems: Array<string>;
+    protected startingStats: Record<string, any>;
 
     /* PLAYER UI STATS */
-    protected playerHealth: number = 20;
     protected playerHealthLabel: Label;
-    protected playerMoney: number = 0;
     protected playerMoneyLabel: Label;
 
-    //! Keep position of ladder entry from previous level
-    protected playerSpawn: Vec2;
     
     /* MORE UI COMPONENTS */
     protected itemBarBackground: Sprite;
@@ -57,7 +57,7 @@ export default abstract class GameLevel extends Scene {
     protected nextLevel: Sprite;
     protected prevLevel: Sprite;
 
-    /* SHOP LEVEL LINK*/
+    /* SHOP LEVEL LINK */
     protected shop: Sprite;
 
     /* THE ARRAY OF ENEMY NODES */
@@ -82,7 +82,7 @@ export default abstract class GameLevel extends Scene {
         this.initUIPrimary();
 
         this.addItemUILayers();
-        this.inventoryManager = new InventoryManager(this, 9, 16, new Vec2(450, 24), UILayers.ITEM_SPRITES, "itembg", UILayers.ITEM_SLOTS);
+        this.inventoryManager = new InventoryManager(this, this.startingItems, 9, 16, new Vec2(450, 24), UILayers.ITEM_SPRITES, "itembg", UILayers.ITEM_SLOTS);
 
         let pausedLayers = [
             GameLayers.PRIMARY, 
@@ -184,14 +184,6 @@ export default abstract class GameLevel extends Scene {
                 this.eventHandlers.pause(event);
                 break;
             }
-            case StoreEvents.VALID_PURCHASE: {
-                console.log("Valid store purchasee caught in GameLevel!");
-                break;
-            }
-            case StoreEvents.INVALID_PURCHASE: {
-                console.log("Invalid store purchase caught in GameLevel!");
-                break;
-            }
             case GameEvents.CHANGE_LEVEL: {
                 console.log("Change Level caught in GameLevel!");
                 this.eventHandlers.changeLevel(event);
@@ -230,14 +222,12 @@ export default abstract class GameLevel extends Scene {
     protected eventHandlers = {
 
         changeLevel: (ev: GameEvent) => { 
-<<<<<<< HEAD
-            this.sceneManager.changeToScene(ev.data.get("level"));
-            // console.log("HELLO!" + ev.data.get("spawn"));
-            // this.player.position.set(ev.data.get("spawn").x,ev.data.get("spawn").y);
-=======
-            this.sceneManager.changeToScene(ev.data.get("level"), {spawn: ev.data.get("spawn"), stats: ev.data.get("inventory")});   // Send player spawn as data into the new level
+            this.sceneManager.changeToScene(ev.data.get("level"), {
+                spawn: ev.data.get("spawn"), 
+                inventory: (<PlayerController>this.player._ai).playerInventory.getCopy(), 
+                stats: (<PlayerController>this.player._ai).playerStats.getCopy()
+            });   // Send player spawn as data into the new level
 
->>>>>>> 56ec0feb8f56276ad8a6d8903300468e7b965d88
         },
     
         pause: (ev : GameEvent) => {
@@ -257,14 +247,14 @@ export default abstract class GameLevel extends Scene {
         let scale = this.getViewScale();
         let scalar = new Vec2(scale, scale);
 
-        this.playerHealthLabel = <Label>this.add.uiElement(UIElementType.LABEL, UILayers.PRIMARY, {position: new Vec2(120, 32).div(scalar), text: "Health: " + (this.playerHealth)});
+        this.playerHealthLabel = <Label>this.add.uiElement(UIElementType.LABEL, UILayers.PRIMARY, {position: new Vec2(120, 32).div(scalar), text: "Health: " + (this.startingStats["HEALTH"])});
         this.playerHealthLabel.size.set(100, 50);
         this.playerHealthLabel.scale.div(scalar);
         this.playerHealthLabel.textColor = Color.WHITE;
         this.playerHealthLabel.fontSize = 20;
         this.playerHealthLabel.font = "Courier";
 
-        this.playerMoneyLabel = <Label>this.add.uiElement(UIElementType.LABEL, UILayers.PRIMARY, {position: new Vec2(300, 32).div(scalar), text: "Money: " + (this.playerMoney)});
+        this.playerMoneyLabel = <Label>this.add.uiElement(UIElementType.LABEL, UILayers.PRIMARY, {position: new Vec2(300, 32).div(scalar), text: "Money: " + (this.startingStats["MONEY"])});
         this.playerMoneyLabel.size.set(100, 50);
         this.playerMoneyLabel.scale.div(scalar);
         this.playerMoneyLabel.textColor = Color.WHITE;
@@ -286,8 +276,6 @@ export default abstract class GameLevel extends Scene {
         this.itemBarBackground.position.set(this.viewport.getCenter().x, 32).div(scalar);
         this.itemBarBackground.scale.div(scalar);
     }
-
-
 
     /**
      * Override and set the zoom of the viewport here
