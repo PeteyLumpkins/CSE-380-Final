@@ -19,7 +19,7 @@ export default abstract class EnemyAI extends StateMachineGoapAI {
     /** The owner of this AI */
     owner: GameNode
 
-    /** The player node */
+    /** The gamenode that the enemy ai will target - ie the player */
     target: GameNode;
 
     initializeAI(owner: GameNode, options: Record<string, any>): void {

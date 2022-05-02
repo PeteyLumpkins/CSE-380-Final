@@ -33,7 +33,6 @@ export default class RatActive extends RatState {
 
         /** Perform actions next */
         let nextAction = this.parent.plan.peek();
-
         let result = nextAction.performAction(this.parent.currentStatus, this.parent, deltaT);
        
         if (result !== null) {

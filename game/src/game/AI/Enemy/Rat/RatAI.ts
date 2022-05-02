@@ -95,7 +95,7 @@ export default class RatAI extends EnemyAI {
         this.attackDamage = options.attackDamage;
     }
 
-    /** Initialize custom state for Rat */
+    /** Initialize custom states for Rat */
     initStates(): void {
         this.addState(RatAIStates.IDLE, new RatIdle(this, this.owner));
         this.addState(RatAIStates.ACTIVE, new RatActive(this, this.owner));
@@ -104,13 +104,14 @@ export default class RatAI extends EnemyAI {
         this.initialize(RatAIStates.IDLE);
     }
 
+    /** Subscribe to any rat specific events that the rats need to know about */
     subscribeToEvents(): void {
         this.receiver.subscribe(RatAIEvents.PLAYER_SEEN);
         this.receiver.subscribe(PlayerEvents.ATTACKED);
     }
 
     /**
-     * This is a builder for the options that are to be fed a RatAI. Basically, it allows you to create a
+     * This is a builder for the options that are to be fed to a RatAI. Basically, it allows you to create a
      * set of RatAIOptions from a template. Once the options are returned, they can be tweaked and tuned 
      * however you want.
      * 
