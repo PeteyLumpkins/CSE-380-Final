@@ -120,7 +120,7 @@ export default class Level1 extends GameLevel {
 
         this.player = this.add.animatedSprite("player", GameLayers.PRIMARY);
 		this.player.position.set(this.playerSpawn.x, this.playerSpawn.y);     
-		let playerCollider = new AABB(Vec2.ZERO, new Vec2(this.player.sizeWithZoom.x, this.player.sizeWithZoom.y).div(scalar).div(new Vec2(3, 3)));
+		let playerCollider = new AABB(Vec2.ZERO, new Vec2(this.player.sizeWithZoom.x, this.player.sizeWithZoom.y).div(scalar).div(new Vec2(2, 2)));
         this.player.addPhysics();
 		this.player.setCollisionShape(playerCollider);
 
