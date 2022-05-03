@@ -1,7 +1,6 @@
 import GameLevel from "../GameLevel";
 import AABB from "../../../Wolfie2D/DataTypes/Shapes/AABB";
 import OrthogonalTilemap from "../../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
-import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import StoreController from "../../AI/Store/StoreController";
 import PlayerController from "../../AI/Player/PlayerController";
 import { GameSprites, GameData, ItemSprites, GameLayers } from "../../GameEnums";

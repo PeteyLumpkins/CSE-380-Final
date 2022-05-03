@@ -7,19 +7,18 @@ import PlayerStats from "../../AI/Player/PlayerStats";
 import StoreController from "../../AI/Store/StoreController";
 import { GameData, GameLayers, GameSprites, ItemSprites } from "../../GameEnums";
 import GameLevel from "../GameLevel";
+
+import StoreItems from "../../AI/Store/StoreItems";
 import items from "./items.json";
 import LevelEndAI from "../../AI/LevelEnd/LevelEndAI";
 
 import Level1 from "./Level1";
-import StoreItems from "../../AI/Store/StoreItems";
-
-
 
 
 
 export default class Shop extends GameLevel {
     protected walls: OrthogonalTilemap;
-    protected prevInventory: Array<string>;
+
     loadScene(): void {
         this.load.tilemap("level", "assets/tilemaps/shopLevel.json");
 
@@ -48,14 +47,18 @@ export default class Shop extends GameLevel {
     unloadScene(): void {
         this.load.keepImage("itembg");
         this.load.keepImage("itembarbg");
-        console.log("Unloading!");
 
+    }
+
+    initScene(init: Record<string, any>): void {
+        this.playerSpawn = init.spawn !== undefined ? init.spawn : Vec2.ZERO;
+        this.startingItems = init.inventory !== undefined ? init.inventory : [];
+        this.startingStats = init.stats !== undefined ? init.stats : {};
     }
 
     startScene(): void {
         console.log(this.load.getObject("item-meta"));
         this.addLayer(GameLayers.PRIMARY, 5);
-
         super.startScene();
     }
 
@@ -65,14 +68,15 @@ export default class Shop extends GameLevel {
         let scalar = new Vec2(scale, scale);
 
         this.player = this.add.animatedSprite("player", GameLayers.PRIMARY);
-		this.player.position.set(160, 352);
+		// this.player.position.set(160, 352);
+
+        this.player.position.set(this.playerSpawn.x, this.playerSpawn.y);
 		let playerCollider = new AABB(Vec2.ZERO, new Vec2(this.player.sizeWithZoom.x, this.player.sizeWithZoom.y).div(scalar).div(new Vec2(2, 2)));
         this.player.addPhysics();
 		this.player.setCollisionShape(playerCollider);
 
-        let inventory = new Array<string>();
         let stats = {"HEALTH": 20, "MONEY": 10, "MOVE_SPEED": 1};
-		this.player.addAI(PlayerController, {inventory: new PlayerInventory(inventory, 9, this.prevInventory), stats: new PlayerStats(stats)});
+		this.player.addAI(PlayerController, {inventory: new PlayerInventory(this.startingItems, 9), stats: new PlayerStats(this.startingStats)});
 
         this.viewport.follow(this.player);
     }
@@ -94,7 +98,7 @@ export default class Shop extends GameLevel {
 
     }
 
-    initMap(): void {        
+    initMap(): void {
         let tilemapLayers = this.add.tilemap("level");
 
         this.getTilemap("Floor").getLayer().setDepth(1);
@@ -107,7 +111,6 @@ export default class Shop extends GameLevel {
         // Set the viewport bounds to the tilemap
         let tilemapSize: Vec2 = this.walls.size;
 
-        this.viewport.setZoomLevel(1);
         this.viewport.setCenter((tilemapSize.x / 2), (tilemapSize.y / 2));
         this.viewport.setBounds(0, 0, tilemapSize.x, tilemapSize.y);
     }
@@ -119,7 +122,9 @@ export default class Shop extends GameLevel {
         this.nextLevel.addAI(LevelEndAI, {player: this.player, range: 25, nextLevel: Level1, spawn: new Vec2(1056, 1200)});
     }
 
-    initViewport(): void {}
+    initViewport(): void {
+        this.viewport.setZoomLevel(2);
+    }
 
 
 }
