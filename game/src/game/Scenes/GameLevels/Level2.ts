@@ -58,13 +58,7 @@ export default class Level2 extends GameLevel {
 
         let inventory = new Array<string>();
 
-<<<<<<< HEAD
-        console.log(this.sceneOptions);
-
-        let stats = {"HEALTH": 20, "MONEY": 10, "MOVE_SPEED": 1};
-=======
         let stats = {"HEALTH": 20, "MONEY": 10, "MOVE_SPEED": 4};
->>>>>>> bbd540ecda2849f564b76bfa8cabcb92a9005a27
 		this.player.addAI(PlayerController, {inventory: new PlayerInventory(inventory, 9), stats: new PlayerStats(stats)});
         this.viewport.follow(this.player);
 

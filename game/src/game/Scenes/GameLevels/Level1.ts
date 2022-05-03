@@ -178,7 +178,7 @@ export default class Level1 extends GameLevel {
         this.viewport.setBounds(0, 0, tilemapSize.x, tilemapSize.y);
 
         let gLayer = this.addLayer(GameLayers.NAVMESH_GRAPH, 10);
-        // gLayer.setHidden(true);
+        gLayer.setHidden(true);
 
         let navmeshData = this.load.getObject(GameData.NAVMESH);
 
@@ -225,8 +225,6 @@ export default class Level1 extends GameLevel {
             this.enemies[i].position.set(enemyData.enemies[i].position[0], enemyData.enemies[i].position[1]);
             this.enemies[i].addAI(RatAI, options);
             this.enemies[i].addPhysics();
-
-            console.log(this.enemies[i]);
         }
 
     }
