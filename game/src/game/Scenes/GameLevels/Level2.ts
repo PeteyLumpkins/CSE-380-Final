@@ -33,6 +33,8 @@ export default class Level2 extends GameLevel {
         // this.load.object(GameData.NAVMESH, "assets/data/navmeshLevel2.json"); 
         // this.load.object(GameData.STORE_ITEMS, "assets/data/item-data.json");
         // this.load.object("enemyData", "assets/data/enemyLevel2.json");
+        this.load.spritesheet("player", "assets/spritesheets/player/player.json");
+        this.load.spritesheet(GameSprites.STORE_BG, "assets/spritesheets/store/store_layer.json");
 
         this.load.image(GameSprites.LADDER, "assets/sprites/EndOfLevel.png");
 
@@ -49,16 +51,20 @@ export default class Level2 extends GameLevel {
         let scalar = new Vec2(scale, scale);
 
         this.player = this.add.animatedSprite("player", GameLayers.PRIMARY);
-		this.player.position.set(448, 480);
+		this.player.position.set(416, 416);
 		let playerCollider = new AABB(Vec2.ZERO, new Vec2(this.player.sizeWithZoom.x, this.player.sizeWithZoom.y).div(scalar).div(new Vec2(3, 3)));
         this.player.addPhysics();
 		this.player.setCollisionShape(playerCollider);
 
         let inventory = new Array<string>();
 
+<<<<<<< HEAD
         console.log(this.sceneOptions);
 
         let stats = {"HEALTH": 20, "MONEY": 10, "MOVE_SPEED": 1};
+=======
+        let stats = {"HEALTH": 20, "MONEY": 10, "MOVE_SPEED": 4};
+>>>>>>> bbd540ecda2849f564b76bfa8cabcb92a9005a27
 		this.player.addAI(PlayerController, {inventory: new PlayerInventory(inventory, 9), stats: new PlayerStats(stats)});
         this.viewport.follow(this.player);
 
@@ -67,18 +73,18 @@ export default class Level2 extends GameLevel {
     initEnemies(): void {}
 
     initStore(): void {
-        let items = new StoreItems(
-            [
-                {key: "moldy_bread", count: 1},
-                {key: "old_boot", count: 1},
-                {key: "mystery_liquid", count: 1}
-            ]
-        );
+        // let items = new StoreItems(
+        //     [
+        //         {key: "moldy_bread", count: 1},
+        //         {key: "old_boot", count: 1},
+        //         {key: "mystery_liquid", count: 1}
+        //     ]
+        // );
 
-        this.store = this.add.animatedSprite("store_terminal", GameLayers.PRIMARY);
-        this.store.position.set(832, 224);
-        this.store.scale.set(0.4, 0.4);
-        this.store.addAI(StoreController, {radius: 100, target: this.player, items: items});
+        // this.store = this.add.animatedSprite("store_terminal", GameLayers.PRIMARY);
+        // this.store.position.set(832, 224);
+        // this.store.scale.set(0.4, 0.4);
+        // this.store.addAI(StoreController, {radius: 100, target: this.player, items: items});
     }
 
     initMap(): void {

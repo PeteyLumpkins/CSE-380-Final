@@ -13,6 +13,7 @@ import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 
 //! TODO: Testing purposes for the shop level
 import Shop from "./Shop";
+import Button from "../../../Wolfie2D/Nodes/UIElements/Button";
 
 /** 
  * TODO: The position of the logo should be moved on each of the screens so that it 
@@ -42,7 +43,7 @@ export default class MainMenu extends Scene {
     private level1_preview: Sprite;
 
     loadScene(){
-        this.load.image(MenuImages.BACKGROUND, "assets/images/background.jpeg");
+        // this.load.image(MenuImages.BACKGROUND, "assets/images/background.jpeg");
         this.load.image(MenuImages.LOGO, "assets/images/logo_no_white.png");
         this.load.audio("menu", "assets/music/menu.wav");
     }
@@ -53,10 +54,10 @@ export default class MainMenu extends Scene {
         this.viewport.setZoomLevel(1);
 
         // The background layer
-        this.background = this.addLayer(MenuLayers.BACKGROUND, 0);
-        this.background_image = this.add.sprite(MenuImages.BACKGROUND, MenuLayers.BACKGROUND);
-		this.background_image.scale.set(.5, .5);
-		this.background_image.position.copy(this.viewport.getCenter());
+        // this.background = this.addLayer(MenuLayers.BACKGROUND, 0);
+        // this.background_image = this.add.sprite(MenuImages.BACKGROUND, MenuLayers.BACKGROUND);
+		// this.background_image.scale.set(.5, .5);
+		// this.background_image.position.copy(this.viewport.getCenter());
 
         // The logo layer?
         this.logo = this.addLayer(MenuLayers.LOGO, 1);
@@ -98,17 +99,21 @@ export default class MainMenu extends Scene {
             }
 
             if(event.type === MenuEvents.CONTROLS){
+                this.logo_image.visible = false;
                 this.controls.setHidden(false);
                 this.mainMenu.setHidden(true);
             }
 
             if(event.type === MenuEvents.HELP){
+                this.logo_image.visible = false;
                 this.about.setHidden(false);
                 this.mainMenu.setHidden(true);
             }
 
             if(event.type === MenuEvents.MAIN_MENU){
                 this.mainMenu.setHidden(false);
+                this.logo_image.position.set(this.viewport.getCenter().x, 150);
+                this.logo_image.visible = true;
 
                 this.controls.setHidden(true);
                 this.about.setHidden(true);
@@ -117,6 +122,7 @@ export default class MainMenu extends Scene {
             }
 
             if(event.type === MenuEvents.LEVELS) {
+                this.logo_image.visible = false;
                 this.levels.setHidden(false);
                 this.mainMenu.setHidden(true);
             }
@@ -130,12 +136,15 @@ export default class MainMenu extends Scene {
         this.splash = this.addUILayer(MenuLayers.SPLASH);
 
         
-        const start = this.add.uiElement(UIElementType.BUTTON, MenuLayers.SPLASH, {position: new Vec2(center.x, center.y + 200), text: "Click to start"});
-        start.size.set(200, 50);
+        const start = <Button> this.add.uiElement(UIElementType.BUTTON, MenuLayers.SPLASH, {position: new Vec2(center.x, center.y + 200), text: "Click to start"});
+        start.font = "menu";
+        start.size.set(300, 50);
         start.borderWidth = 2;
         start.borderColor = Color.WHITE;
         start.backgroundColor = Color.TRANSPARENT;
         start.onClickEventId = MenuEvents.MAIN_MENU;
+        
+        
     }
 
     initMainMenu() {
@@ -145,8 +154,11 @@ export default class MainMenu extends Scene {
         this.mainMenu = this.addUILayer(MenuLayers.MAIN_MENU);
         this.mainMenu.setHidden(true);
 
+
+
         // Add play button, and give it an event to emit on press
-        const play = this.add.uiElement(UIElementType.BUTTON, MenuLayers.MAIN_MENU, {position: new Vec2(center.x, center.y - 100), text: "Play"});
+        const play = <Button> this.add.uiElement(UIElementType.BUTTON, MenuLayers.MAIN_MENU, {position: new Vec2(center.x, center.y - 100), text: "Play"});
+        play.font = "menu";
         play.size.set(200, 50);
         play.borderWidth = 2;
         play.borderColor = Color.WHITE;
@@ -154,7 +166,8 @@ export default class MainMenu extends Scene {
         play.onClickEventId = MenuEvents.PLAY_GAME;
 
         // Add controls button
-        const controls = this.add.uiElement(UIElementType.BUTTON, MenuLayers.MAIN_MENU, {position: new Vec2(center.x, center.y), text: "Controls"});
+        const controls = <Button> this.add.uiElement(UIElementType.BUTTON, MenuLayers.MAIN_MENU, {position: new Vec2(center.x, center.y), text: "Controls"});
+        controls.font = 'menu';
         controls.size.set(200, 50);
         controls.borderWidth = 2;
         controls.borderColor = Color.WHITE;
@@ -162,7 +175,8 @@ export default class MainMenu extends Scene {
         controls.onClickEventId = MenuEvents.CONTROLS;
 
         // Add help button
-        const about = this.add.uiElement(UIElementType.BUTTON, MenuLayers.MAIN_MENU, {position: new Vec2(center.x, center.y + 100), text: "About"});
+        const about = <Button> this.add.uiElement(UIElementType.BUTTON, MenuLayers.MAIN_MENU, {position: new Vec2(center.x, center.y + 100), text: "About"});
+        about.font = 'menu';
         about.size.set(200, 50);
         about.borderWidth = 2;
         about.borderColor = Color.WHITE;
@@ -170,7 +184,8 @@ export default class MainMenu extends Scene {
         about.onClickEventId = MenuEvents.HELP;
 
         // Add levels button
-        const levels = this.add.uiElement(UIElementType.BUTTON, MenuLayers.MAIN_MENU, {position: new Vec2(center.x, center.y + 200), text: "Levels" });
+        const levels = <Button> this.add.uiElement(UIElementType.BUTTON, MenuLayers.MAIN_MENU, {position: new Vec2(center.x, center.y + 200), text: "Levels" });
+        levels.font = 'menu';
         levels.size.set(200, 50);
         levels.borderWidth = 2;
         levels.borderColor = Color.WHITE;
@@ -201,7 +216,8 @@ export default class MainMenu extends Scene {
         pause.textColor = Color.WHITE;
         
 
-        const constBack = this.add.uiElement(UIElementType.BUTTON, MenuLayers.CONTROLS, {position: new Vec2(125, 100), text: "Back"});
+        const constBack = <Button> this.add.uiElement(UIElementType.BUTTON, MenuLayers.CONTROLS, {position: new Vec2(125, 100), text: "Back"});
+        constBack.font = "menu";
         constBack.size.set(100, 50);
         constBack.borderWidth = 2;
         constBack.borderColor = Color.WHITE;

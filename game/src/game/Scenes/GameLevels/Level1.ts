@@ -82,7 +82,9 @@ export default class Level1 extends GameLevel {
         this.load.keepImage("itembg");
         this.load.keepImage("itembarbg");
         this.load.keepSpritesheet(GameSprites.STORE_BG);
-
+        this.load.keepSpritesheet(GameSprites.COIN);
+        this.load.keepObject("item-data");
+        this.load.keepObject(GameData.STORE_ITEMS);
         this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level1"});
         console.log("Unloading!");
     }
