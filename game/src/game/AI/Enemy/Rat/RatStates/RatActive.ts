@@ -31,11 +31,26 @@ export default class RatActive extends RatState {
             }
         } 
 
+        if (this.attackCooldownTimer.isStopped()) {
+            if (!this.parent.currentStatus.includes(RatAIStatuses.ATTACK_READY)) {
+                this.parent.currentStatus.push(RatAIStatuses.ATTACK_READY);
+            }
+        } else {
+            let i = this.parent.currentStatus.indexOf(RatAIStatuses.ATTACK_READY);
+            if (i != -1) {
+                this.parent.currentStatus.splice(i, 1);
+            }
+        }
+
         /** Perform actions next */
         let nextAction = this.parent.plan.peek();
         let result = nextAction.performAction(this.parent.currentStatus, this.parent, deltaT);
-       
+    
         if (result !== null) {
+            if (nextAction.toString() === EnemyActions.ATTACK) {
+                this.attackCooldownTimer.start();
+            }
+            
             this.parent.plan.pop();
 
             // Adds statuses to the current status of the

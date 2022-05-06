@@ -17,7 +17,7 @@ export default abstract class RatState extends State {
         super(parent);
         this.owner = owner;
 
-        this.attackCooldownTimer = new Timer(1000);
+        this.attackCooldownTimer = new Timer(2000);
     }
 
     update(deltaT: number): void {

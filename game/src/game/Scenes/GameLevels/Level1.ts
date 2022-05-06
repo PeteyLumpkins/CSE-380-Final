@@ -54,23 +54,20 @@ export default class Level1 extends GameLevel {
         this.load.spritesheet("whiteRat", "assets/spritesheets/enemies/whiteRat.json");
         this.load.spritesheet(GameSprites.COIN, "assets/spritesheets/coin.json");
         this.load.object('item-data', 'assets/data/item-data.json');
-        // this.load.spritesheet("bat", "assets/spritesheets/WhiffleBat.json");
 
         this.load.object(GameData.NAVMESH, "assets/data/navmeshLevel1.json"); 
         this.load.object(GameData.STORE_ITEMS, "assets/data/item-data.json");
         this.load.object("enemyData", "assets/data/enemyLevel1.json");
 
-        // this.load.image(ItemSprites.MOLD_BREAD, "assets/itemsprites/moldBread.png");
-        // this.load.image(ItemSprites.OLD_BOOT, "assets/itemsprites/oldBoot.png");
         this.load.image(GameSprites.LADDER, "assets/sprites/EndOfLevel.png");
 
         this.load.audio("level1", "assets/music/Level1.wav");
+
         this.load.audio("hitSound", "assets/soundEffects/smack.wav");
         this.load.audio("coinSound", "assets/soundEffects/coin.wav");
         this.load.audio("footstep", "assets/soundEffects/footstep1.wav");
         this.load.audio("buySound", "assets/soundEffects/shopBuy.wav");
         this.load.audio("textbox", "assets/soundEffects/textbox.wav");
-
         this.load.audio("itemdrop", "assets/soundEffects/itemDrop.wav");
         this.load.audio("itempickup", "assets/soundEffects/itemPickup.wav");
         this.load.audio("invalidbuy", "assets/soundEffects/invalidStore.wav");

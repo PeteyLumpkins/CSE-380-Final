@@ -26,6 +26,7 @@ export enum RatAIEvents {
 
 export enum RatAIStatuses {
     IN_RANGE = "RAT_IN_RANGE",
+    ATTACK_READY = "RAT_ATTACK_READY",
     GOAL_REACHED = "RAT_GOAL_REACHED"
 }
 
@@ -130,9 +131,9 @@ export default class RatAI extends EnemyAI {
                 optionsTemplate = {
                     target: target,
                     goal: RatAIStatuses.GOAL_REACHED,
-                    statuses: new Array<RatAIStatuses>(),
+                    statuses: [],
                     actions: [
-                        new RatAttack(3, [RatAIStatuses.IN_RANGE], [RatAIStatuses.GOAL_REACHED]),
+                        new RatAttack(3, [RatAIStatuses.IN_RANGE, RatAIStatuses.ATTACK_READY], [RatAIStatuses.GOAL_REACHED]),
                         new RatMove(4, [], [RatAIStatuses.IN_RANGE])
                     ],
                     health: 5,
@@ -148,7 +149,7 @@ export default class RatAI extends EnemyAI {
                 optionsTemplate = {
                     target: target,
                     goal: RatAIStatuses.GOAL_REACHED,
-                    statuses: new Array<RatAIStatuses>(),
+                    statuses: new Array<string>(),
                     actions: [
                         new RatAttack(3, [RatAIStatuses.IN_RANGE], [RatAIStatuses.GOAL_REACHED]),
                         new RatMove(4, [], [RatAIStatuses.IN_RANGE])

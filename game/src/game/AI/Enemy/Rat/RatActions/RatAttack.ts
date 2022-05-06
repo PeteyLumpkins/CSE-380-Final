@@ -2,6 +2,7 @@ import StateMachineGoapAI from "../../../../../Wolfie2D/AI/StateMachineGoapAI";
 import GoapAction from "../../../../../Wolfie2D/DataTypes/Interfaces/GoapAction";
 import Emitter from "../../../../../Wolfie2D/Events/Emitter";
 import { EnemyActions } from "../../../../GameEnums";
+import { RatAIStatuses } from "../RatAI";
 
 export default class RatAttackAction extends GoapAction {
     
@@ -17,7 +18,7 @@ export default class RatAttackAction extends GoapAction {
 
     performAction(statuses: Array<string>, actor: StateMachineGoapAI, deltaT: number, target?: StateMachineGoapAI): Array<string> {
         // Check if preconditions are met for this action to be performed
-        if (this.checkPreconditions(statuses)) {
+        if (this.checkPreconditions(statuses) && statuses.includes(RatAIStatuses.ATTACK_READY)) {
             this.emitter.fireEvent(EnemyActions.ATTACK, {amount: 1});
             return this.effects;
         }

@@ -51,6 +51,9 @@ export default abstract class EnemyAI extends StateMachineGoapAI {
         // This is the plan that is executed in the Active state, so whenever we don't have a plan, acquire a new one given the current statuses the enemy has
         if (this.plan.isEmpty()) {
             //get a new plan
+            console.log(this.currentStatus);
+            console.log(this.possibleActions);
+            console.log(this.goal);
             this.plan = this.planner.plan(this.goal, this.possibleActions, this.currentStatus, null);
         }
     }
