@@ -40,6 +40,12 @@ export default class Level2 extends GameLevel {
 
     }
 
+    initScene(init: Record<string, any>): void {
+        this.playerSpawn = init.spawn !== undefined ? init.spawn : Vec2.ZERO;
+        this.startingItems = init.inventory !== undefined ? init.inventory : [];
+        this.startingStats = init.stats !== undefined ? init.stats : {};
+    }
+
     startScene(): void {
         this.addLayer(GameLayers.PRIMARY, 5);
 
