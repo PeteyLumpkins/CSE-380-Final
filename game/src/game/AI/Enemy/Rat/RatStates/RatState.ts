@@ -11,39 +11,37 @@ export default abstract class RatState extends State {
     protected parent: RatAI;
     protected owner: GameNode;
 
-    protected attackCooldownTimer: Timer;
-
     constructor(parent: RatAI, owner: GameNode){
         super(parent);
         this.owner = owner;
-
-        this.attackCooldownTimer = new Timer(2000);
     }
 
     update(deltaT: number): void {
 
+        // If the rat is dead - transition to the dead state
         if (this.isDead()) {
             this.finished(RatAIStates.DEAD);
         }
+
     }
 
-    canAttack(): boolean {
-        return this.attackCooldownTimer.isStopped();
+    protected attackReady(): boolean {
+        return this.parent.attackCooldownTimer.isStopped();
     }
 
-    isDead(): boolean {
+    protected isDead(): boolean {
         return this.parent.health <= 0;
     }
 
-    inSightRange(position: Vec2) {
+    protected inSightRange(position: Vec2) {
         return this.owner.position.distanceTo(position) <= this.parent.sightRange;
     }
 
-    inSwarmRange(position: Vec2) {
+    protected inSwarmRange(position: Vec2) {
         return this.owner.position.distanceTo(position) <= this.parent.swarmRange;
     }
 
-    inAttackRange(position: Vec2) {
+    protected inAttackRange(position: Vec2) {
         return this.owner.position.distanceTo(position) <= this.parent.attackRange;
     }
 }

@@ -130,9 +130,6 @@ export default class Level1 extends GameLevel {
             stats: new PlayerStats(this.startingStats) // Passed through here?
         });  
 
-        // Create new player inventory and then transfer items ( if any from previous )
-
-
         this.viewport.follow(this.player);
 
     }
