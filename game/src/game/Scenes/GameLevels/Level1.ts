@@ -126,10 +126,6 @@ export default class Level1 extends GameLevel {
         this.player.addPhysics();
 		this.player.setCollisionShape(playerCollider);
 
-        console.log(this.sceneOptions);
-
-        let stats = {"HEALTH": 20, "MONEY": 10, "MOVE_SPEED": 5};
-
 		this.player.addAI(PlayerController, {
             inventory: new PlayerInventory(this.startingItems, 9),                             
             stats: new PlayerStats(this.startingStats) // Passed through here?
@@ -215,10 +211,12 @@ export default class Level1 extends GameLevel {
 
     drawHitbox(): void {
 
-        let ry = this.player.position.y;
-        let rx = this.player.boundary.topRight.x - this.player.boundary.halfSize.x / 3;
+        let scale = 1/2;
 
-        let box = new AABB(new Vec2(rx, ry), new Vec2(this.player.boundary.halfSize.x / 3, this.player.boundary.halfSize.y / 3));
+        let ry = this.player.position.y;
+        let rx = this.player.boundary.topRight.x;
+
+        let box = new AABB(new Vec2(rx, ry), new Vec2(this.player.boundary.halfSize.x * scale, this.player.boundary.halfSize.y * scale));
 
         this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.topLeft, end: box.topRight});
         this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.topRight, end: box.bottomRight});
@@ -228,9 +226,9 @@ export default class Level1 extends GameLevel {
 
 
         let ly = this.player.position.y;
-        let lx = this.player.boundary.topLeft.x + this.player.boundary.halfSize.x / 3;
+        let lx = this.player.boundary.topLeft.x;
 
-        box = new AABB(new Vec2(lx, ly), new Vec2(this.player.boundary.halfSize.x / 3, this.player.boundary.halfSize.y / 3));
+        box = new AABB(new Vec2(lx, ly), new Vec2(this.player.boundary.halfSize.x * scale, this.player.boundary.halfSize.y * scale));
 
         this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.topLeft, end: box.topRight});
         this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.topRight, end: box.bottomRight});
@@ -239,10 +237,10 @@ export default class Level1 extends GameLevel {
 
 
 
-        let uy = this.player.boundary.topRight.y + this.player.boundary.halfSize.y / 3;
+        let uy = this.player.boundary.topRight.y;
         let ux = this.player.position.x;
 
-        box = new AABB(new Vec2(ux, uy), new Vec2(this.player.boundary.halfSize.x / 3, this.player.boundary.halfSize.y / 3));
+        box = new AABB(new Vec2(ux, uy), new Vec2(this.player.boundary.halfSize.x * scale, this.player.boundary.halfSize.y * scale));
 
         this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.topLeft, end: box.topRight});
         this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.topRight, end: box.bottomRight});
@@ -251,10 +249,10 @@ export default class Level1 extends GameLevel {
 
 
 
-        let dy = this.player.boundary.bottomRight.y - this.player.boundary.halfSize.y / 3;
+        let dy = this.player.boundary.bottomRight.y;
         let dx = this.player.position.x;
 
-        box = new AABB(new Vec2(dx, dy), new Vec2(this.player.boundary.halfSize.x / 3, this.player.boundary.halfSize.y / 3));
+        box = new AABB(new Vec2(dx, dy), new Vec2(this.player.boundary.halfSize.x * scale, this.player.boundary.halfSize.y * scale));
 
         this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.topLeft, end: box.topRight});
         this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: box.topRight, end: box.bottomRight});
