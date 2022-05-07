@@ -9,6 +9,7 @@ import GameEvent from "../../Wolfie2D/Events/GameEvent";
 
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
+import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 
 import MainMenu from "../Scenes/GameLevels/MainMenu";
@@ -37,7 +38,7 @@ export default class PauseManager implements Updateable {
     private resumeLayer: string;
 
     /* Buttons on resume layer */
-    private pausedBackground: Label;
+    private pausedBackground: Sprite;
     private resumeButton: Button;
     private controlsButton: Button;
     private mainMenuButton: Button;
@@ -147,20 +148,20 @@ export default class PauseManager implements Updateable {
 
         console.log("View scale: " + scale);
 
-        this.pausedBackground = <Label>this.scene.add.uiElement(UIElementType.LABEL, this.resumeLayer, {position: new Vec2(center.x, center.y).div(scalar), text: ""});
+        this.pausedBackground = this.scene.add.sprite("pausebg", this.resumeLayer);
+        this.pausedBackground.position.set(center.x, center.y);
         this.pausedBackground.size.set(200, 200);
         this.pausedBackground.scale.div(scalar);
-        this.pausedBackground.backgroundColor = Color.TRANSPARENT;
-        this.pausedBackground.borderWidth = 2;
-        this.pausedBackground.borderColor = Color.BLACK;
 
         // Resume button
         this.resumeButton = <Button>this.scene.add.uiElement(UIElementType.BUTTON, this.resumeLayer, {position: new Vec2(center.x, center.y - 50).div(scalar), text: "Resume"});
         this.resumeButton.size.set(100, 25);
         this.resumeButton.scale.div(scalar);
         this.resumeButton.borderWidth = 2;
+        this.resumeButton.borderColor = Color.WHITE;
+        this.resumeButton.backgroundColor = Color.TRANSPARENT;
+        this.resumeButton.font = "Courier";
         this.resumeButton.fontSize = 16;
-        this.resumeButton.backgroundColor = Color.BLACK;
         this.resumeButton.onClickEventId = PauseEvent.RESUME;
 
         // Controls button
@@ -169,7 +170,9 @@ export default class PauseManager implements Updateable {
         this.controlsButton.scale.div(scalar);
         this.controlsButton.borderWidth = 2;
         this.controlsButton.fontSize = 16;
-        this.controlsButton.backgroundColor = Color.BLACK;
+        this.controlsButton.borderColor = Color.WHITE;
+        this.controlsButton.backgroundColor = Color.TRANSPARENT;
+        this.controlsButton.font = "Courier";
         this.controlsButton.onClickEventId = PauseEvent.CONTROLS;
 
         // Main Menu button
@@ -178,7 +181,9 @@ export default class PauseManager implements Updateable {
         this.mainMenuButton.scale.div(scalar);
         this.mainMenuButton.borderWidth = 2;
         this.mainMenuButton.fontSize = 16;
-        this.mainMenuButton.backgroundColor = Color.BLACK;
+        this.mainMenuButton.borderColor = Color.WHITE;
+        this.mainMenuButton.backgroundColor = Color.TRANSPARENT;
+        this.mainMenuButton.font = "Courier";
         this.mainMenuButton.onClickEventId = PauseEvent.MAIN_MENU;
 
         // Initially we hide the pause layer

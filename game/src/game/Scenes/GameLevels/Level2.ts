@@ -29,6 +29,9 @@ export default class Level2 extends GameLevel {
     loadScene(): void {
         this.load.tilemap("level", "assets/tilemaps/levelTwo.json");
 
+        for (let i = 0; i < items.length; i++) {
+            this.load.image(items[i].key, items[i].path);
+        }
 
         // this.load.object(GameData.NAVMESH, "assets/data/navmeshLevel2.json"); 
         // this.load.object(GameData.STORE_ITEMS, "assets/data/item-data.json");
@@ -37,12 +40,16 @@ export default class Level2 extends GameLevel {
         this.load.spritesheet(GameSprites.STORE_BG, "assets/spritesheets/store/store_layer.json");
 
         this.load.image(GameSprites.LADDER, "assets/sprites/EndOfLevel.png");
+    }
 
+    initScene(init: Record<string, any>): void {
+        this.playerSpawn = init.spawn !== undefined ? init.spawn : Vec2.ZERO;
+        this.startingItems = init.inventory !== undefined ? init.inventory : [];
+        this.startingStats = init.stats !== undefined ? init.stats : {};
     }
 
     startScene(): void {
         this.addLayer(GameLayers.PRIMARY, 5);
-
         super.startScene();
     }
 
@@ -58,8 +65,7 @@ export default class Level2 extends GameLevel {
 
         let inventory = new Array<string>();
 
-        let stats = {"HEALTH": 20, "MONEY": 10, "MOVE_SPEED": 4};
-		this.player.addAI(PlayerController, {inventory: new PlayerInventory(inventory, 9), stats: new PlayerStats(stats)});
+		this.player.addAI(PlayerController, {inventory: new PlayerInventory(this.startingItems, 9), stats: new PlayerStats(this.startingStats)});
         this.viewport.follow(this.player);
 
     }
@@ -67,18 +73,6 @@ export default class Level2 extends GameLevel {
     initEnemies(): void {}
 
     initStore(): void {
-        // let items = new StoreItems(
-        //     [
-        //         {key: "moldy_bread", count: 1},
-        //         {key: "old_boot", count: 1},
-        //         {key: "mystery_liquid", count: 1}
-        //     ]
-        // );
-
-        // this.store = this.add.animatedSprite("store_terminal", GameLayers.PRIMARY);
-        // this.store.position.set(832, 224);
-        // this.store.scale.set(0.4, 0.4);
-        // this.store.addAI(StoreController, {radius: 100, target: this.player, items: items});
     }
 
     initMap(): void {

@@ -1,7 +1,6 @@
 import AABB from "../../../Wolfie2D/DataTypes/Shapes/AABB";
 import OrthogonalTilemap from "../../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
-import StoreController from "../../AI/Store/StoreController";
 import PlayerController from "../../AI/Player/PlayerController";
 import { GameSprites, GameData, GameLayers } from "../../GameEnums";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
@@ -45,6 +44,7 @@ export default class Level1 extends GameLevel {
 
         this.load.image("itembg", "assets/sprites/itembg.png");
         this.load.image("itembarbg", "assets/sprites/itembarbg.png");
+        this.load.image("pausebg", "assets/sprites/pause_bg.png");
 
         this.load.spritesheet("player", "assets/spritesheets/player/player.json");
         this.load.spritesheet("store_terminal", "assets/spritesheets/store/store_terminal.json");
@@ -53,15 +53,12 @@ export default class Level1 extends GameLevel {
         this.load.spritesheet("rat", "assets/spritesheets/enemies/rat.json");
         this.load.spritesheet("whiteRat", "assets/spritesheets/enemies/whiteRat.json");
         this.load.spritesheet(GameSprites.COIN, "assets/spritesheets/coin.json");
-        this.load.object('item-data', 'assets/data/item-data.json');
-        // this.load.spritesheet("bat", "assets/spritesheets/WhiffleBat.json");
 
+        this.load.object('item-data', 'assets/data/item-data.json');
         this.load.object(GameData.NAVMESH, "assets/data/navmeshLevel1.json"); 
         this.load.object(GameData.STORE_ITEMS, "assets/data/item-data.json");
         this.load.object("enemyData", "assets/data/enemyLevel1.json");
 
-        // this.load.image(ItemSprites.MOLD_BREAD, "assets/itemsprites/moldBread.png");
-        // this.load.image(ItemSprites.OLD_BOOT, "assets/itemsprites/oldBoot.png");
         this.load.image(GameSprites.LADDER, "assets/sprites/EndOfLevel.png");
 
         this.load.audio("level1", "assets/music/Level1.wav");
@@ -70,17 +67,22 @@ export default class Level1 extends GameLevel {
         this.load.audio("footstep", "assets/soundEffects/footstep1.wav");
         this.load.audio("buySound", "assets/soundEffects/shopBuy.wav");
         this.load.audio("textbox", "assets/soundEffects/textbox.wav");
-
         this.load.audio("itemdrop", "assets/soundEffects/itemDrop.wav");
         this.load.audio("itempickup", "assets/soundEffects/itemPickup.wav");
         this.load.audio("invalidbuy", "assets/soundEffects/invalidStore.wav");
     }
 
     unloadScene(): void {
+        for (let i = 0; i < items.length; i++) {
+            this.load.keepImage(items[i].key);
+        }
+
         this.load.keepSpritesheet("player");
         this.load.keepSpritesheet("store_terminal");
         this.load.keepImage("itembg");
         this.load.keepImage("itembarbg");
+        this.load.keepImage("pausebg");
+
         this.load.keepSpritesheet(GameSprites.STORE_BG);
         this.load.keepSpritesheet(GameSprites.COIN);
         this.load.keepObject("item-data");
@@ -133,29 +135,10 @@ export default class Level1 extends GameLevel {
             stats: new PlayerStats(this.startingStats) // Passed through here?
         });  
 
-        // Create new player inventory and then transfer items ( if any from previous )
-
-
         this.viewport.follow(this.player);
-
     }
 
-    initStore(): void {
-    
-        // let storeItems = new StoreItems(
-        //     [
-        //         {key: "moldy_bread", count: 1},
-        //         {key: "old_boot", count: 1},
-        //         {key: "mystery_liquid", count: 1}
-        //     ]
-        // );
-
-        // this.store = this.add.animatedSprite("store_terminal", GameLayers.PRIMARY);
-        // this.store.position.set(1056, 1152);
-        // this.store.scale.set(0.4, 0.4);
-        // this.store.addAI(StoreController, {radius: 100, target: this.player, items: storeItems});
-
-    }
+    initStore(): void {}
 
     initMap(): void {
 
@@ -178,7 +161,7 @@ export default class Level1 extends GameLevel {
         this.viewport.setBounds(0, 0, tilemapSize.x, tilemapSize.y);
 
         let gLayer = this.addLayer(GameLayers.NAVMESH_GRAPH, 10);
-        gLayer.setHidden(true);
+        // gLayer.setHidden(true);
 
         let navmeshData = this.load.getObject(GameData.NAVMESH);
 
@@ -201,6 +184,7 @@ export default class Level1 extends GameLevel {
         let navmesh = new Navmesh(this.navmeshGraph);
 
         this.navManager.addNavigableEntity("navmesh", navmesh);
+        this.drawHitbox();
     }
 
     initLevelLinks(): void {

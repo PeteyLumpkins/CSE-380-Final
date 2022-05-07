@@ -95,7 +95,7 @@ export default class MainMenu extends Scene {
             let event = this.receiver.getNextEvent();
 
             if(event.type === MenuEvents.PLAY_GAME){
-                this.sceneManager.changeToScene(Level1, {spawn: new Vec2(448, 480)});
+                this.sceneManager.changeToScene(Level1, {spawn: new Vec2(448, 480), stats: {"HEALTH": 20, "MONEY": 0, "MOVE_SPEED": 3}});
             }
 
             if(event.type === MenuEvents.CONTROLS){

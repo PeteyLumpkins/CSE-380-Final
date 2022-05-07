@@ -14,6 +14,7 @@ export default class RatIdle extends RatState {
         if (this.owner instanceof AnimatedSprite) {
             this.owner.animation.play("WalkRight");
         }
+        console.log("Entering the rat idle state");
     }
 
     handleInput(event: GameEvent): void { 
@@ -32,26 +33,18 @@ export default class RatIdle extends RatState {
     }
 
     handlePlayerSeenEvent(event: GameEvent): void {
-        
-        console.log(event.data.get("position"));
-        // If we're within the swarm range of the rat that saw the player -> make active
-        if (this.inSwarmRange(event.data.get("position"))) {
-            this.finished(RatAIStates.ACTIVE);
-        }
+        console.log("Handlign a player seen event");
     }
 
     update(deltaT: number): void {
-
         super.update(deltaT);
 
-        // If we're in range of the player - rat becomes active
+        // If we're in range of the player - rat should start trying to move toward the player
         if (this.inSightRange(this.parent.target.position)) {
-            this.finished(RatAIStates.ACTIVE);
+            this.finished(RatAIStates.MOVE);
         }
     }
 
-    onExit(): Record<string, any> {
-        return;
-    }
+    onExit(): Record<string, any> { return; }
 
 }
