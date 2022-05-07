@@ -175,22 +175,24 @@ export default class StoreManager implements Updateable {
      */
     private loadStoreControls() {
         let center = this.scene.getViewport().getCenter();
+        center.sub(this.scene.getViewport().getOrigin());
+
         let scale = this.scene.getViewScale();
         let scalar = new Vec2(scale, scale);
 
         this.storeBackground = this.scene.add.animatedSprite(this.storeBackgroundSprite, this.backgroundLayer);
         this.storeBackground.scale.div(scalar);
-        this.storeBackground.position.set(this.scene.getViewport().getCenter().x, this.scene.getViewport().getCenter().y).div(scalar);
+        this.storeBackground.position.set(center.x, center.y);
         this.storeBackground.animation.play("idle");
 
         /* STORE BUTTONS */
         this.itemBuyButtons = new Array<Button>();
-        let startX = center.x - 150;
-        let startY = center.y + 100;
-        let spaceX = 150;
+        let startX = center.x - 150 / scale;
+        let startY = center.y + 100 / scale;
+        let spaceX = 150 / scale;
 
         for (let i = 0; i < this.numItems; i++) {
-            this.itemBuyButtons[i] = <Button>this.scene.add.uiElement(UIElementType.BUTTON, this.buttonLayer, {position: new Vec2(startX, startY).div(scalar), text: "Buy Item " + (i + 1)});
+            this.itemBuyButtons[i] = <Button>this.scene.add.uiElement(UIElementType.BUTTON, this.buttonLayer, {position: new Vec2(startX, startY), text: "Buy Item " + (i + 1)});
             this.itemBuyButtons[i].size.set(100, 25);
             this.itemBuyButtons[i].scale.div(scalar);
             this.itemBuyButtons[i].borderColor = Color.WHITE;
@@ -211,12 +213,12 @@ export default class StoreManager implements Updateable {
         /* STORE ITEM NAME LABELS */
         this.itemNameLabels = new Array<Label>();
 
-        startX = center.x - 150;
-        startY = center.y - 175;
-        spaceX = 150;
+        startX = center.x - 150 / scale;
+        startY = center.y - 175 / scale;
+        spaceX = 150 / scale;
 
         for (let i = 0; i < this.numItems; i += 1, startX += spaceX) {
-            this.itemNameLabels[i] = <Label>this.scene.add.uiElement(UIElementType.LABEL, this.nameLayer, {position: new Vec2(startX, startY).div(scalar), text: ""});
+            this.itemNameLabels[i] = <Label>this.scene.add.uiElement(UIElementType.LABEL, this.nameLayer, {position: new Vec2(startX, startY), text: ""});
             this.itemNameLabels[i].fontSize = 18;
             this.itemNameLabels[i].textColor = Color.WHITE;
             this.itemNameLabels[i].font = "Courier";
@@ -226,12 +228,12 @@ export default class StoreManager implements Updateable {
         /* STORE ITEM COST LABELS */
         this.itemCostLabels = new Array<Label>();
 
-        startX = center.x - 150;
-        startY = center.y - 25;
-        spaceX = 150;
+        startX = center.x - 150 / scale;
+        startY = center.y - 25 / scale;
+        spaceX = 150 / scale;
 
         for (let i = 0; i < this.numItems; i += 1, startX += spaceX) {
-            this.itemCostLabels[i] = <Label>this.scene.add.uiElement(UIElementType.LABEL, this.costLayer, {position: new Vec2(startX, startY).div(scalar), text: ""});
+            this.itemCostLabels[i] = <Label>this.scene.add.uiElement(UIElementType.LABEL, this.costLayer, {position: new Vec2(startX, startY), text: ""});
             this.itemCostLabels[i].fontSize = 18;
             this.itemCostLabels[i].textColor = Color.WHITE;
             this.itemCostLabels[i].font = "Courier";

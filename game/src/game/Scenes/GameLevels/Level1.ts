@@ -114,7 +114,7 @@ export default class Level1 extends GameLevel {
     }
 
     initViewport(): void {
-        this.viewport.setZoomLevel(1);
+        this.viewport.setZoomLevel(3);
     }
 
     initPlayer(): void {
