@@ -53,6 +53,8 @@ export default class MainMenu extends Scene {
         this.viewport.setBounds(0, 0, 1024, 1024);
         this.viewport.setZoomLevel(1);
 
+        console.log("ZOOM LEVEL IN MAIN MENU: " + this.viewport.getZoomLevel());
+
         // The background layer
         // this.background = this.addLayer(MenuLayers.BACKGROUND, 0);
         // this.background_image = this.add.sprite(MenuImages.BACKGROUND, MenuLayers.BACKGROUND);

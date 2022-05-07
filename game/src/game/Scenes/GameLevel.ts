@@ -75,9 +75,11 @@ export default abstract class GameLevel extends Scene {
 
     startScene(): void {
 
+        console.log("BEFORE SETTING VIEW: " + this.viewport.getZoomLevel());
         this.initViewport();
-        this.initPlayer();
+        console.log("AFTER SETTING VIEW: " + this.viewport.getZoomLevel());
 
+        this.initPlayer();
         this.addPrimaryUILayers();
         this.initUIPrimary();
 
@@ -273,7 +275,7 @@ export default abstract class GameLevel extends Scene {
         this.pauseButton.font = "Courier";
 
         this.itemBarBackground = this.add.sprite("itembarbg", UILayers.ITEM_BAR);
-        this.itemBarBackground.position.set(this.viewport.getCenter().x, 32).div(scalar);
+        this.itemBarBackground.position.set(this.viewport.getCenter().x, 32).sub(this.viewport.getOrigin()).div(scalar);
         this.itemBarBackground.scale.div(scalar);
     }
 
