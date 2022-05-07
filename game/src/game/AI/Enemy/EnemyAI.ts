@@ -1,10 +1,5 @@
-import GoapActionPlanner from "../../../Wolfie2D/AI/GoapActionPlanner";
-import StateMachineGoapAI from "../../../Wolfie2D/AI/StateMachineGoapAI";
-import GoapAction from "../../../Wolfie2D/DataTypes/Interfaces/GoapAction";
-import Stack from "../../../Wolfie2D/DataTypes/Stack";
+import StateMachineAI from "../../../Wolfie2D/AI/StateMachineAI";
 import GameNode from "../../../Wolfie2D/Nodes/GameNode";
-
-import { EnemyStates, EnemyStatuses } from "../../GameEnums";
 
 /**
  * The enemy AI class is the main, top level AI class. Each enemy AI should
@@ -15,7 +10,8 @@ import { EnemyStates, EnemyStatuses } from "../../GameEnums";
  * concrete implementations of the EnemyAI class. The enemy AI class sets
  * up the owner GameNode, goal, statuses, and possible actions the AI can take.
  */
-export default abstract class EnemyAI extends StateMachineGoapAI {
+export default abstract class EnemyAI extends StateMachineAI {
+
     /** The owner of this AI */
     owner: GameNode
 
@@ -34,28 +30,12 @@ export default abstract class EnemyAI extends StateMachineGoapAI {
 
         /* Subscribe to events */
         this.subscribeToEvents();
-
-        /* Attributes of the GOAP AI */
-        this.goal = options.goal;
-        this.currentStatus = options.statuses;
-        this.possibleActions = options.actions;
-        this.plan = new Stack<GoapAction>();
-        this.planner = new GoapActionPlanner();
     }
 
     activate(options: Record<string, any>): void {}
 
     update(deltaT: number){
         super.update(deltaT);
-
-        // This is the plan that is executed in the Active state, so whenever we don't have a plan, acquire a new one given the current statuses the enemy has
-        if (this.plan.isEmpty()) {
-            //get a new plan
-            console.log(this.currentStatus);
-            console.log(this.possibleActions);
-            console.log(this.goal);
-            this.plan = this.planner.plan(this.goal, this.possibleActions, this.currentStatus, null);
-        }
     }
 
     abstract initStates(): void;

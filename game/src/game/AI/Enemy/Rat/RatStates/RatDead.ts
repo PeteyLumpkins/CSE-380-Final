@@ -1,14 +1,10 @@
-import AABB from "../../../../../Wolfie2D/DataTypes/Shapes/AABB";
-import Vec2 from "../../../../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../../../../Wolfie2D/Events/GameEvent";
-import AnimatedSprite from "../../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 
 import PickupAI from "../../../Pickup/PickupAI";
 import { PickupTypes } from "../../../Pickup/PickupTypes";
 import { GameSprites, GameLayers } from "../../../../GameEnums";
 
 import RatState from "./RatState";
-import { RatAIStates, RatAIEvents } from "../RatAI";
 
 export default class RatDead extends RatState {
 

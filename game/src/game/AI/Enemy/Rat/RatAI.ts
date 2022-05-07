@@ -1,33 +1,31 @@
 import EnemyAI from "../EnemyAI";
 import GameNode from "../../../../Wolfie2D/Nodes/GameNode";
 import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
-import Vec2 from "../../../../Wolfie2D/DataTypes/Vec2";
+import Timer from "../../../../Wolfie2D/Timing/Timer";
 
 import { PlayerEvents } from "../../Player/PlayerController";
 import { GameEventType } from "../../../../Wolfie2D/Events/GameEventType";
 
 import RatIdle from "./RatStates/RatIdle";
-import RatActive from "./RatStates/RatActive";
+import RatAttack from "./RatStates/RatAttack";
+import RatKnockback from "./RatStates/RatKnockback";
+import RatMove from "./RatStates/RatMove";
 import RatDead from "./RatStates/RatDead";
 
-import RatAttack from "./RatActions/RatAttack";
-import RatMove from "./RatActions/RatMove";
+import AttackAction from "../Actions/AttackAction";
+import MoveAction from "../Actions/MoveAction";
 
 
 export enum RatAIStates {
     IDLE = "RAT_IDLE_STATE",
-    ACTIVE = "RAT_ACTIVE_STATE",
+    MOVE = "RAT_MOVING_STATE",
+    ATTACK = "RAT_ATTACKING_STATE",
+    KNOCK_BACK = "RAT_KNOCKED_BACK_STATE",
     DEAD = "RAT_DEAD_STATE"
 }
 
 export enum RatAIEvents {
     PLAYER_SEEN = "RAT_PLAYER_SEEN_EVENT"
-}
-
-export enum RatAIStatuses {
-    IN_RANGE = "RAT_IN_RANGE",
-    ATTACK_READY = "RAT_ATTACK_READY",
-    GOAL_REACHED = "RAT_GOAL_REACHED"
 }
 
 export enum RatAIOptionType {
@@ -37,6 +35,11 @@ export enum RatAIOptionType {
 }
 
 export default class RatAI extends EnemyAI {
+
+    /** Actions that the rat can perform/undergo kinda will go here? */
+    attack = new AttackAction({amount: 2});
+    move = new MoveAction("navmesh", 100, true);
+    knockback = new MoveAction("navmesh", 200, true);
 
     /** Custom attributes specific to the rat ai go here */
     maxHealth: number;
@@ -49,6 +52,10 @@ export default class RatAI extends EnemyAI {
     
     attackRange: number;
     attackDamage: number;
+
+    /** Cooldown timers for the knockback and attack of the rat */
+    attackCooldownTimer: Timer = new Timer(2000);
+    knockbackCooldownTimer: Timer = new Timer(2000);
 
     update(deltaT: number): void {
         super.update(deltaT);
@@ -75,12 +82,11 @@ export default class RatAI extends EnemyAI {
         if (this.owner.collisionShape.overlaps(event.data.get("hitbox"))) {
             this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "hitSound", loop: false, holdReference: true});
             this.health -= event.data.get("damage");
-            // this.owner.move(event.data.get("dir").mult(new Vec2(500, 500)));
+            if (this.knockbackCooldownTimer.isStopped()) {
+                this.knockbackCooldownTimer.start();
+                this.changeState(RatAIStates.KNOCK_BACK);
+            }
         }
-    }
-
-    handleKnockBack(dir: Vec2): void {
-        this.owner.move(dir.mult(new Vec2(100, 100)));
     }
 
     /** Initialize custom attributes for Rat */
@@ -99,8 +105,10 @@ export default class RatAI extends EnemyAI {
     /** Initialize custom states for Rat */
     initStates(): void {
         this.addState(RatAIStates.IDLE, new RatIdle(this, this.owner));
-        this.addState(RatAIStates.ACTIVE, new RatActive(this, this.owner));
+        this.addState(RatAIStates.ATTACK, new RatAttack(this, this.owner));
         this.addState(RatAIStates.DEAD, new RatDead(this, this.owner));
+        this.addState(RatAIStates.MOVE, new RatMove(this, this.owner));
+        this.addState(RatAIStates.KNOCK_BACK, new RatKnockback(this, this.owner));
 
         this.initialize(RatAIStates.IDLE);
     }
@@ -117,8 +125,7 @@ export default class RatAI extends EnemyAI {
      * however you want.
      * 
      * @param type the type of RatAIOption we want to give to our RatAI - defined in the enum RatAIOptions 
-     * @param player the player node to add to the options (this is required)
-     * @param options any custom options we want to tweak
+     * @param target the player node to add to the options 
      * @returns a set of options for a RatAI
      */
     public static optionsBuilder(type: RatAIOptionType, target: GameNode): Record<string, any> {
@@ -130,12 +137,7 @@ export default class RatAI extends EnemyAI {
             case RatAIOptionType.DEFAULT: {
                 optionsTemplate = {
                     target: target,
-                    goal: RatAIStatuses.GOAL_REACHED,
-                    statuses: [],
-                    actions: [
-                        new RatAttack(3, [RatAIStatuses.IN_RANGE, RatAIStatuses.ATTACK_READY], [RatAIStatuses.GOAL_REACHED]),
-                        new RatMove(4, [], [RatAIStatuses.IN_RANGE])
-                    ],
+                    
                     health: 5,
                     sightRange: 100,
                     swarmRange: 50,
@@ -148,12 +150,7 @@ export default class RatAI extends EnemyAI {
             case RatAIOptionType.FAST: {
                 optionsTemplate = {
                     target: target,
-                    goal: RatAIStatuses.GOAL_REACHED,
-                    statuses: new Array<string>(),
-                    actions: [
-                        new RatAttack(3, [RatAIStatuses.IN_RANGE], [RatAIStatuses.GOAL_REACHED]),
-                        new RatMove(4, [], [RatAIStatuses.IN_RANGE])
-                    ],
+                    
                     health: 5,
                     sightRange: 200,
                     swarmRange: 50,
