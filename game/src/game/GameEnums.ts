@@ -37,7 +37,8 @@ export enum GameEvents {
     OPEN_STORE = "OPEN_STORE_EVENT",
     CLOSE_STORE = "CLOSE_STORE_EVENT",
     PICKUP_ITEM = "PICKUP_ITEM_EVENT",
-    CHANGE_LEVEL = "CHANGE_LEVEL_EVENT"
+    CHANGE_LEVEL = "CHANGE_LEVEL_EVENT",
+    GAME_OVER = "GAME_OVER_EVENT"
 }
 
 /* Any JSON objects floating around in the game */

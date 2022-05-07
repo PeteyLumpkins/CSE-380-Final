@@ -15,7 +15,7 @@ export default class InLevelEnd extends LevelEndState {
     handleInput(): void {}
 
     update(deltaT: number): void {
-        if (!this.inRange(this.parent.getPlayerPosition())) {
+        if (!this.inRange(this.parent.player.position)) {
             this.finished(LevelEndStates.OUTSIDE);
         }
 
@@ -23,9 +23,8 @@ export default class InLevelEnd extends LevelEndState {
         if (this.nextLevel()) {
             console.log("Firing next level event");
             this.emitter.fireEvent(GameEvents.CHANGE_LEVEL, {
-                "level": this.parent.nextLevel, 
-                "spawn": this.parent.playerSpawn,   // Spawn vector is passed into the event handler and then sent to the initScene of next level
-                "inventory": this.parent.getPlayer()
+                "level": this.parent.nextLevel,
+                "data": this.parent.nextLevelData
             });
         }
     }

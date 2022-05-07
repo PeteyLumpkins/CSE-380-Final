@@ -13,6 +13,8 @@ import { GameEvents, GameLayers, GameSprites, GameData, StoreEvents, ItemSprites
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import { PlayerEvents } from "../AI/Player/PlayerController";
 
+import GameOver from "./GameOver";
+
 import PlayerController from "../AI/Player/PlayerController";
 import InventoryManager from "../GameSystems/InventoryManager";
 import PauseManager from "../GameSystems/PauseManager";
@@ -112,6 +114,7 @@ export default abstract class GameLevel extends Scene {
 
         /* Subscribe to any events */
         this.subscribeToEvents();
+
     }
 
     updateScene(deltaT: number): void {
@@ -222,12 +225,7 @@ export default abstract class GameLevel extends Scene {
     protected eventHandlers = {
 
         changeLevel: (ev: GameEvent) => { 
-            this.sceneManager.changeToScene(ev.data.get("level"), {
-                spawn: ev.data.get("spawn"), 
-                inventory: (<PlayerController>this.player._ai).playerInventory.getCopy(), 
-                stats: (<PlayerController>this.player._ai).playerStats.getCopy()
-            });   // Send player spawn as data into the new level
-
+            this.sceneManager.changeToScene(ev.data.get("level"), ev.data.get("data"));   // Send player spawn as data into the new level
         },
     
         pause: (ev : GameEvent) => {
@@ -239,7 +237,14 @@ export default abstract class GameLevel extends Scene {
         },
 
         healthChange: (ev: GameEvent) => {
-            this.playerHealthLabel.text = `Health: ${ev.data.get("amount")}`;
+            let hp = ev.data.get("amount");
+            this.playerHealthLabel.text = `Health: ${hp}`;
+            // TODO: this is where the gameover event will be triggered I'm pretty sure?
+            if (hp <= 0) {
+                this.sceneManager.changeToScene(GameOver, {
+                    stats: (<PlayerController>this.player._ai).playerStats
+                });
+            }
         }
     }
 

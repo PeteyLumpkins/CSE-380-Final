@@ -13,7 +13,7 @@ export default class OutLevelEnd extends LevelEndState {
     handleInput(): void {}
 
     update(deltaT: number): void {
-        if (this.inRange(this.parent.getPlayerPosition())) {
+        if (this.inRange(this.parent.player.position)) {
             this.finished(LevelEndStates.INSIDE);
         }
     }
