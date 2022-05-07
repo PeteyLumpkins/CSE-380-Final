@@ -143,6 +143,8 @@ export default class PauseManager implements Updateable {
     private initPausedLayer() {
 
         let center = this.scene.getViewport().getCenter();
+        center.sub(this.scene.getViewport().getOrigin());
+        
         let scale = this.scene.getViewScale();
         let scalar = new Vec2(scale, scale);
 
@@ -154,7 +156,7 @@ export default class PauseManager implements Updateable {
         this.pausedBackground.scale.div(scalar);
 
         // Resume button
-        this.resumeButton = <Button>this.scene.add.uiElement(UIElementType.BUTTON, this.resumeLayer, {position: new Vec2(center.x, center.y - 50).div(scalar), text: "Resume"});
+        this.resumeButton = <Button>this.scene.add.uiElement(UIElementType.BUTTON, this.resumeLayer, {position: new Vec2(center.x, center.y - 50 / scale), text: "Resume"});
         this.resumeButton.size.set(100, 25);
         this.resumeButton.scale.div(scalar);
         this.resumeButton.borderWidth = 2;
@@ -165,7 +167,7 @@ export default class PauseManager implements Updateable {
         this.resumeButton.onClickEventId = PauseEvent.RESUME;
 
         // Controls button
-        this.controlsButton = <Button>this.scene.add.uiElement(UIElementType.BUTTON, this.resumeLayer, {position: new Vec2(center.x, center.y).div(scalar), text: "Controls"});
+        this.controlsButton = <Button>this.scene.add.uiElement(UIElementType.BUTTON, this.resumeLayer, {position: new Vec2(center.x, center.y), text: "Controls"});
         this.controlsButton.size.set(100, 25);
         this.controlsButton.scale.div(scalar);
         this.controlsButton.borderWidth = 2;
@@ -176,7 +178,7 @@ export default class PauseManager implements Updateable {
         this.controlsButton.onClickEventId = PauseEvent.CONTROLS;
 
         // Main Menu button
-        this.mainMenuButton = <Button>this.scene.add.uiElement(UIElementType.BUTTON, this.resumeLayer, {position: new Vec2(center.x, center.y + 50).div(scalar), text: "Main Menu"});
+        this.mainMenuButton = <Button>this.scene.add.uiElement(UIElementType.BUTTON, this.resumeLayer, {position: new Vec2(center.x, center.y + 50 / scale), text: "Main Menu"});
         this.mainMenuButton.size.set(100, 25);
         this.mainMenuButton.scale.div(scalar);
         this.mainMenuButton.borderWidth = 2;
