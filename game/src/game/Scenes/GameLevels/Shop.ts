@@ -14,8 +14,6 @@ import LevelEndAI from "../../AI/LevelEnd/LevelEndAI";
 
 import Level1 from "./Level1";
 
-
-
 export default class Shop extends GameLevel {
     protected walls: OrthogonalTilemap;
 
@@ -47,7 +45,6 @@ export default class Shop extends GameLevel {
     unloadScene(): void {
         this.load.keepImage("itembg");
         this.load.keepImage("itembarbg");
-
     }
 
     initScene(init: Record<string, any>): void {

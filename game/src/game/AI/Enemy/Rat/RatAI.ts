@@ -37,7 +37,7 @@ export enum RatAIOptionType {
 export default class RatAI extends EnemyAI {
 
     /** Actions that the rat can perform/undergo kinda will go here? */
-    attack = new AttackAction({});
+    attack = new AttackAction({amount: 2});
     move = new MoveAction("navmesh", 100, true);
     knockback = new MoveAction("navmesh", 200, true);
 
@@ -82,7 +82,6 @@ export default class RatAI extends EnemyAI {
         if (this.owner.collisionShape.overlaps(event.data.get("hitbox"))) {
             this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "hitSound", loop: false, holdReference: true});
             this.health -= event.data.get("damage");
-
             if (this.knockbackCooldownTimer.isStopped()) {
                 this.knockbackCooldownTimer.start();
                 this.changeState(RatAIStates.KNOCK_BACK);
@@ -126,8 +125,7 @@ export default class RatAI extends EnemyAI {
      * however you want.
      * 
      * @param type the type of RatAIOption we want to give to our RatAI - defined in the enum RatAIOptions 
-     * @param player the player node to add to the options (this is required)
-     * @param options any custom options we want to tweak
+     * @param target the player node to add to the options 
      * @returns a set of options for a RatAI
      */
     public static optionsBuilder(type: RatAIOptionType, target: GameNode): Record<string, any> {
