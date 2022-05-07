@@ -142,8 +142,8 @@ export default class RatAI extends EnemyAI {
                     sightRange: 100,
                     swarmRange: 50,
                     moveSpeed: 100,
-                    attackRange: 50, 
-                    attackDamage: 2
+                    attackRange: 25, 
+                    attackDamage: 1
                 }
                 break;
             }
@@ -151,12 +151,12 @@ export default class RatAI extends EnemyAI {
                 optionsTemplate = {
                     target: target,
                     
-                    health: 5,
+                    health: 2,
                     sightRange: 200,
                     swarmRange: 50,
                     moveSpeed: 150,
-                    attackRange: 50, 
-                    attackDamage: 2
+                    attackRange: 25, 
+                    attackDamage: 1
                 }
                 break;
             }

@@ -90,9 +90,11 @@ export default class PlayerController extends StateMachineAI {
 	 * @returns the downward attack hitbox of the player
 	 */
 	getDownHitbox(): AABB {
-		let y = this.owner.boundary.bottomRight.y - this.owner.boundary.halfSize.y / 3;
+		let scale = 1/2;
+
+		let y = this.owner.boundary.bottomRight.y;
         let x = this.owner.position.x;
-        return new AABB(new Vec2(x, y), new Vec2(this.owner.boundary.halfSize.x / 3, this.owner.boundary.halfSize.y / 3));
+        return new AABB(new Vec2(x, y), new Vec2(this.owner.boundary.halfSize.x * scale, this.owner.boundary.halfSize.y * scale));
 	}
 
 	/**
@@ -101,27 +103,33 @@ export default class PlayerController extends StateMachineAI {
 	 * @returns the left attack hitbox of the player
 	 */
 	getLeftHitbox(): AABB {
+		let scale = 1/2;
+
 		let y = this.owner.position.y;
-        let x = this.owner.boundary.topLeft.x + this.owner.boundary.halfSize.x / 3;
-        return new AABB(new Vec2(x, y), new Vec2(this.owner.boundary.halfSize.x / 3, this.owner.boundary.halfSize.y / 3));
+        let x = this.owner.boundary.topLeft.x;
+        return new AABB(new Vec2(x, y), new Vec2(this.owner.boundary.halfSize.x * scale, this.owner.boundary.halfSize.y * scale));
 	}
 
 	/**
 	 * @returns the right attack hitbox of the player
 	 */
 	getRightHitbox(): AABB {
+		let scale = 1/2;
+
 		let y = this.owner.position.y;
-        let x = this.owner.boundary.topRight.x - this.owner.boundary.halfSize.x / 3;
-        return new AABB(new Vec2(x, y), new Vec2(this.owner.boundary.halfSize.x / 3, this.owner.boundary.halfSize.y / 3));
+        let x = this.owner.boundary.topRight.x;
+        return new AABB(new Vec2(x, y), new Vec2(this.owner.boundary.halfSize.x * scale, this.owner.boundary.halfSize.y * scale));
 	}
 
 	/**
 	 * @returns the upper attack hitbox of the player
 	 */
 	getUpHitbox(): AABB {
-		let y = this.owner.boundary.topRight.y + this.owner.boundary.halfSize.y / 3;
+		let scale = 1/2;
+
+		let y = this.owner.boundary.topRight.y;
         let x = this.owner.position.x;
-        return new AABB(new Vec2(x, y), new Vec2(this.owner.boundary.halfSize.x / 3, this.owner.boundary.halfSize.y / 3));
+        return new AABB(new Vec2(x, y), new Vec2(this.owner.boundary.halfSize.x * scale, this.owner.boundary.halfSize.y * scale));
 	}
 
 	activate(options: Record<string, any>): void {};
