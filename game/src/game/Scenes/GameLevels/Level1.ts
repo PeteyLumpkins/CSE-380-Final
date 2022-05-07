@@ -107,9 +107,10 @@ export default class Level1 extends GameLevel {
     }
 
     initScene(init: Record<string, any>): void {
+        console.log(init);
         this.playerSpawn = init.spawn !== undefined ? init.spawn : Vec2.ZERO;
-        this.startingItems = init.inventory !== undefined ? init.inventory : [];
-        this.startingStats = init.stats !== undefined ? init.stats : {};
+        this.startingItems = init.inventory !== undefined ? init.inventory.getCopy() : [];
+        this.startingStats = init.stats !== undefined ? init.stats.getCopy() : {};
     }
 
     initViewport(): void {
@@ -188,14 +189,25 @@ export default class Level1 extends GameLevel {
     }
 
     initLevelLinks(): void {
+
+        // SHOP LEVEL
         this.shop = this.add.sprite(GameSprites.LADDER, GameLayers.PRIMARY);
         this.shop.position.set(1056, 1184);
-        this.shop.addAI(LevelEndAI, {player: this.player, range: 25, spawn: new Vec2(160, 352), nextLevel: Shop});
+        this.shop.addAI(LevelEndAI, {player: this.player, range: 25, nextLevel: Shop, nextLevelData: {
+            spawn: new Vec2(160, 352), 
+            inventory: (<PlayerController>this.player._ai).playerInventory,
+            stats: (<PlayerController>this.player._ai).playerStats,
+            nextLevel: Level1,
+        }});
 
+        // NEXT LEVEL
         this.nextLevel = this.add.sprite(GameSprites.LADDER, GameLayers.PRIMARY);
         this.nextLevel.position.set(2960, 595);
-
-        this.nextLevel.addAI(LevelEndAI, {player: this.player, range: 25, spawn: new Vec2(448, 480), nextLevel: Level2});
+        this.nextLevel.addAI(LevelEndAI, {player: this.player, range: 25, nextLevel: Level2, nextLevelData: {
+            spawn: new Vec2(416, 416), 
+            inventory: (<PlayerController>this.player._ai).playerInventory,
+            stats: (<PlayerController>this.player._ai).playerStats
+        }});
     }
 
     initEnemies(): void {

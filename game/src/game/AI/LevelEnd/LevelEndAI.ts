@@ -1,5 +1,4 @@
 import StateMachineAI from "../../../Wolfie2D/AI/StateMachineAI";
-import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import Emitter from "../../../Wolfie2D/Events/Emitter";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import GameNode from "../../../Wolfie2D/Nodes/GameNode";
@@ -15,13 +14,13 @@ export enum LevelEndStates {
 
 export default class LevelEndAI extends StateMachineAI {
 
-    protected owner: GameNode;
+    owner: GameNode;
+    player: GameNode;
 
-    protected player: GameNode;
     nextLevel: new (...args: any) => GameLevel;
-    protected range: number;
-    public playerSpawn: Vec2;   // ! Needs to be public for it to work in the InLevelEnd?
+    nextLevelData: Record<string, any>;
 
+    range: number;
     protected emitter: Emitter;
 
     /**
@@ -34,22 +33,14 @@ export default class LevelEndAI extends StateMachineAI {
         this.range = options.range;
 
         this.nextLevel = options.nextLevel;
-        this.playerSpawn = options.spawn;
+        this.nextLevelData = options.nextLevelData;
 
         this.emitter = new Emitter();
 
         this.addState(LevelEndStates.INSIDE, new InLevelEnd(this, this.owner));
         this.addState(LevelEndStates.OUTSIDE, new OutLevelEnd(this, this.owner));
         this.initialize(LevelEndStates.OUTSIDE);
-
-
     }   
-
-    getRange(): number { return this.range; }
-
-    getPlayerPosition(): Vec2 { return this.player.position; }
-
-    getPlayer(): GameNode { return this.player; }
 
     destroy(): void {}
 

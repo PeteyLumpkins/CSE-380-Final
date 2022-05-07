@@ -1,6 +1,4 @@
 import GameLevel from "../GameLevel";
-import Level3 from "./Level3";
-
 import AABB from "../../../Wolfie2D/DataTypes/Shapes/AABB";
 import OrthogonalTilemap from "../../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 import LevelEndAI from "../../AI/LevelEnd/LevelEndAI";
@@ -14,36 +12,9 @@ import PlayerStats from "../../AI/Player/PlayerStats";
 import PlayerInventory from "../../AI/Player/PlayerInventory";
 import StoreItems from "../../AI/Store/StoreItems";
 
+export default class Level3 extends GameLevel {
 
-import items from "./items.json";
-export default class Level2 extends GameLevel {
-
-
-    //! Current Positions:
-    // Player Spawn = (416, 416)
-    // Store Terminal = (832, 224)
-    // Level End = (2944, 1568)
-
-    protected walls: OrthogonalTilemap;
-    protected navmeshGraph: PositionGraph;
-
-    private PLAYER_SPAWN: Vec2 = new Vec2(448, 480);
-
-    loadScene(): void {
-        this.load.tilemap("level", "assets/tilemaps/levelTwo.json");
-
-        for (let i = 0; i < items.length; i++) {
-            this.load.image(items[i].key, items[i].path);
-        }
-
-        // this.load.object(GameData.NAVMESH, "assets/data/navmeshLevel2.json"); 
-        // this.load.object(GameData.STORE_ITEMS, "assets/data/item-data.json");
-        // this.load.object("enemyData", "assets/data/enemyLevel2.json");
-        this.load.spritesheet("player", "assets/spritesheets/player/player.json");
-        this.load.spritesheet(GameSprites.STORE_BG, "assets/spritesheets/store/store_layer.json");
-
-        this.load.image(GameSprites.LADDER, "assets/sprites/EndOfLevel.png");
-    }
+    /** SCENE METHODS */
 
     initScene(init: Record<string, any>): void {
         this.playerSpawn = init.spawn !== undefined ? init.spawn : Vec2.ZERO;
@@ -54,6 +25,13 @@ export default class Level2 extends GameLevel {
     startScene(): void {
         this.addLayer(GameLayers.PRIMARY, 5);
         super.startScene();
+    }
+
+
+    /** GAME LEVEL METHODS */
+
+    initViewport(): void {
+        this.viewport.setZoomLevel(1);
     }
 
     initPlayer(): void {
@@ -70,26 +48,12 @@ export default class Level2 extends GameLevel {
         this.viewport.follow(this.player);
     }
 
-    initEnemies(): void {}
-
     initStore(): void {
+        throw new Error('Method not implemented.');
     }
-
     initMap(): void {
-        let tilemapLayers = this.add.tilemap("level");
-
-        this.getTilemap("Floor").getLayer().setDepth(1);
-        this.getTilemap("UpperWall").getLayer().setDepth(1);
-
-         // Get the wall layer
-        this.walls = <OrthogonalTilemap>tilemapLayers[0].getItems()[0];
-
-        // Set the viewport bounds to the tilemap
-        let tilemapSize: Vec2 = this.walls.size;
-
-        this.viewport.setBounds(0, 0, tilemapSize.x, tilemapSize.y);
+        throw new Error('Method not implemented.');
     }
-
     initLevelLinks(): void {
         // SHOP LEVEL
         this.shop = this.add.sprite(GameSprites.LADDER, GameLayers.PRIMARY);
@@ -98,7 +62,7 @@ export default class Level2 extends GameLevel {
             spawn: new Vec2(160, 352), 
             inventory: (<PlayerController>this.player._ai).playerInventory,
             stats: (<PlayerController>this.player._ai).playerStats,
-            nextLevel: Level2,
+            nextLevel: Level3,
         }});
 
         // NEXT LEVEL
@@ -111,9 +75,8 @@ export default class Level2 extends GameLevel {
         }});
     }
 
-    initViewport(): void {
-        this.viewport.setZoomLevel(1);
+    initEnemies(): void {
+        throw new Error('Method not implemented.');
     }
-
-
+    
 }

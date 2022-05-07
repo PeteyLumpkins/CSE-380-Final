@@ -29,7 +29,7 @@ export default abstract class LevelEndState extends State {
     }
 
     inRange(position: Vec2): boolean {
-        return this.parent.getPlayerPosition().distanceTo(this.owner.position) <= this.parent.getRange();
+        return this.parent.player.position.distanceTo(this.owner.position) <= this.parent.range;
     }
 
 	update(deltaT: number): void {

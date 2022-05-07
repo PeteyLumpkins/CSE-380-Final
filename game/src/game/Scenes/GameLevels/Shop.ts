@@ -6,16 +6,18 @@ import PlayerInventory from "../../AI/Player/PlayerInventory";
 import PlayerStats from "../../AI/Player/PlayerStats";
 import StoreController from "../../AI/Store/StoreController";
 import { GameData, GameLayers, GameSprites, ItemSprites } from "../../GameEnums";
+
 import GameLevel from "../GameLevel";
+import Level1 from "../GameLevels/Level1";
 
 import StoreItems from "../../AI/Store/StoreItems";
 import items from "./items.json";
 import LevelEndAI from "../../AI/LevelEnd/LevelEndAI";
 
-import Level1 from "./Level1";
 
 export default class Shop extends GameLevel {
     protected walls: OrthogonalTilemap;
+    private next: new (...args: any) => GameLevel;
 
     loadScene(): void {
         this.load.tilemap("level", "assets/tilemaps/shopLevel.json");
@@ -39,7 +41,6 @@ export default class Shop extends GameLevel {
 
         this.load.audio("buySound", "assets/soundEffects/shopBuy.wav");
         this.load.audio("textbox", "assets/soundEffects/textbox.wav");
-
     }
 
     unloadScene(): void {
@@ -49,8 +50,9 @@ export default class Shop extends GameLevel {
 
     initScene(init: Record<string, any>): void {
         this.playerSpawn = init.spawn !== undefined ? init.spawn : Vec2.ZERO;
-        this.startingItems = init.inventory !== undefined ? init.inventory : [];
-        this.startingStats = init.stats !== undefined ? init.stats : {};
+        this.startingItems = init.inventory !== undefined ? init.inventory.getCopy() : [];
+        this.startingStats = init.stats !== undefined ? init.stats.getCopy() : {};
+        this.next = init.nextLevel !== undefined ? init.nextLevel : Level1;
     }
 
     startScene(): void {
@@ -116,7 +118,11 @@ export default class Shop extends GameLevel {
         this.nextLevel = this.add.sprite(GameSprites.LADDER, GameLayers.PRIMARY);
         this.nextLevel.position.set(160, 352);
         // NextLevel should be the one that is passed into this file, as to loop back to the level it came from.
-        this.nextLevel.addAI(LevelEndAI, {player: this.player, range: 25, nextLevel: Level1, spawn: new Vec2(1056, 1200)});
+        this.nextLevel.addAI(LevelEndAI, {player: this.player, range: 25, nextLevel: this.next, nextLevelData: {
+            spawn: new Vec2(1056, 1200), 
+            inventory: (<PlayerController>this.player._ai).playerInventory,
+            stats: (<PlayerController>this.player._ai).playerStats
+        }});
     }
 
     initViewport(): void {
