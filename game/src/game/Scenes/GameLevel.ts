@@ -274,8 +274,11 @@ export default abstract class GameLevel extends Scene {
         this.pauseButton.fontSize = 20;
         this.pauseButton.font = "Courier";
 
+        let center = this.viewport.getCenter()
+        center.sub(this.viewport.getOrigin());
+
         this.itemBarBackground = this.add.sprite("itembarbg", UILayers.ITEM_BAR);
-        this.itemBarBackground.position.set(this.viewport.getCenter().x, 32).sub(this.viewport.getOrigin()).div(scalar);
+        this.itemBarBackground.position.set(center.x, 32 / scale);
         this.itemBarBackground.scale.div(scalar);
     }
 

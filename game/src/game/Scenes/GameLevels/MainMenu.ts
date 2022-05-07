@@ -53,6 +53,9 @@ export default class MainMenu extends Scene {
         this.viewport.setBounds(0, 0, 1024, 1024);
         this.viewport.setZoomLevel(1);
 
+        let center = this.viewport.getCenter();
+        center.sub(this.viewport.getOrigin());
+
         console.log("ZOOM LEVEL IN MAIN MENU: " + this.viewport.getZoomLevel());
 
         // The background layer
@@ -65,7 +68,8 @@ export default class MainMenu extends Scene {
         this.logo = this.addLayer(MenuLayers.LOGO, 1);
         this.logo_image = this.add.sprite(MenuImages.LOGO, MenuLayers.LOGO);
         this.logo_image.scale.set(.25, .25);
-        this.logo_image.position.copy(this.viewport.getCenter());
+
+        this.logo_image.position.copy(center);
 
         // Splash Screen
         this.initSplash();
@@ -114,7 +118,10 @@ export default class MainMenu extends Scene {
 
             if(event.type === MenuEvents.MAIN_MENU){
                 this.mainMenu.setHidden(false);
-                this.logo_image.position.set(this.viewport.getCenter().x, 150);
+
+                let center = this.viewport.getCenter();
+                center.sub(this.viewport.getOrigin());
+                this.logo_image.position.set(center.x, this.viewport.getOrigin().y + 150);
                 this.logo_image.visible = true;
 
                 this.controls.setHidden(true);
@@ -145,8 +152,6 @@ export default class MainMenu extends Scene {
         start.borderColor = Color.WHITE;
         start.backgroundColor = Color.TRANSPARENT;
         start.onClickEventId = MenuEvents.MAIN_MENU;
-        
-        
     }
 
     initMainMenu() {
