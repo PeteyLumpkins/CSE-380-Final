@@ -1,0 +1,76 @@
+{
+    "numEnemies": 11,
+    "enemies": [
+      {
+        "position": [833, 1484],
+        "health": 5,
+        "type": "rat_enemy"
+      },
+      {
+        "position": [1553, 1631],
+        "health": 5,
+        "type": "rat_enemy"
+      },
+      {
+        "position": [1636, 1617],
+        "health": 5,
+        "type": "rat_enemy"
+      },
+  
+  
+      
+      {
+        "position": [1439, 1176],
+        "health": 5,
+        "type": "rat_enemy"
+      },
+      {
+        "position": [733, 1281],
+        "health": 5,
+        "type": "rat_enemy"
+      },
+      {
+        "position": [1150, 1022],
+        "health": 5,
+        "type": "rat_enemy"
+      },
+  
+  
+      {
+        "position": [971, 419],
+        "health": 5,
+        "type": "rat_enemy"
+      },
+      {
+        "position": [1080, 391],
+        "health": 5,
+        "type": "rat_enemy"
+      },
+      {
+        "position": [1038, 468],
+        "health": 5,
+        "type": "rat_enemy"
+      },
+  
+  
+      {
+        "position": [1012, 331],
+        "health": 5,
+        "type": "rat_enemy"
+      },
+      {
+        "position": [458, 446],
+        "health": 5,
+        "type": "rat_enemy"
+      },
+  
+  
+      {
+        "position": [497, 502],
+        "health": 5,
+        "type": "rat_enemy"
+      }
+      
+    ]
+  }
+  
