@@ -194,13 +194,14 @@ export default class Level1 extends GameLevel {
             inventory: (<PlayerController>this.player._ai).playerInventory,
             stats: (<PlayerController>this.player._ai).playerStats,
             nextLevel: Level1,
+            nextLevelSpawn: new Vec2(1056, 1200)
         }});
 
         // NEXT LEVEL
         this.nextLevel = this.add.sprite(GameSprites.LADDER, GameLayers.PRIMARY);
         this.nextLevel.position.set(2960, 595);
         this.nextLevel.addAI(LevelEndAI, {player: this.player, range: 25, nextLevel: Level2, nextLevelData: {
-            spawn: new Vec2(416, 416), 
+            spawn: new Vec2(254, 382), 
             inventory: (<PlayerController>this.player._ai).playerInventory,
             stats: (<PlayerController>this.player._ai).playerStats
         }});
@@ -218,7 +219,6 @@ export default class Level1 extends GameLevel {
             this.enemies[i].addAI(RatAI, options);
             this.enemies[i].addPhysics();
         }
-
     }
 
     drawHitbox(): void {

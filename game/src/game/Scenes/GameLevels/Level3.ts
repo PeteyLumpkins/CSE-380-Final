@@ -18,7 +18,7 @@ import RatAI from "../../AI/Enemy/Rat/RatAI";
 
 import items from "./items.json";
 
-import Level3 from "./Level2";
+import Level3 from "./Level3";
 
 import PlayerStats from "../../AI/Player/PlayerStats";
 import PlayerInventory from "../../AI/Player/PlayerInventory";
@@ -104,8 +104,8 @@ export default class Level1 extends GameLevel {
 
     initScene(init: Record<string, any>): void {
         this.playerSpawn = init.spawn !== undefined ? init.spawn : Vec2.ZERO;
-        this.startingItems = init.inventory !== undefined ? init.inventory : [];
-        this.startingStats = init.stats !== undefined ? init.stats : {};
+        this.startingItems = init.inventory !== undefined ? init.inventory.getCopy() : [];
+        this.startingStats = init.stats !== undefined ? init.stats.getCopy() : {};
     }
 
     initViewport(): void {
@@ -122,10 +122,6 @@ export default class Level1 extends GameLevel {
         this.player.addPhysics();
 		this.player.setCollisionShape(playerCollider);
 
-        console.log(this.sceneOptions);
-
-        let stats = {"HEALTH": 20, "MONEY": 10, "MOVE_SPEED": 5};
-
 		this.player.addAI(PlayerController, {
             inventory: new PlayerInventory(this.startingItems, 9),                             
             stats: new PlayerStats(this.startingStats) // Passed through here?
@@ -133,25 +129,10 @@ export default class Level1 extends GameLevel {
 
         // Create new player inventory and then transfer items ( if any from previous )
 
-
         this.viewport.follow(this.player);
-
     }
 
     initStore(): void {
-    
-        // let storeItems = new StoreItems(
-        //     [
-        //         {key: "moldy_bread", count: 1},
-        //         {key: "old_boot", count: 1},
-        //         {key: "mystery_liquid", count: 1}
-        //     ]
-        // );
-
-        // this.store = this.add.animatedSprite("store_terminal", GameLayers.PRIMARY);
-        // this.store.position.set(1056, 1152);
-        // this.store.scale.set(0.4, 0.4);
-        // this.store.addAI(StoreController, {radius: 100, target: this.player, items: storeItems});
 
     }
 
@@ -201,27 +182,28 @@ export default class Level1 extends GameLevel {
 
     initLevelLinks(): void {
         this.shop = this.add.sprite(GameSprites.LADDER, GameLayers.PRIMARY);
-        this.shop.position.set(1056, 1184);
-        this.shop.addAI(LevelEndAI, {player: this.player, range: 25, spawn: new Vec2(160, 352), nextLevel: Shop});
+        this.shop.position.set(2848, 704);
+        this.shop.addAI(LevelEndAI, {player: this.player, range: 25, nextLevel: Shop, nextLevelData: {
+            spawn: new Vec2(160, 352), 
+            inventory: (<PlayerController>this.player._ai).playerInventory,
+            stats: (<PlayerController>this.player._ai).playerStats,
+
+            nextLevel: Level3,
+            nextLevelSpawn: new Vec2(2848, 704)
+        }});
+        // store (2848, 704)
+        // end of level (2944, 1600)
 
         this.nextLevel = this.add.sprite(GameSprites.LADDER, GameLayers.PRIMARY);
-        this.nextLevel.position.set(2960, 595);
-
-        // this.nextLevel.addAI(LevelEndAI, {player: this.player, range: 25, spawn: new Vec2(448, 480), nextLevel: Level3});
+        this.nextLevel.position.set(2944, 1600);
+        this.nextLevel.addAI(LevelEndAI, {player: this.player, range: 25, nextLevel: Level3, nextLevelData: {
+            spawn: new Vec2(254, 382), 
+            inventory: (<PlayerController>this.player._ai).playerInventory,
+            stats: (<PlayerController>this.player._ai).playerStats
+        }});
     }
 
     initEnemies(): void {
-        
-        // this.enemies = new Array<AnimatedSprite>();
-        // let enemyData = this.load.getObject("enemyData");
-        // let options = RatAI.optionsBuilder(RatAIOptionType.FAST, this.player);
-
-        // for (let i = 0; i < enemyData.enemies.length; i++) {
-        //     this.enemies[i] = this.add.animatedSprite("rat", GameLayers.PRIMARY);
-        //     this.enemies[i].position.set(enemyData.enemies[i].position[0], enemyData.enemies[i].position[1]);
-        //     this.enemies[i].addAI(RatAI, options);
-        //     this.enemies[i].addPhysics();
-        // }
 
     }
 

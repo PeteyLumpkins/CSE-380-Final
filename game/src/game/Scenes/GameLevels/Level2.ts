@@ -61,7 +61,7 @@ export default class Level2 extends GameLevel {
         let scalar = new Vec2(scale, scale);
 
         this.player = this.add.animatedSprite("player", GameLayers.PRIMARY);
-		this.player.position.set(254, 382);     
+		this.player.position.set(this.playerSpawn.x, this.playerSpawn.y);
 		let playerCollider = new AABB(Vec2.ZERO, new Vec2(this.player.sizeWithZoom.x, this.player.sizeWithZoom.y).div(scalar).div(new Vec2(2, 2)));
         this.player.addPhysics();
 		this.player.setCollisionShape(playerCollider);
@@ -92,21 +92,24 @@ export default class Level2 extends GameLevel {
     }
 
     initLevelLinks(): void {
+        
         // SHOP LEVEL
         this.shop = this.add.sprite(GameSprites.LADDER, GameLayers.PRIMARY);
-        this.shop.position.set(832, 224);
+        this.shop.position.set(1784, 160);
         this.shop.addAI(LevelEndAI, {player: this.player, range: 25, nextLevel: Shop, nextLevelData: {
             spawn: new Vec2(160, 352), 
             inventory: (<PlayerController>this.player._ai).playerInventory,
             stats: (<PlayerController>this.player._ai).playerStats,
+
             nextLevel: Level2,
+            nextLevelSpawn: new Vec2(1784, 160)
         }});
 
         // NEXT LEVEL
         this.nextLevel = this.add.sprite(GameSprites.LADDER, GameLayers.PRIMARY);
-        this.nextLevel.position.set(2944, 1568);
+        this.nextLevel.position.set(184, 1442);
         this.nextLevel.addAI(LevelEndAI, {player: this.player, range: 25, nextLevel: Level3, nextLevelData: {
-            spawn: new Vec2(448, 480), 
+            spawn: new Vec2(254, 382), 
             inventory: (<PlayerController>this.player._ai).playerInventory,
             stats: (<PlayerController>this.player._ai).playerStats
         }});
