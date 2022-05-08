@@ -1,6 +1,9 @@
 import GameEvent from "../../../../../../Wolfie2D/Events/GameEvent";
+
 import AnimatedSprite from "../../../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import GooseIdle from "./GooseIdle";
+
+
 
 export default class NormalGooseIdle extends GooseIdle {
 

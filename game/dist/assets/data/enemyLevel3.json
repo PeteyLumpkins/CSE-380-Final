@@ -1,0 +1,77 @@
+{
+  "numEnemies": 11,
+  "enemies": [
+    {
+      "position": [992, 480],
+      "health": 5,
+      "type": "goose_enemy"
+    },
+    {
+      "position": [1152, 736],
+      "health": 5,
+      "type": "goose_enemy"
+    },
+    {
+      "position": [1408, 512],
+      "health": 5,
+      "type": "goose_enemy"
+    },
+
+
+    
+    {
+      "position": [544, 1312],
+      "health": 5,
+      "type": "goose_enemy"
+    },
+    {
+      "position": [554, 1568],
+      "health": 5,
+      "type": "goose_enemy"
+    },
+
+
+
+    {
+      "position": [1842, 544],
+      "health": 5,
+      "type": "goose_enemy"
+    },
+    {
+      "position": [1728, 704],
+      "health": 5,
+      "type": "goose_enemy"
+    },
+    {
+      "position": [1952, 704],
+      "health": 5,
+      "type": "goose_enemy"
+    },
+
+
+
+    {
+      "position": [2752, 1056],
+      "health": 5,
+      "type": "goose_enemy"
+    },
+
+
+
+    {
+      "position": [1760, 1376],
+      "health": 5,
+      "type": "goose_enemy"
+    },
+    {
+      "position": [2336, 1504],
+      "health": 5,
+      "type": "goose_enemy"
+    }
+
+
+
+
+    
+  ]
+}

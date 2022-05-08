@@ -6,12 +6,9 @@ import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import PositionGraph from "../../../Wolfie2D/DataTypes/Graphs/PositionGraph";
 import Navmesh from "../../../Wolfie2D/Pathfinding/Navmesh";
 import { GraphicType } from "../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
-import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 
 import GameLevel from "./GameLevel";
 import LevelEndAI from "../../AI/LevelEnd/LevelEndAI";
-
-import Level3 from "./Level3";
 
 import PlayerStats from "../../AI/Player/PlayerStats";
 import PlayerInventory from "../../AI/Player/PlayerInventory";
@@ -20,9 +17,9 @@ import Level5 from "./Level5";
 
 export default class Level4 extends GameLevel {
 
-    public static readonly PLAYER_SPAWN_POS = new Vec2(0, 0);
-    public static readonly STORE_LEVEL_POS = new Vec2(0, 0);
-    public static readonly NEXT_LEVEL_POS = new Vec2(0, 0);
+    public static readonly PLAYER_SPAWN_POS = new Vec2(213, 1681);
+    public static readonly STORE_LEVEL_POS = new Vec2(1553, 334);
+    public static readonly NEXT_LEVEL_POS = new Vec2(412, 525);
 
     protected walls: OrthogonalTilemap;
     protected navmeshGraph: PositionGraph;
@@ -36,8 +33,9 @@ export default class Level4 extends GameLevel {
     loadScene(): void {
         super.loadScene();
 
-        // TODO: Load level stuff here
         this.load.tilemap("level", "assets/tilemaps/Level32.json");
+        this.load.object(GameData.NAVMESH, "assets/data/navmeshLevel32.json");
+        this.load.object("enemyData", "assets/data/enemyLevel32.json");
     }
 
     unloadScene(): void {
@@ -122,7 +120,7 @@ export default class Level4 extends GameLevel {
             inventory: (<PlayerController>this.player._ai).playerInventory,
             stats: (<PlayerController>this.player._ai).playerStats,
 
-            nextLevel: Level3,
+            nextLevel: Level4,
             nextLevelSpawn: Level4.STORE_LEVEL_POS
         }});
 

@@ -50,6 +50,7 @@ export default class GooseAI extends EnemyAI {
     knockbackCooldownTimer: Timer = new Timer(2000);
 
     initStates(): void {
+
         this.addState(GooseAIStates.ATTACK_LEFT, new GooseAttackLeft(this, this.owner));
         this.addState(GooseAIStates.ATTACK_RIGHT, new GooseAttackRight(this, this.owner));
 
