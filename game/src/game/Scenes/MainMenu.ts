@@ -7,6 +7,11 @@ import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import { MenuImages, MenuEvents, MenuLayers } from "../GameEnums";
 import GameLevel from "./GameLevels/GameLevel";
 import Level1 from "./GameLevels/Level1";
+import Level2 from "./GameLevels/Level2";
+import Level3 from "./GameLevels/Level3";
+import Level4 from "./GameLevels/Level4";
+import Level5 from "./GameLevels/Level5";
+
 import PlayerStats from "../AI/Player/PlayerStats";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
@@ -30,6 +35,7 @@ export default class MainMenu extends Scene {
     private mainMenu: Layer;
     private controls: Layer;
     private about: Layer;
+    private levelPreview: Layer;
     private levels: Layer;
     private logo: Layer;
     private background: Layer;
@@ -46,6 +52,11 @@ export default class MainMenu extends Scene {
     loadScene(){
         // this.load.image(MenuImages.BACKGROUND, "assets/images/background.jpeg");
         this.load.image(MenuImages.LOGO, "assets/images/logo_no_white.png");
+        this.load.image(MenuImages.LEVEL1, "assets/images/level1preview.png");
+        this.load.image(MenuImages.LEVEL2, "assets/images/level2preview.png");
+
+        this.load.image(MenuImages.LEVEL3, "assets/images/level3preview.png");
+
         this.load.audio("menu", "assets/music/menu.wav");
     }
 
@@ -93,6 +104,11 @@ export default class MainMenu extends Scene {
         this.receiver.subscribe(MenuEvents.CONTROLS);
         this.receiver.subscribe(MenuEvents.MAIN_MENU);
         this.receiver.subscribe(MenuEvents.LEVELS);
+        this.receiver.subscribe(MenuEvents.PLAY_LEVEL_1);
+        this.receiver.subscribe(MenuEvents.PLAY_LEVEL_2);
+        this.receiver.subscribe(MenuEvents.PLAY_LEVEL_3);
+        this.receiver.subscribe(MenuEvents.PLAY_LEVEL_4);
+        this.receiver.subscribe(MenuEvents.PLAY_LEVEL_5);
 
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "menu", loop: true, holdReference: true});
     }
@@ -100,7 +116,7 @@ export default class MainMenu extends Scene {
     updateScene(){
         while(this.receiver.hasNextEvent()){
             let event = this.receiver.getNextEvent();
-
+            console.log(event)
             if(event.type === MenuEvents.PLAY_GAME){
                 this.sceneManager.changeToScene(Level1, {spawn: new Vec2(448, 480), stats: new PlayerStats({"HEALTH": 20, "MONEY": 0, "MOVE_SPEED": 3})});
             }
@@ -109,12 +125,16 @@ export default class MainMenu extends Scene {
                 this.logo_image.visible = false;
                 this.controls.setHidden(false);
                 this.mainMenu.setHidden(true);
+                this.levelPreview.setHidden(true);
+
             }
 
             if(event.type === MenuEvents.HELP){
                 this.logo_image.visible = false;
                 this.about.setHidden(false);
                 this.mainMenu.setHidden(true);
+                this.levelPreview.setHidden(true);
+
             }
 
             if(event.type === MenuEvents.MAIN_MENU){
@@ -125,6 +145,7 @@ export default class MainMenu extends Scene {
                 this.logo_image.position.set(center.x, this.viewport.getOrigin().y + 150);
                 this.logo_image.visible = true;
 
+                this.levelPreview.setHidden(true);
                 this.controls.setHidden(true);
                 this.about.setHidden(true);
                 this.splash.setHidden(true);
@@ -134,7 +155,23 @@ export default class MainMenu extends Scene {
             if(event.type === MenuEvents.LEVELS) {
                 this.logo_image.visible = false;
                 this.levels.setHidden(false);
+                this.levelPreview.setHidden(false);
                 this.mainMenu.setHidden(true);
+            }
+            if(event.type === MenuEvents.PLAY_LEVEL_1){
+                this.sceneManager.changeToScene(Level1, {spawn: new Vec2(448, 480), stats: new PlayerStats({"HEALTH": 20, "MONEY": 0, "MOVE_SPEED": 3})});
+            }
+            if(event.type === MenuEvents.PLAY_LEVEL_2){
+                this.sceneManager.changeToScene(Level2, {spawn: new Vec2(254, 382), stats: new PlayerStats({"HEALTH": 20, "MONEY": 0, "MOVE_SPEED": 3})});
+            }
+            if(event.type === MenuEvents.PLAY_LEVEL_3){
+                this.sceneManager.changeToScene(Level3, {spawn: new Vec2(416, 416), stats: new PlayerStats({"HEALTH": 20, "MONEY": 0, "MOVE_SPEED": 3})});
+            }
+            if(event.type === MenuEvents.PLAY_LEVEL_4){
+                this.sceneManager.changeToScene(Level1, {spawn: new Vec2(448, 480), stats: new PlayerStats({"HEALTH": 20, "MONEY": 0, "MOVE_SPEED": 3})});
+            }
+            if(event.type === MenuEvents.PLAY_LEVEL_5){
+                this.sceneManager.changeToScene(Level1, {spawn: new Vec2(448, 480), stats: new PlayerStats({"HEALTH": 20, "MONEY": 0, "MOVE_SPEED": 3})});
             }
         }
     }
@@ -300,8 +337,9 @@ export default class MainMenu extends Scene {
         line10.textColor = Color.WHITE;
         line10.fontSize = 16;
 
-        const aboutBack = this.add.uiElement(UIElementType.BUTTON, MenuLayers.HELP, {position: new Vec2(125, 100), text: "Back"});
+        const aboutBack = <Button> this.add.uiElement(UIElementType.BUTTON, MenuLayers.HELP, {position: new Vec2(125, 100), text: "Back"});
         aboutBack.size.set(100, 50);
+        aboutBack.font = 'menu';
         aboutBack.borderWidth = 2;
         aboutBack.borderColor = Color.WHITE;
         aboutBack.backgroundColor = Color.TRANSPARENT;
@@ -312,17 +350,58 @@ export default class MainMenu extends Scene {
         let center = this.viewport.getCenter();
         this.levels = this.addUILayer(MenuLayers.LEVELS);
         this.levels.setHidden(true);
-
+        
         const levelsHeader = <Label>this.add.uiElement(UIElementType.LABEL, MenuLayers.LEVELS, {position: new Vec2(center.x, center.y - 300), text: "Levels"});
         levelsHeader.textColor = Color.WHITE;
+        levelsHeader.font = "menu";
 
-        const levelsBack = this.add.uiElement(UIElementType.BUTTON, MenuLayers.LEVELS, {position: new Vec2(125, 100), text: "Back"});
+        const levelsBack = <Button> this.add.uiElement(UIElementType.BUTTON, MenuLayers.LEVELS, {position: new Vec2(125, 100), text: "Back"});
         levelsBack.size.set(100, 50);
+        levelsBack.font = 'menu';
         levelsBack.borderWidth = 2;
         levelsBack.borderColor = Color.WHITE;
         levelsBack.backgroundColor = Color.TRANSPARENT;
         levelsBack.onClickEventId = MenuEvents.MAIN_MENU;
-    }
+
+        this.levelPreview = this.addUILayer(MenuLayers.LEVEL_PREVIEW);
+        this.levelPreview.setDepth(-1);
+        this.levelPreview.setHidden(true);
+
+
+        const level1 = <Button> this.add.uiElement(UIElementType.BUTTON, MenuLayers.LEVELS, {position: new Vec2(center.x - 250, 300), text: "Level One"});
+        level1.size.set(200,180);
+        level1.font = 'menu';
+        level1.backgroundColor = Color.TRANSPARENT;
+        level1.borderColor = Color.TRANSPARENT;
+        level1.onClickEventId = MenuEvents.PLAY_LEVEL_1;
+        const level1Image = this.add.sprite(MenuImages.LEVEL1, MenuLayers.LEVEL_PREVIEW);
+        level1Image.position.set(center.x - 250, 300);
+
+        const level2 = <Button> this.add.uiElement(UIElementType.BUTTON, MenuLayers.LEVELS, {position: new Vec2(center.x, 300), text: "Level Two"});
+        level2.size.set(200,180);
+        level2.font = 'menu';
+        level2.backgroundColor = Color.TRANSPARENT;
+        level2.borderColor = Color.TRANSPARENT;
+        level2.onClickEventId = MenuEvents.PLAY_LEVEL_2;
+        const level2Image = this.add.sprite(MenuImages.LEVEL2, MenuLayers.LEVEL_PREVIEW);
+        level2Image.position.set(center.x, 300);
+
+
+        const level3 = <Button> this.add.uiElement(UIElementType.BUTTON, MenuLayers.LEVELS, {position: new Vec2(center.x + 250, 300), text: "Level Three"});
+        level3.size.set(200,180);
+        level3.font = 'menu';
+        level3.backgroundColor = Color.TRANSPARENT;
+        level3.borderColor = Color.TRANSPARENT;
+        level3.onClickEventId = MenuEvents.PLAY_LEVEL_3;
+        const level3Image = this.add.sprite(MenuImages.LEVEL3, MenuLayers.LEVEL_PREVIEW);
+        level3Image.position.set(center.x + 250, 300);
+
+        const level4 = <Button> this.add.uiElement(UIElementType.BUTTON, MenuLayers.LEVELS, {position: new Vec2(center.x - 125, 530), text: "Level Four"});
+        level4.size.set(200,180);
+
+        const level5 = <Button> this.add.uiElement(UIElementType.BUTTON, MenuLayers.LEVELS, {position: new Vec2(center.x + 125, 530), text: "Level Five"});
+        level5.size.set(200,180);
+    }   
 
     unloadScene() {
         this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "menu"});
