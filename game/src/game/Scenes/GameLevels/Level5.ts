@@ -13,11 +13,15 @@ import LevelEndAI from "../../AI/LevelEnd/LevelEndAI";
 import GameOver from "../GameOver";
 import GameLevel from "./GameLevel";
 
+import PlayerStats from "../../AI/Player/PlayerStats";
+import PlayerInventory from "../../AI/Player/PlayerInventory";
+
 export default class Level5 extends GameLevel {
 
-    public static readonly PLAYER_SPAWN_POS = new Vec2(0, 0);
-    public static readonly STORE_LEVEL_POS = new Vec2(0, 0);
-    public static readonly NEXT_LEVEL_POS = new Vec2(0, 0);
+    public static readonly PLAYER_SPAWN_POS = new Vec2(896, 1824);
+    protected walls: OrthogonalTilemap;
+    // public static readonly STORE_LEVEL_POS = new Vec2(0, 0);
+    // public static readonly NEXT_LEVEL_POS = new Vec2(0, 0);
 
     /** SCENE METHODS */
 
@@ -29,6 +33,7 @@ export default class Level5 extends GameLevel {
 
     loadScene(): void {
         super.loadScene();
+        this.load.tilemap("level", "assets/tilemaps/LevelFive.json");
 
         /** TODO: Load level stuff here */
     }
@@ -49,27 +54,54 @@ export default class Level5 extends GameLevel {
     }
 
     initPlayer(): void {
-        throw new Error("Method not implemented.");
+        let scale = this.viewport.getZoomLevel();
+        let scalar = new Vec2(scale, scale);
+
+        this.player = this.add.animatedSprite("player", GameLayers.PRIMARY);
+		this.player.position.set(this.playerSpawn.x, this.playerSpawn.y);     
+		let playerCollider = new AABB(Vec2.ZERO, new Vec2(this.player.sizeWithZoom.x, this.player.sizeWithZoom.y).div(scalar).div(new Vec2(2, 2)));
+        this.player.addPhysics();
+		this.player.setCollisionShape(playerCollider);
+
+		this.player.addAI(PlayerController, {
+            inventory: new PlayerInventory(this.startingItems, 9),                             
+            stats: new PlayerStats(this.startingStats) 
+        });  
+
+        this.viewport.follow(this.player);
     }
 
     initStore(): void {}
 
     initMap(): void {
-        throw new Error("Method not implemented.");
+        let tilemapLayers = this.add.tilemap("level");
+        
+        // this.getTilemap("LowerWall").getLayer().setDepth(6);
+        this.getTilemap("GroundProps").getLayer().setDepth(0);
+        this.getTilemap("Floor").getLayer().setDepth(1);
+        this.getTilemap("UpperWall").getLayer().setDepth(1);
+        this.getTilemap("Arch").getLayer().setDepth(6);
+        
+
+
+         // Get the wall layer
+        this.walls = <OrthogonalTilemap>tilemapLayers[0].getItems()[0];
+
+        // Set the viewport bounds to the tilemap
+        let tilemapSize: Vec2 = this.walls.size;
+
+        this.viewport.setBounds(0, 0, tilemapSize.x, tilemapSize.y);
+
+        let gLayer = this.addLayer(GameLayers.NAVMESH_GRAPH, 10);
+        gLayer.setHidden(true);
     }
 
     initLevelLinks(): void {
-        this.nextLevel = this.add.sprite(GameSprites.LADDER, GameLayers.PRIMARY);
-        this.nextLevel.position.copy(Level5.NEXT_LEVEL_POS);
-        this.nextLevel.addAI(LevelEndAI, {player: this.player, range: 25, nextLevel: GameOver, nextLevelData: {
-            spawn: Vec2.ZERO, 
-            inventory: (<PlayerController>this.player._ai).playerInventory,
-            stats: (<PlayerController>this.player._ai).playerStats
-        }});
+
     }
 
     initEnemies(): void {
-        throw new Error("Method not implemented.");
+
     }
     
 }

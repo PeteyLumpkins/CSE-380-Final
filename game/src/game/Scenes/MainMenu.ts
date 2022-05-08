@@ -54,10 +54,9 @@ export default class MainMenu extends Scene {
         this.load.image(MenuImages.LOGO, "assets/images/logo_no_white.png");
         this.load.image(MenuImages.LEVEL1, "assets/images/level1preview.png");
         this.load.image(MenuImages.LEVEL2, "assets/images/level2preview.png");
-
         this.load.image(MenuImages.LEVEL3, "assets/images/level3preview.png");
-
         this.load.image(MenuImages.LEVEL4, "assets/images/level4preview.png");
+        this.load.image(MenuImages.LEVEL5, "assets/images/level5preview.png");
 
         this.load.audio("menu", "assets/music/menu.wav");
     }
@@ -173,7 +172,7 @@ export default class MainMenu extends Scene {
                 this.sceneManager.changeToScene(Level4, {spawn: new Vec2(213, 1681), stats: new PlayerStats({"HEALTH": 20, "MONEY": 0, "MOVE_SPEED": 3})});
             }
             if(event.type === MenuEvents.PLAY_LEVEL_5){
-                this.sceneManager.changeToScene(Level1, {spawn: new Vec2(448, 480), stats: new PlayerStats({"HEALTH": 20, "MONEY": 0, "MOVE_SPEED": 3})});
+                this.sceneManager.changeToScene(Level5, {spawn: new Vec2(896, 1824), stats: new PlayerStats({"HEALTH": 20, "MONEY": 0, "MOVE_SPEED": 3})});
             }
         }
     }
@@ -409,6 +408,12 @@ export default class MainMenu extends Scene {
 
         const level5 = <Button> this.add.uiElement(UIElementType.BUTTON, MenuLayers.LEVELS, {position: new Vec2(center.x + 125, 530), text: "Level Five"});
         level5.size.set(200,180);
+        level5.font='menu';
+        level5.backgroundColor=Color.TRANSPARENT;
+        level5.borderColor=Color.TRANSPARENT;
+        level5.onClickEventId = MenuEvents.PLAY_LEVEL_5;
+        const level5Image=this.add.sprite(MenuImages.LEVEL5, MenuLayers.LEVEL_PREVIEW);
+        level5Image.position.set(center.x+125, 530);
     }   
 
     unloadScene() {
