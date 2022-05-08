@@ -142,7 +142,7 @@
 			]
 		},
         {
-			"name": "attackLeft",
+			"name": "attackRight",
 			"repeat": true,
 			"frames": [
                 {

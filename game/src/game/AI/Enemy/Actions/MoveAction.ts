@@ -46,8 +46,6 @@ export default class MoveAction implements EnemyAction {
         let target = options["target"];
         let toPos = options["position"];
 
-        console.log(options);
-
         let path = target.getScene().getNavigationManager().getPath(this.navkey, target.position, toPos, this.direct);
         target.moveOnPath(this.speed*deltaT, path);
 
