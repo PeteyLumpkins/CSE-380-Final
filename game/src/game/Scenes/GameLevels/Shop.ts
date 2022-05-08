@@ -5,49 +5,34 @@ import PlayerController from "../../AI/Player/PlayerController";
 import PlayerInventory from "../../AI/Player/PlayerInventory";
 import PlayerStats from "../../AI/Player/PlayerStats";
 import StoreController from "../../AI/Store/StoreController";
-import { GameData, GameLayers, GameSprites, ItemSprites } from "../../GameEnums";
+import { GameLayers, GameSprites } from "../../GameEnums";
 
-import GameLevel from "../GameLevel";
+import GameLevel from "./GameLevel";
 import Level1 from "../GameLevels/Level1";
 
 import StoreItems from "../../AI/Store/StoreItems";
-import items from "./items.json";
 import LevelEndAI from "../../AI/LevelEnd/LevelEndAI";
 
 
 export default class Shop extends GameLevel {
+
+    public static readonly PLAYER_SPAWN_POS = new Vec2(160, 352);
+    public static readonly NEXT_LEVEL_POS = new Vec2(160, 352);
 
     protected walls: OrthogonalTilemap;
     private next: new (...args: any) => GameLevel;
     private nextLevelSpawn: Vec2;
 
     loadScene(): void {
+        super.loadScene();
         this.load.tilemap("level", "assets/tilemaps/shopLevel.json");
-
-        for (let i = 0; i < items.length; i++) {
-            this.load.image(items[i].key, items[i].path);
-        }
-
-        this.load.image("itembg", "assets/sprites/itembg.png");
-        this.load.image("itembarbg", "assets/sprites/itembarbg.png");
-
-        this.load.spritesheet("player", "assets/spritesheets/player/player.json");
         this.load.spritesheet("merchant", "assets/spritesheets/store/merchant.json");
-        this.load.spritesheet(GameSprites.STORE_BG, "assets/spritesheets/store/store_layer.json");
-        this.load.spritesheet("rat", "assets/spritesheets/enemies/rat.json");
-        this.load.object('item-data', 'assets/data/item-data.json');
-
-        this.load.object(GameData.STORE_ITEMS, "assets/data/item-data.json");
-
-        this.load.image(GameSprites.LADDER, "assets/sprites/EndOfLevel.png");
-
         this.load.audio("buySound", "assets/soundEffects/shopBuy.wav");
         this.load.audio("textbox", "assets/soundEffects/textbox.wav");
     }
 
     unloadScene(): void {
-        this.load.keepImage("itembg");
-        this.load.keepImage("itembarbg");
+        super.unloadScene();
     }
 
     initScene(init: Record<string, any>): void {
@@ -115,7 +100,7 @@ export default class Shop extends GameLevel {
 
     initLevelLinks(): void {
         this.nextLevel = this.add.sprite(GameSprites.LADDER, GameLayers.PRIMARY);
-        this.nextLevel.position.set(160, 352);
+        this.nextLevel.position.copy(Shop.NEXT_LEVEL_POS);
         // NextLevel should be the one that is passed into this file, as to loop back to the level it came from.
         this.nextLevel.addAI(LevelEndAI, {player: this.player, range: 25, nextLevel: this.next, nextLevelData: {
             spawn: this.nextLevelSpawn, 

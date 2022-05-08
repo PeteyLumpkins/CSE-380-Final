@@ -1,52 +1,39 @@
-import GameLevel from "../GameLevel";
+import GameLevel from "./GameLevel";
 import Level3 from "./Level3";
 
 import AABB from "../../../Wolfie2D/DataTypes/Shapes/AABB";
 import OrthogonalTilemap from "../../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 import LevelEndAI from "../../AI/LevelEnd/LevelEndAI";
 import PlayerController from "../../AI/Player/PlayerController";
-import { GameSprites, GameData, ItemSprites, GameLayers } from "../../GameEnums";
+import { GameSprites, GameData, GameLayers } from "../../GameEnums";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import PositionGraph from "../../../Wolfie2D/DataTypes/Graphs/PositionGraph";
 
 import Shop from "../GameLevels/Shop";
 import PlayerStats from "../../AI/Player/PlayerStats";
 import PlayerInventory from "../../AI/Player/PlayerInventory";
-import StoreItems from "../../AI/Store/StoreItems";
 
-
-import items from "./items.json";
 export default class Level2 extends GameLevel {
 
-
-    //! Current Positions:
-    // Player Spawn = (416, 416)
-    // Store Terminal = (832, 224)
-    // Level End = (2944, 1568)
+    public static readonly PLAYER_SPAWN_POS = new Vec2(254, 382);
+    public static readonly STORE_LEVEL_POS = new Vec2(1784, 160);
+    public static readonly NEXT_LEVEL_POS = new Vec2(184, 1442);
 
     protected walls: OrthogonalTilemap;
     protected navmeshGraph: PositionGraph;
 
-    private PLAYER_SPAWN: Vec2 = new Vec2(448, 480);
-
     loadScene(): void {
+        super.loadScene();
         this.load.tilemap("level", "assets/tilemaps/level1.2.json");
-
-        for (let i = 0; i < items.length; i++) {
-            this.load.image(items[i].key, items[i].path);
-        }
-
         // this.load.object(GameData.NAVMESH, "assets/data/navmeshLevel2.json"); 
-        // this.load.object(GameData.STORE_ITEMS, "assets/data/item-data.json");
-        // this.load.object("enemyData", "assets/data/enemyLevel2.json");
-        this.load.spritesheet("player", "assets/spritesheets/player/player.json");
-        this.load.spritesheet(GameSprites.STORE_BG, "assets/spritesheets/store/store_layer.json");
+    }
 
-        this.load.image(GameSprites.LADDER, "assets/sprites/EndOfLevel.png");
+    unloadScene(): void {
+        super.unloadScene();
     }
 
     initScene(init: Record<string, any>): void {
-        this.playerSpawn = init.spawn !== undefined ? init.spawn : Vec2.ZERO;
+        this.playerSpawn = init.spawn !== undefined ? init.spawn : Level2.PLAYER_SPAWN_POS;
         this.startingItems = init.inventory !== undefined ? init.inventory.getCopy() : [];
         this.startingStats = init.stats !== undefined ? init.stats.getCopy() : {};
     }
@@ -92,31 +79,31 @@ export default class Level2 extends GameLevel {
     }
 
     initLevelLinks(): void {
-        
+
         // SHOP LEVEL
         this.shop = this.add.sprite(GameSprites.LADDER, GameLayers.PRIMARY);
-        this.shop.position.set(1784, 160);
+        this.shop.position.copy(Level2.STORE_LEVEL_POS);
         this.shop.addAI(LevelEndAI, {player: this.player, range: 25, nextLevel: Shop, nextLevelData: {
-            spawn: new Vec2(160, 352), 
+            spawn: Shop.PLAYER_SPAWN_POS, 
             inventory: (<PlayerController>this.player._ai).playerInventory,
             stats: (<PlayerController>this.player._ai).playerStats,
 
             nextLevel: Level2,
-            nextLevelSpawn: new Vec2(1784, 160)
+            nextLevelSpawn: Level2.STORE_LEVEL_POS
         }});
 
         // NEXT LEVEL
         this.nextLevel = this.add.sprite(GameSprites.LADDER, GameLayers.PRIMARY);
-        this.nextLevel.position.set(184, 1442);
+        this.nextLevel.position.copy(Level2.NEXT_LEVEL_POS);
         this.nextLevel.addAI(LevelEndAI, {player: this.player, range: 25, nextLevel: Level3, nextLevelData: {
-            spawn: new Vec2(254, 382), 
+            spawn: Level3.PLAYER_SPAWN_POS, 
             inventory: (<PlayerController>this.player._ai).playerInventory,
             stats: (<PlayerController>this.player._ai).playerStats
         }});
     }
 
     initViewport(): void {
-        this.viewport.setZoomLevel(1);
+        this.viewport.setZoomLevel(3);
     }
 
 

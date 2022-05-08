@@ -1,6 +1,6 @@
 import Input from "../../Wolfie2D/Input/Input";
 import Scene from "../../Wolfie2D/Scene/Scene";
-import MainMenu from "./GameLevels/MainMenu";
+import MainMenu from "./MainMenu";
 
 export default class GameOver extends Scene {
     private score: number;

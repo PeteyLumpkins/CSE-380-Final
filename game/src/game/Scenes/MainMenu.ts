@@ -1,20 +1,20 @@
-import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
-import { UIElementType } from "../../../Wolfie2D/Nodes/UIElements/UIElementTypes";
-import Layer from "../../../Wolfie2D/Scene/Layer";
-import Scene from "../../../Wolfie2D/Scene/Scene";
-import Color from "../../../Wolfie2D/Utils/Color";
-import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
-import { MenuImages, MenuEvents, MenuLayers } from "../../GameEnums";
-import GameLevel from "../GameLevel";
-import Level1 from "./Level1";
-import PlayerStats from "../../AI/Player/PlayerStats";
-import Label from "../../../Wolfie2D/Nodes/UIElements/Label";
-import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
+import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
+import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
+import Layer from "../../Wolfie2D/Scene/Layer";
+import Scene from "../../Wolfie2D/Scene/Scene";
+import Color from "../../Wolfie2D/Utils/Color";
+import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
+import { MenuImages, MenuEvents, MenuLayers } from "../GameEnums";
+import GameLevel from "./GameLevels/GameLevel";
+import Level1 from "./GameLevels/Level1";
+import PlayerStats from "../AI/Player/PlayerStats";
+import Label from "../../Wolfie2D/Nodes/UIElements/Label";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 
 
 //! TODO: Testing purposes for the shop level
-import Shop from "./Shop";
-import Button from "../../../Wolfie2D/Nodes/UIElements/Button";
+import Shop from "./GameLevels/Shop";
+import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 
 /** 
  * TODO: The position of the logo should be moved on each of the screens so that it 

@@ -10,91 +10,51 @@ import { GraphicType } from "../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 import { RatAIOptionType } from "../../AI/Enemy/Rat/RatAI";
 
-import GameLevel from "../GameLevel";
+import GameLevel from "./GameLevel";
 import LevelEndAI from "../../AI/LevelEnd/LevelEndAI";
 
 import RatAI from "../../AI/Enemy/Rat/RatAI";
 
-import items from "./items.json";
 
 import Level2 from "./Level2";
 
 import PlayerStats from "../../AI/Player/PlayerStats";
 import PlayerInventory from "../../AI/Player/PlayerInventory";
-import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
 import Shop from "./Shop";
-import StoreItems from "../../AI/Store/StoreItems";
 
 
 export default class Level1 extends GameLevel {
 
-    // The wall layer of the tilemap to use for bullet visualization
+    public static readonly PLAYER_SPAWN_POS = new Vec2(160, 352);
+    public static readonly STORE_LEVEL_POS = new Vec2(1056, 1200);
+    public static readonly NEXT_LEVEL_POS = new Vec2(2960, 595);
+
     protected walls: OrthogonalTilemap;
     protected navmeshGraph: PositionGraph;
 
-    // private PLAYER_SPAWN: Vec2 = new Vec2(448, 480);    // Default Spawn
+
+    /** SCENE METHODS */
+    
+    initScene(init: Record<string, any>): void {
+        this.playerSpawn = init.spawn !== undefined ? init.spawn : Level1.PLAYER_SPAWN_POS;
+        this.startingItems = init.inventory !== undefined ? init.inventory.getCopy() : [];
+        this.startingStats = init.stats !== undefined ? init.stats.getCopy() : {};
+    }
 
     loadScene(){
-        
+        super.loadScene();
+
         this.load.tilemap("level", "assets/tilemaps/levelOne.json");
-
-        for (let i = 0; i < items.length; i++) {
-            this.load.image(items[i].key, items[i].path);
-        }
-
-        this.load.image("itembg", "assets/sprites/itembg.png");
-        this.load.image("itembarbg", "assets/sprites/itembarbg.png");
-        this.load.image("pausebg", "assets/sprites/pause_bg.png");
-
-        this.load.spritesheet("player", "assets/spritesheets/player/player.json");
-        this.load.spritesheet("store_terminal", "assets/spritesheets/store/store_terminal.json");
-        this.load.spritesheet("brokenGreenPipe", "assets/sprites/BrokenGreenPipe.json");
-        this.load.spritesheet(GameSprites.STORE_BG, "assets/spritesheets/store/store_layer.json");
-        this.load.spritesheet("rat", "assets/spritesheets/enemies/rat.json");
-        this.load.spritesheet("whiteRat", "assets/spritesheets/enemies/whiteRat.json");
-        this.load.spritesheet(GameSprites.COIN, "assets/spritesheets/coin.json");
-
-        this.load.object('item-data', 'assets/data/item-data.json');
         this.load.object(GameData.NAVMESH, "assets/data/navmeshLevel1.json"); 
-        this.load.object(GameData.STORE_ITEMS, "assets/data/item-data.json");
         this.load.object("enemyData", "assets/data/enemyLevel1.json");
-
-        this.load.image(GameSprites.LADDER, "assets/sprites/EndOfLevel.png");
-
         this.load.audio("level1", "assets/music/Level1.wav");
-        this.load.audio("hitSound", "assets/soundEffects/smack.wav");
-        this.load.audio("coinSound", "assets/soundEffects/coin.wav");
-        this.load.audio("footstep", "assets/soundEffects/footstep1.wav");
-        this.load.audio("buySound", "assets/soundEffects/shopBuy.wav");
-        this.load.audio("textbox", "assets/soundEffects/textbox.wav");
-        this.load.audio("itemdrop", "assets/soundEffects/itemDrop.wav");
-        this.load.audio("itempickup", "assets/soundEffects/itemPickup.wav");
-        this.load.audio("invalidbuy", "assets/soundEffects/invalidStore.wav");
     }
 
     unloadScene(): void {
-        for (let i = 0; i < items.length; i++) {
-            this.load.keepImage(items[i].key);
-        }
-
-        this.load.keepSpritesheet("player");
-        this.load.keepSpritesheet("store_terminal");
-        this.load.keepImage("itembg");
-        this.load.keepImage("itembarbg");
-        this.load.keepImage("pausebg");
-
-        this.load.keepSpritesheet(GameSprites.STORE_BG);
-        this.load.keepSpritesheet(GameSprites.COIN);
-        this.load.keepObject("item-data");
-        this.load.keepObject(GameData.STORE_ITEMS);
+        super.unloadScene();
         this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level1"});
-        console.log("Unloading!");
     }
 
-    /**
-     * The "Scene" class has an options parameter that we'll use to pass the players
-     * health and buffs through the game levels.
-     */
     startScene(){
         this.addLayer(GameLayers.PRIMARY, 5);
         
@@ -106,12 +66,7 @@ export default class Level1 extends GameLevel {
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level1", loop: true, holdReference: true});
     }
 
-    initScene(init: Record<string, any>): void {
-        console.log(init);
-        this.playerSpawn = init.spawn !== undefined ? init.spawn : Vec2.ZERO;
-        this.startingItems = init.inventory !== undefined ? init.inventory.getCopy() : [];
-        this.startingStats = init.stats !== undefined ? init.stats.getCopy() : {};
-    }
+    /** GAMELEVEL METHODS */
 
     initViewport(): void {
         this.viewport.setZoomLevel(3);
@@ -140,11 +95,9 @@ export default class Level1 extends GameLevel {
     initMap(): void {
 
         let tilemapLayers = this.add.tilemap("level");
-        // FIXME: the player should be able to move under the pipes but for some reason it doesn't work,
-        // I'm not sure what's up with the layering.
+        
         // this.getTilemap("LowerWall").getLayer().setDepth(6);
         this.getTilemap("Floor").getLayer().setDepth(1);
-
         this.getTilemap("PipeLayer1").getLayer().setDepth(6);
         this.getTilemap("UpperWall").getLayer().setDepth(1);
         this.getTilemap("GroundProps").getLayer().setDepth(1);
@@ -158,7 +111,7 @@ export default class Level1 extends GameLevel {
         this.viewport.setBounds(0, 0, tilemapSize.x, tilemapSize.y);
 
         let gLayer = this.addLayer(GameLayers.NAVMESH_GRAPH, 10);
-        // gLayer.setHidden(true);
+        gLayer.setHidden(true);
 
         let navmeshData = this.load.getObject(GameData.NAVMESH);
 
@@ -181,27 +134,26 @@ export default class Level1 extends GameLevel {
         let navmesh = new Navmesh(this.navmeshGraph);
 
         this.navManager.addNavigableEntity("navmesh", navmesh);
-        this.drawHitbox();
     }
 
     initLevelLinks(): void {
 
         // SHOP LEVEL
         this.shop = this.add.sprite(GameSprites.LADDER, GameLayers.PRIMARY);
-        this.shop.position.set(1056, 1184);
+        this.shop.position.copy(Level1.STORE_LEVEL_POS);
         this.shop.addAI(LevelEndAI, {player: this.player, range: 25, nextLevel: Shop, nextLevelData: {
-            spawn: new Vec2(160, 352), 
+            spawn: Shop.PLAYER_SPAWN_POS, 
             inventory: (<PlayerController>this.player._ai).playerInventory,
             stats: (<PlayerController>this.player._ai).playerStats,
             nextLevel: Level1,
-            nextLevelSpawn: new Vec2(1056, 1200)
+            nextLevelSpawn: Level1.STORE_LEVEL_POS
         }});
 
         // NEXT LEVEL
         this.nextLevel = this.add.sprite(GameSprites.LADDER, GameLayers.PRIMARY);
-        this.nextLevel.position.set(2960, 595);
+        this.nextLevel.position.copy(Level1.NEXT_LEVEL_POS);
         this.nextLevel.addAI(LevelEndAI, {player: this.player, range: 25, nextLevel: Level2, nextLevelData: {
-            spawn: new Vec2(254, 382), 
+            spawn: Level2.PLAYER_SPAWN_POS, 
             inventory: (<PlayerController>this.player._ai).playerInventory,
             stats: (<PlayerController>this.player._ai).playerStats
         }});

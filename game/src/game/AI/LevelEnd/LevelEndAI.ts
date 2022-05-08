@@ -2,7 +2,7 @@ import StateMachineAI from "../../../Wolfie2D/AI/StateMachineAI";
 import Emitter from "../../../Wolfie2D/Events/Emitter";
 import GameEvent from "../../../Wolfie2D/Events/GameEvent";
 import GameNode from "../../../Wolfie2D/Nodes/GameNode";
-import GameLevel from "../../Scenes/GameLevel";
+import GameLevel from "../../Scenes/GameLevels/GameLevel";
 import InLevelEnd from "./LevelEndStates/InLevelEnd";
 import OutLevelEnd from "./LevelEndStates/OutLevelEnd";
 
