@@ -9,29 +9,43 @@ import { GameEventType } from "../../../../Wolfie2D/Events/GameEventType";
 import AttackAction from "../Actions/AttackAction";
 import MoveAction from "../Actions/MoveAction";
 
-import { GooseAttack, GooseDead, GooseIdle, GooseKnockback, GooseMove } from "./GooseStates/GooseState";
-
 export enum GooseAIStates {
-    IDLE = "GOOSE_IDLE_STATE",
-    MOVE = "GOOSE_MOVING_STATE",
-    ATTACK = "GOOSE_ATTACKING_STATE",
+    IDLE_LEFT = "GOOSE_IDLE_LEFT_STATE",
+    IDLE_RIGHT = "GOOSE_IDLE_RIGHT_STATE",
+
+    MOVE_LEFT = "GOOSE_MOVE_LEFT_STATE",
+    MOVE_RIGHT = "GOOSE_MOVE_RIGHT_STATE",
+
+    ATTACK_LEFT = "GOOSE_ATTACK_LEFT_STATE",
+    ATTACK_RIGHT = "GOOSE_ATTACK_RIGHT_STATE",
+
     KNOCK_BACK = "GOOSE_KNOCKED_BACK_STATE",
     DEAD = "GOOSE_DEAD_STATE"
 }
 
 export default class GooseAI extends EnemyAI {
 
-    /** Goose stats/options should go here */
+    /** Actions that the goose can perform/undergo kinda will go here? */
+    attackAction = new AttackAction({amount: 2});
+    moveAction = new MoveAction("navmesh", 100, true);
+    knockbackAction = new MoveAction("navmesh", 200, true);
 
+    /** Custom attributes specific to the goose ai go here */
+    maxHealth: number;
+    health: number;
+
+    sightRange: number;
+    moveSpeed: number;
+    
+    attackRange: number;
+    attackDamage: number;
+
+    /** Cooldown timers for the knockback and attack of the goose */
+    attackCooldownTimer: Timer = new Timer(2000);
+    knockbackCooldownTimer: Timer = new Timer(2000);
 
     initStates(): void {
-        this.addState(GooseAIStates.IDLE, new GooseIdle(this, this.owner));
-        this.addState(GooseAIStates.MOVE, new GooseMove(this, this.owner));
-        this.addState(GooseAIStates.ATTACK, new GooseAttack(this, this.owner));
-        this.addState(GooseAIStates.KNOCK_BACK, new GooseKnockback(this, this.owner));
-        this.addState(GooseAIStates.DEAD, new GooseDead(this, this.owner));
-
-        this.initialize(GooseAIStates.IDLE);
+        
     }
 
     initOptions(options: Record<string, any>): void {
