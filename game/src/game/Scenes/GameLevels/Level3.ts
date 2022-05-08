@@ -15,6 +15,7 @@ import PlayerStats from "../../AI/Player/PlayerStats";
 import PlayerInventory from "../../AI/Player/PlayerInventory";
 import Shop from "./Shop";
 import Level4 from "./Level4";
+import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 
 
 export default class Level3 extends GameLevel {
@@ -30,7 +31,6 @@ export default class Level3 extends GameLevel {
     loadScene(){
         super.loadScene();
         this.load.tilemap("level", "assets/tilemaps/levelThree.json");
-        
         this.load.object(GameData.NAVMESH, "assets/data/navmeshLevel3.json");
     }
 
@@ -97,29 +97,29 @@ export default class Level3 extends GameLevel {
 
         this.viewport.setBounds(0, 0, tilemapSize.x, tilemapSize.y);
 
-        // let gLayer = this.addLayer(GameLayers.NAVMESH_GRAPH, 10);
-        // gLayer.setHidden(true);
-        // let navmeshData = this.load.getObject(GameData.NAVMESH);
+        let gLayer = this.addLayer(GameLayers.NAVMESH_GRAPH, 10);
+        gLayer.setHidden(true);
+        let navmeshData = this.load.getObject(GameData.NAVMESH);
 
-        //  // Create the graph
-        // this.navmeshGraph = new PositionGraph();
+         // Create the graph
+        this.navmeshGraph = new PositionGraph();
 
-        // // Add all nodes to our graph
-        // for(let node of navmeshData.nodes){
-        //     this.navmeshGraph.addPositionedNode(new Vec2(node[0], node[1]));
-        //     this.add.graphic(GraphicType.POINT, GameLayers.NAVMESH_GRAPH, {position: new Vec2(node[0], node[1])});
-        // }
+        // Add all nodes to our graph
+        for(let node of navmeshData.nodes){
+            this.navmeshGraph.addPositionedNode(new Vec2(node[0], node[1]));
+            this.add.graphic(GraphicType.POINT, GameLayers.NAVMESH_GRAPH, {position: new Vec2(node[0], node[1])});
+        }
 
-        // // Add all edges to our graph
-        // for(let edge of navmeshData.edges){
-        //     this.navmeshGraph.addEdge(edge[0], edge[1]);
-        //     this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: this.navmeshGraph.getNodePosition(edge[0]), end: this.navmeshGraph.getNodePosition(edge[1])})
-        // }
+        // Add all edges to our graph
+        for(let edge of navmeshData.edges){
+            this.navmeshGraph.addEdge(edge[0], edge[1]);
+            this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: this.navmeshGraph.getNodePosition(edge[0]), end: this.navmeshGraph.getNodePosition(edge[1])})
+        }
 
-        // // Set this graph as a navigable entity
-        // let navmesh = new Navmesh(this.navmeshGraph);
+        // Set this graph as a navigable entity
+        let navmesh = new Navmesh(this.navmeshGraph);
 
-        // this.navManager.addNavigableEntity("navmesh", navmesh);
+        this.navManager.addNavigableEntity("navmesh", navmesh);
     }
 
     initLevelLinks(): void {
@@ -144,6 +144,15 @@ export default class Level3 extends GameLevel {
     }
 
     initEnemies(): void {
+        // this.enemies = new Array<AnimatedSprite>();
+        // let enemyData = this.load.getObject("enemyData");
+        // let options = RatAI.optionsBuilder(RatAIOptionType.FAST, this.player);
 
+        // for (let i = 0; i < enemyData.enemies.length; i++) {
+        //     this.enemies[i] = this.add.animatedSprite("whiteRat", GameLayers.PRIMARY);
+        //     this.enemies[i].position.set(enemyData.enemies[i].position[0], enemyData.enemies[i].position[1]);
+        //     this.enemies[i].addAI(RatAI, options);
+        //     this.enemies[i].addPhysics();
+        // }
     }
 }
