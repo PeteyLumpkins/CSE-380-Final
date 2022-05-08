@@ -12,6 +12,10 @@ import PositionGraph from "../../../Wolfie2D/DataTypes/Graphs/PositionGraph";
 import Shop from "../GameLevels/Shop";
 import PlayerStats from "../../AI/Player/PlayerStats";
 import PlayerInventory from "../../AI/Player/PlayerInventory";
+import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import RatAI, { RatAIOptionType } from "../../AI/Enemy/Rat/RatAI";
+import { GraphicType } from "../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
+import Navmesh from "../../../Wolfie2D/Pathfinding/Navmesh";
 
 export default class Level2 extends GameLevel {
 
@@ -25,7 +29,8 @@ export default class Level2 extends GameLevel {
     loadScene(): void {
         super.loadScene();
         this.load.tilemap("level", "assets/tilemaps/level1.2.json");
-        // this.load.object(GameData.NAVMESH, "assets/data/navmeshLevel2.json"); 
+        this.load.object("enemyData", "assets/data/enemyLevel1.2.json");
+        this.load.object(GameData.NAVMESH, "assets/data/navmeshLevel1.2.json"); 
     }
 
     unloadScene(): void {
@@ -57,7 +62,18 @@ export default class Level2 extends GameLevel {
         this.viewport.follow(this.player);
     }
 
-    initEnemies(): void {}
+    initEnemies(): void {
+        this.enemies = new Array<AnimatedSprite>();
+        let enemyData = this.load.getObject("enemyData");
+        let options = RatAI.optionsBuilder(RatAIOptionType.FAST, this.player);
+
+        for (let i = 0; i < enemyData.enemies.length; i++) {
+            this.enemies[i] = this.add.animatedSprite("whiteRat", GameLayers.PRIMARY);
+            this.enemies[i].position.set(enemyData.enemies[i].position[0], enemyData.enemies[i].position[1]);
+            this.enemies[i].addAI(RatAI, options);
+            this.enemies[i].addPhysics();
+        }
+    }
 
     initStore(): void {
     }
@@ -69,13 +85,37 @@ export default class Level2 extends GameLevel {
         this.getTilemap("UpperWall").getLayer().setDepth(1);
         this.getTilemap("UpperWallPipes").getLayer().setDepth(6);
 
-         // Get the wall layer
         this.walls = <OrthogonalTilemap>tilemapLayers[0].getItems()[0];
 
         // Set the viewport bounds to the tilemap
         let tilemapSize: Vec2 = this.walls.size;
 
         this.viewport.setBounds(0, 0, tilemapSize.x, tilemapSize.y);
+
+        let gLayer = this.addLayer(GameLayers.NAVMESH_GRAPH, 10);
+        gLayer.setHidden(true);
+
+        let navmeshData = this.load.getObject(GameData.NAVMESH);
+
+         // Create the graph
+        this.navmeshGraph = new PositionGraph();
+
+        // Add all nodes to our graph
+        for(let node of navmeshData.nodes){
+            this.navmeshGraph.addPositionedNode(new Vec2(node[0], node[1]));
+            this.add.graphic(GraphicType.POINT, GameLayers.NAVMESH_GRAPH, {position: new Vec2(node[0], node[1])});
+        }
+
+        // Add all edges to our graph
+        for(let edge of navmeshData.edges){
+            this.navmeshGraph.addEdge(edge[0], edge[1]);
+            this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: this.navmeshGraph.getNodePosition(edge[0]), end: this.navmeshGraph.getNodePosition(edge[1])})
+        }
+
+        // Set this graph as a navigable entity
+        let navmesh = new Navmesh(this.navmeshGraph);
+
+        this.navManager.addNavigableEntity("navmesh", navmesh);
     }
 
     initLevelLinks(): void {
