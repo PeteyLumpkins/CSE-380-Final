@@ -1,5 +1,5 @@
-import GameEvent from "../../../../../Wolfie2D/Events/GameEvent";
-import GooseState from "./GooseState"
+import GameEvent from "../../../../../../Wolfie2D/Events/GameEvent";
+import GooseState from "../GooseState"
 
 export default class GooseMove extends GooseState {
 

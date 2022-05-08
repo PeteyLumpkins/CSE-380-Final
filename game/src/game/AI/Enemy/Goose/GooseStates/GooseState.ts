@@ -20,11 +20,3 @@ export default abstract class GooseState extends State {
 
 }
 
-import GooseAttack from "./GooseAttack";
-import GooseDead from "./GooseDead";
-import GooseIdle from "./GooseIdle";
-import GooseKnockback from "./GooseKnockback";
-import GooseMove from "./GooseMove";
-
-export { GooseAttack, GooseDead, GooseIdle, GooseKnockback, GooseMove }
-

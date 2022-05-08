@@ -30,6 +30,7 @@ export default class Level3 extends GameLevel {
     loadScene(){
         super.loadScene();
         this.load.tilemap("level", "assets/tilemaps/levelThree.json");
+        
         this.load.object(GameData.NAVMESH, "assets/data/navmeshLevel3.json");
     }
 
