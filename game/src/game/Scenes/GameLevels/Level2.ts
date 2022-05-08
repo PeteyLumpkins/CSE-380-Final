@@ -30,7 +30,7 @@ export default class Level2 extends GameLevel {
     private PLAYER_SPAWN: Vec2 = new Vec2(448, 480);
 
     loadScene(): void {
-        this.load.tilemap("level", "assets/tilemaps/levelTwo.json");
+        this.load.tilemap("level", "assets/tilemaps/level1.2.json");
 
         for (let i = 0; i < items.length; i++) {
             this.load.image(items[i].key, items[i].path);
@@ -61,8 +61,8 @@ export default class Level2 extends GameLevel {
         let scalar = new Vec2(scale, scale);
 
         this.player = this.add.animatedSprite("player", GameLayers.PRIMARY);
-		this.player.position.set(416, 416);
-		let playerCollider = new AABB(Vec2.ZERO, new Vec2(this.player.sizeWithZoom.x, this.player.sizeWithZoom.y).div(scalar).div(new Vec2(3, 3)));
+		this.player.position.set(254, 382);     
+		let playerCollider = new AABB(Vec2.ZERO, new Vec2(this.player.sizeWithZoom.x, this.player.sizeWithZoom.y).div(scalar).div(new Vec2(2, 2)));
         this.player.addPhysics();
 		this.player.setCollisionShape(playerCollider);
 
@@ -80,6 +80,7 @@ export default class Level2 extends GameLevel {
 
         this.getTilemap("Floor").getLayer().setDepth(1);
         this.getTilemap("UpperWall").getLayer().setDepth(1);
+        this.getTilemap("UpperWallPipes").getLayer().setDepth(6);
 
          // Get the wall layer
         this.walls = <OrthogonalTilemap>tilemapLayers[0].getItems()[0];
