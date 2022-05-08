@@ -1,0 +1,188 @@
+{
+	"name": "goose",
+	"spriteSheetImage": "goose.png",
+	"spriteWidth": 128,
+	"spriteHeight": 64,
+	"leftBuffer": 0,
+	"rightBuffer": 0,
+	"topBuffer": 0,
+	"bottomBuffer": 0,
+	"columns": 6,
+	"rows": 6,
+	"animations": [
+        {
+			"name": "idle_not_aggro",
+			"repeat": true,
+			"frames": [
+                {
+                    "index": 0,
+                    "duration": 10
+                },
+                {
+                    "index": 1,
+                    "duration": 10
+                },
+                {
+                    "index": 2,
+                    "duration": 10
+                }
+			]
+		},        
+        {
+			"name": "idle_aggro",
+			"repeat": true,
+			"frames": [
+                {
+                    "index": 3,
+                    "duration": 10
+                },
+                {
+                    "index": 4,
+                    "duration": 10
+                },
+                {
+                    "index": 5,
+                    "duration": 10
+                }
+			]
+		},
+        {
+			"name": "WalkLeft",
+			"repeat": true,
+			"frames": [
+                {
+                    "index": 5,
+                    "duration": 10
+                },
+                {
+                    "index": 6,
+                    "duration": 10
+                },
+                {
+                    "index": 7,
+                    "duration": 10
+                },
+                {
+                    "index": 8,
+                    "duration": 10
+                },
+                {
+                    "index": 9,
+                    "duration": 10
+                }
+			]
+		},
+        {
+			"name": "attackLeft",
+			"repeat": true,
+			"frames": [
+                {
+                    "index": 10,
+                    "duration": 10
+                },
+                {
+                    "index": 11,
+                    "duration": 10
+                },
+                {
+                    "index": 12,
+                    "duration": 10
+                },
+                {
+                    "index": 13,
+                    "duration": 10
+                },
+                {
+                    "index": 14,
+                    "duration": 10
+                },
+                {
+                    "index": 15,
+                    "duration": 10
+                },
+                {
+                    "index": 16,
+                    "duration": 10
+                },
+                {
+                    "index": 17,
+                    "duration": 10
+                },
+                {
+                    "index": 18,
+                    "duration": 10
+                }
+			]
+		},
+		{
+			"name": "WalkRight",
+			"repeat": true,
+			"frames": [
+				{
+					"index": 19,
+					"duration": 10
+				},
+				{
+					"index": 20,
+					"duration": 10
+				},
+				{
+					"index": 21,
+					"duration": 10
+				},
+				{
+					"index": 22,
+					"duration": 10
+				},
+				{
+					"index": 23,
+					"duration": 10
+				}
+
+			]
+		},
+        {
+			"name": "attackLeft",
+			"repeat": true,
+			"frames": [
+                {
+                    "index": 24,
+                    "duration": 10
+                },
+                {
+                    "index": 25,
+                    "duration": 10
+                },
+                {
+                    "index": 26,
+                    "duration": 10
+                },
+                {
+                    "index": 27,
+                    "duration": 10
+                },
+                {
+                    "index": 28,
+                    "duration": 10
+                },
+                {
+                    "index": 29,
+                    "duration": 10
+                },
+                {
+                    "index": 30,
+                    "duration": 10
+                },
+                {
+                    "index": 31,
+                    "duration": 10
+                },
+                {
+                    "index": 32,
+                    "duration": 10
+                }
+			]
+		}
+		
+    ]
+}
