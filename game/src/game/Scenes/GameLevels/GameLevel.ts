@@ -1,24 +1,26 @@
-import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
-import Scene from "../../Wolfie2D/Scene/Scene";
-import Color from "../../Wolfie2D/Utils/Color";
-import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
-import Label from "../../Wolfie2D/Nodes/UIElements/Label";
-import Button from "../../Wolfie2D/Nodes/UIElements/Button";
-import GameEvent from "../../Wolfie2D/Events/GameEvent";
-import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
-import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
-import GameNode from "../../Wolfie2D/Nodes/GameNode";
+import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
+import Scene from "../../../Wolfie2D/Scene/Scene";
+import Color from "../../../Wolfie2D/Utils/Color";
+import { UIElementType } from "../../../Wolfie2D/Nodes/UIElements/UIElementTypes";
+import Label from "../../../Wolfie2D/Nodes/UIElements/Label";
+import Button from "../../../Wolfie2D/Nodes/UIElements/Button";
+import GameEvent from "../../../Wolfie2D/Events/GameEvent";
+import Sprite from "../../../Wolfie2D/Nodes/Sprites/Sprite";
+import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import GameNode from "../../../Wolfie2D/Nodes/GameNode";
 
-import { GameEvents, GameLayers, GameSprites, GameData, StoreEvents, ItemSprites } from "../GameEnums";
-import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
-import { PlayerEvents } from "../AI/Player/PlayerController";
+import items from "./items.json";
 
-import GameOver from "./GameOver";
+import { GameEvents, GameLayers, GameSprites, GameData, StoreEvents, ItemSprites } from "../../GameEnums";
+import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
+import { PlayerEvents } from "../../AI/Player/PlayerController";
 
-import PlayerController from "../AI/Player/PlayerController";
-import InventoryManager from "../GameSystems/InventoryManager";
-import PauseManager from "../GameSystems/PauseManager";
-import StoreManager from "../GameSystems/StoreManager";
+import GameOver from "../GameOver";
+
+import PlayerController from "../../AI/Player/PlayerController";
+import InventoryManager from "../../GameSystems/InventoryManager";
+import PauseManager from "../../GameSystems/PauseManager";
+import StoreManager from "../../GameSystems/StoreManager";
 
 
 export enum UILayers {
@@ -73,13 +75,87 @@ export default abstract class GameLevel extends Scene {
     protected pauseManager: PauseManager;
     protected inventoryManager: InventoryManager;
 
-    loadScene(): void {}
+    /**
+     * Any shared resources between the levels of the game will be loaded and kept by each of the 
+     * classes that extend the GameLevel class. Each class extending the GameLevel class will probs
+     * have it's own level specific data that it also needs to load.
+     * 
+     * The idea is to group the common loads in the top level game level class, and specific stuff 
+     * in each of the specific levels (like maps and map data)
+     */
+    loadScene(): void {
+
+        /** Loading all the images / static sprites that all the levels will need */
+        this.load.image(GameSprites.LADDER, "assets/sprites/EndOfLevel.png");
+        for (let i = 0; i < items.length; i++) {
+            this.load.image(items[i].key, items[i].path);
+        }
+        this.load.image("itembg", "assets/sprites/itembg.png");
+        this.load.image("itembarbg", "assets/sprites/itembarbg.png");
+        this.load.image("pausebg", "assets/sprites/pause_bg.png");
+
+        /** Loads any spitesheets that all the levels will need */
+        this.load.spritesheet("player", "assets/spritesheets/player/player.json");
+        this.load.spritesheet("store_terminal", "assets/spritesheets/store/store_terminal.json");
+        this.load.spritesheet("brokenGreenPipe", "assets/sprites/BrokenGreenPipe.json");
+        this.load.spritesheet(GameSprites.STORE_BG, "assets/spritesheets/store/store_layer.json");
+        this.load.spritesheet("rat", "assets/spritesheets/enemies/rat.json");
+        this.load.spritesheet("whiteRat", "assets/spritesheets/enemies/whiteRat.json");
+        this.load.spritesheet(GameSprites.COIN, "assets/spritesheets/coin.json");
+
+        /** Loads any data/object files that all the levels will need - probs just item data */
+        this.load.object('item-data', 'assets/data/item-data.json');
+        this.load.object(GameData.STORE_ITEMS, "assets/data/item-data.json");
+
+        /** Loading all of the sound effects that all the levels will need */
+        this.load.audio("hitSound", "assets/soundEffects/smack.wav");
+        this.load.audio("coinSound", "assets/soundEffects/coin.wav");
+        this.load.audio("footstep", "assets/soundEffects/footstep1.wav");
+        this.load.audio("buySound", "assets/soundEffects/shopBuy.wav");
+        this.load.audio("textbox", "assets/soundEffects/textbox.wav");
+        this.load.audio("itemdrop", "assets/soundEffects/itemDrop.wav");
+        this.load.audio("itempickup", "assets/soundEffects/itemPickup.wav");
+        this.load.audio("invalidbuy", "assets/soundEffects/invalidStore.wav");
+    }
+
+    unloadScene(): void {
+
+        /** Keeps all the images the next level will need */
+        this.load.image(GameSprites.LADDER, "assets/sprites/EndOfLevel.png");
+        for (let i = 0; i < items.length; i++) {
+            this.load.keepImage(items[i].key);
+        }
+        this.load.keepImage("itembg");
+        this.load.keepImage("itembarbg");
+        this.load.keepImage("pausebg");
+
+        /** Keeps all the spritesheets we'll need later */
+        this.load.keepSpritesheet("player");
+        this.load.keepSpritesheet("store_terminal");
+        this.load.keepSpritesheet("brokenGreenPipe");
+        this.load.keepSpritesheet(GameSprites.STORE_BG);
+        this.load.keepSpritesheet("rat");
+        this.load.keepSpritesheet("whiteRat");
+        this.load.keepSpritesheet(GameSprites.COIN);
+
+        /** Keeps the objects we'll need later */
+        this.load.keepObject('item-data');
+        this.load.keepObject(GameData.STORE_ITEMS);
+
+        /** Keeping the sound effects */
+        this.load.keepAudio("hitSound");
+        this.load.keepAudio("coinSound");
+        this.load.keepAudio("footstep");
+        this.load.keepAudio("buySound");
+        this.load.keepAudio("textbox");
+        this.load.keepAudio("itemdrop");
+        this.load.keepAudio("itempickup");
+        this.load.keepAudio("invalidbuy");
+    }
 
     startScene(): void {
 
-        console.log("BEFORE SETTING VIEW: " + this.viewport.getZoomLevel());
         this.initViewport();
-        console.log("AFTER SETTING VIEW: " + this.viewport.getZoomLevel());
 
         this.initPlayer();
         this.addPrimaryUILayers();
@@ -170,7 +246,6 @@ export default abstract class GameLevel extends Scene {
     }
 
     private subscribeToEvents(): void {
-        console.log("Subscribing to events");
         this.receiver.subscribe(GameEvents.CHANGE_LEVEL);
         this.receiver.subscribe(GameEvents.PAUSE);
 

@@ -137,7 +137,6 @@ export default class RatAI extends EnemyAI {
             case RatAIOptionType.DEFAULT: {
                 optionsTemplate = {
                     target: target,
-                    
                     health: 5,
                     sightRange: 100,
                     swarmRange: 50,
@@ -150,7 +149,6 @@ export default class RatAI extends EnemyAI {
             case RatAIOptionType.FAST: {
                 optionsTemplate = {
                     target: target,
-                    
                     health: 2,
                     sightRange: 200,
                     swarmRange: 50,

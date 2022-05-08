@@ -12,7 +12,7 @@ import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 
-import MainMenu from "../Scenes/GameLevels/MainMenu";
+import MainMenu from "../Scenes/MainMenu";
 import { GameEvents } from "../GameEnums";
 
 import Color from "../../Wolfie2D/Utils/Color";

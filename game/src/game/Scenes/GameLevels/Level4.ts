@@ -11,47 +11,42 @@ import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 import GameLevel from "./GameLevel";
 import LevelEndAI from "../../AI/LevelEnd/LevelEndAI";
 
+import Level3 from "./Level3";
+
 import PlayerStats from "../../AI/Player/PlayerStats";
 import PlayerInventory from "../../AI/Player/PlayerInventory";
 import Shop from "./Shop";
-import Level4 from "./Level4";
+import Level5 from "./Level5";
 
+export default class Level4 extends GameLevel {
 
-export default class Level3 extends GameLevel {
+    public static readonly PLAYER_SPAWN_POS = new Vec2(0, 0);
+    public static readonly STORE_LEVEL_POS = new Vec2(0, 0);
+    public static readonly NEXT_LEVEL_POS = new Vec2(0, 0);
 
-    public static readonly PLAYER_SPAWN_POS = new Vec2(416, 416);
-    public static readonly STORE_LEVEL_POS = new Vec2(2848, 704);
-    public static readonly NEXT_LEVEL_POS = new Vec2(2944, 1600);
-
-    // The wall layer of the tilemap to use for bullet visualization
     protected walls: OrthogonalTilemap;
     protected navmeshGraph: PositionGraph;
 
-    loadScene(){
+    initScene(init: Record<string, any>): void {
+        this.playerSpawn = init.spawn !== undefined ? init.spawn : Level4.PLAYER_SPAWN_POS;
+        this.startingItems = init.inventory !== undefined ? init.inventory.getCopy() : [];
+        this.startingStats = init.stats !== undefined ? init.stats.getCopy() : {};
+    }
+
+    loadScene(): void {
         super.loadScene();
-        this.load.tilemap("level", "assets/tilemaps/levelThree.json");
-        this.load.object(GameData.NAVMESH, "assets/data/navmeshLevel3.json");
+
+        // TODO: Load level stuff here
+        this.load.tilemap("level", "assets/tilemaps/Level32.json");
     }
 
     unloadScene(): void {
-        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level3"});
-        console.log("Unloading!");
+        super.unloadScene();
     }
 
-    /**
-     * The "Scene" class has an options parameter that we'll use to pass the players
-     * health and buffs through the game levels.
-     */
-    startScene(){
+    startScene(): void {
         this.addLayer(GameLayers.PRIMARY, 5);
         super.startScene();
-        // this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level1", loop: true, holdReference: true});
-    }
-
-    initScene(init: Record<string, any>): void {
-        this.playerSpawn = init.spawn !== undefined ? init.spawn : Level3.PLAYER_SPAWN_POS;
-        this.startingItems = init.inventory !== undefined ? init.inventory.getCopy() : [];
-        this.startingStats = init.stats !== undefined ? init.stats.getCopy() : {};
     }
 
     initViewport(): void {
@@ -76,12 +71,9 @@ export default class Level3 extends GameLevel {
         this.viewport.follow(this.player);
     }
 
-    initStore(): void {
-
-    }
+    initStore(): void {}
 
     initMap(): void {
-
         let tilemapLayers = this.add.tilemap("level");
         
         // this.getTilemap("LowerWall").getLayer().setDepth(6);
@@ -96,53 +88,53 @@ export default class Level3 extends GameLevel {
 
         this.viewport.setBounds(0, 0, tilemapSize.x, tilemapSize.y);
 
-        // let gLayer = this.addLayer(GameLayers.NAVMESH_GRAPH, 10);
-        // gLayer.setHidden(true);
-        // let navmeshData = this.load.getObject(GameData.NAVMESH);
+        let gLayer = this.addLayer(GameLayers.NAVMESH_GRAPH, 10);
+        gLayer.setHidden(true);
 
-        //  // Create the graph
-        // this.navmeshGraph = new PositionGraph();
+        let navmeshData = this.load.getObject(GameData.NAVMESH);
 
-        // // Add all nodes to our graph
-        // for(let node of navmeshData.nodes){
-        //     this.navmeshGraph.addPositionedNode(new Vec2(node[0], node[1]));
-        //     this.add.graphic(GraphicType.POINT, GameLayers.NAVMESH_GRAPH, {position: new Vec2(node[0], node[1])});
-        // }
+         // Create the graph
+        this.navmeshGraph = new PositionGraph();
 
-        // // Add all edges to our graph
-        // for(let edge of navmeshData.edges){
-        //     this.navmeshGraph.addEdge(edge[0], edge[1]);
-        //     this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: this.navmeshGraph.getNodePosition(edge[0]), end: this.navmeshGraph.getNodePosition(edge[1])})
-        // }
+        // Add all nodes to our graph
+        for(let node of navmeshData.nodes){
+            this.navmeshGraph.addPositionedNode(new Vec2(node[0], node[1]));
+            this.add.graphic(GraphicType.POINT, GameLayers.NAVMESH_GRAPH, {position: new Vec2(node[0], node[1])});
+        }
 
-        // // Set this graph as a navigable entity
-        // let navmesh = new Navmesh(this.navmeshGraph);
+        // Add all edges to our graph
+        for(let edge of navmeshData.edges){
+            this.navmeshGraph.addEdge(edge[0], edge[1]);
+            this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: this.navmeshGraph.getNodePosition(edge[0]), end: this.navmeshGraph.getNodePosition(edge[1])})
+        }
 
-        // this.navManager.addNavigableEntity("navmesh", navmesh);
+        // Set this graph as a navigable entity
+        let navmesh = new Navmesh(this.navmeshGraph);
+
+        this.navManager.addNavigableEntity("navmesh", navmesh);
     }
 
     initLevelLinks(): void {
         this.shop = this.add.sprite(GameSprites.LADDER, GameLayers.PRIMARY);
-        this.shop.position.copy(Level3.STORE_LEVEL_POS);
+        this.shop.position.copy(Level4.STORE_LEVEL_POS);
         this.shop.addAI(LevelEndAI, {player: this.player, range: 25, nextLevel: Shop, nextLevelData: {
             spawn: Shop.PLAYER_SPAWN_POS, 
             inventory: (<PlayerController>this.player._ai).playerInventory,
             stats: (<PlayerController>this.player._ai).playerStats,
 
             nextLevel: Level3,
-            nextLevelSpawn: Level3.STORE_LEVEL_POS
+            nextLevelSpawn: Level4.STORE_LEVEL_POS
         }});
 
         this.nextLevel = this.add.sprite(GameSprites.LADDER, GameLayers.PRIMARY);
-        this.nextLevel.position.copy(Level3.NEXT_LEVEL_POS);
-        this.nextLevel.addAI(LevelEndAI, {player: this.player, range: 25, nextLevel: Level4, nextLevelData: {
-            spawn: Level4.PLAYER_SPAWN_POS, 
+        this.nextLevel.position.copy(Level4.NEXT_LEVEL_POS);
+        this.nextLevel.addAI(LevelEndAI, {player: this.player, range: 25, nextLevel: Level5, nextLevelData: {
+            spawn: Level5.PLAYER_SPAWN_POS, 
             inventory: (<PlayerController>this.player._ai).playerInventory,
             stats: (<PlayerController>this.player._ai).playerStats
         }});
     }
 
-    initEnemies(): void {
+    initEnemies(): void {}
 
-    }
 }
