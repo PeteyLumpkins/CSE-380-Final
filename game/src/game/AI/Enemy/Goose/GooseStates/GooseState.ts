@@ -18,7 +18,11 @@ export default abstract class GooseState extends State {
         this.owner = owner;
     }
 
-    update(deltaT: number): void {}
+    update(deltaT: number): void {
+        if(this.isDead()) {
+            this.finished(GooseAIStates.DEAD);
+        }
+    }
 
     protected attackReady(): boolean {
         return this.parent.attackCooldownTimer.isStopped();
@@ -42,11 +46,21 @@ export default abstract class GooseState extends State {
 
 }
 
-import GooseAttack from "./Attack/GooseAttack";
+import { GooseAttackRight, GooseAttackLeft } from "./Attack/GooseAttack";
+import { GooseMoveRight, GooseMoveLeft } from "./Move/GooseMove";
+import { NormalGooseIdle, DemonGooseIdle } from "./Idle/GooseIdle"
 import GooseDead from "./GooseDead";
-import GooseIdle from "./Idle/NormalGooseIdle";
-import GooseKnockback from "./GooseKnockback";
-import GooseMove from "./Move/GooseMove";
 
-export { GooseAttack, GooseDead, GooseIdle, GooseKnockback, GooseMove }
+export { 
+    GooseAttackRight, 
+    GooseAttackLeft, 
+     
+    GooseMoveRight, 
+    GooseMoveLeft,
+
+    NormalGooseIdle, 
+    DemonGooseIdle,
+
+    GooseDead
+} 
 

@@ -24,3 +24,9 @@ export default abstract class GooseAttack extends GooseState {
     
     abstract attack(dir: Vec2): void;
 }
+
+
+import GooseAttackLeft from "./GooseAttackLeft";
+import GooseAttackRight from "./GooseAttackRight";
+
+export { GooseAttackRight, GooseAttackLeft } 

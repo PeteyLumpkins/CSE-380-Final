@@ -6,15 +6,12 @@ import { GooseAIStates } from "../../GooseAI"
 
 export default abstract class GooseIdle extends GooseState {
 
-    /** Defines whether or not this goose can move or not - @implement */
-    abstract canMove(): boolean;
-
     update(deltaT: number): void {
         super.update(deltaT);
 
-        if (this.canMove()) {
-            
-            let dir = this.owner.position.dirTo(this.parent.target.position);
+        let dir = this.owner.position.dirTo(this.parent.target.position);
+
+        if (!dir.isZero) {
             this.move(dir);
         }
     }
@@ -32,3 +29,8 @@ export default abstract class GooseIdle extends GooseState {
     onExit(): Record<string, any> { return; }
 
 }
+
+import NormalGooseIdle from "./NormalGooseIdle";
+import DemonGooseIdle from "./DemonGooseIdle";
+
+export { NormalGooseIdle, DemonGooseIdle }

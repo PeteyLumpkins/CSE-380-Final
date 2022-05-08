@@ -37,3 +37,8 @@ export default abstract class GooseMove extends GooseState {
 
     abstract attack(dir: Vec2): void;
 }
+
+import GooseMoveLeft from "./GooseMoveLeft";
+import GooseMoveRight from "./GooseMoveRight";
+
+export { GooseMoveLeft, GooseMoveRight }
