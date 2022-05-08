@@ -57,6 +57,8 @@ export default class MainMenu extends Scene {
 
         this.load.image(MenuImages.LEVEL3, "assets/images/level3preview.png");
 
+        this.load.image(MenuImages.LEVEL4, "assets/images/level4preview.png");
+
         this.load.audio("menu", "assets/music/menu.wav");
     }
 
@@ -168,7 +170,7 @@ export default class MainMenu extends Scene {
                 this.sceneManager.changeToScene(Level3, {spawn: new Vec2(416, 416), stats: new PlayerStats({"HEALTH": 20, "MONEY": 0, "MOVE_SPEED": 3})});
             }
             if(event.type === MenuEvents.PLAY_LEVEL_4){
-                this.sceneManager.changeToScene(Level1, {spawn: new Vec2(448, 480), stats: new PlayerStats({"HEALTH": 20, "MONEY": 0, "MOVE_SPEED": 3})});
+                this.sceneManager.changeToScene(Level4, {spawn: new Vec2(213, 1681), stats: new PlayerStats({"HEALTH": 20, "MONEY": 0, "MOVE_SPEED": 3})});
             }
             if(event.type === MenuEvents.PLAY_LEVEL_5){
                 this.sceneManager.changeToScene(Level1, {spawn: new Vec2(448, 480), stats: new PlayerStats({"HEALTH": 20, "MONEY": 0, "MOVE_SPEED": 3})});
@@ -398,6 +400,12 @@ export default class MainMenu extends Scene {
 
         const level4 = <Button> this.add.uiElement(UIElementType.BUTTON, MenuLayers.LEVELS, {position: new Vec2(center.x - 125, 530), text: "Level Four"});
         level4.size.set(200,180);
+        level4.font='menu';
+        level4.backgroundColor=Color.TRANSPARENT;
+        level4.borderColor=Color.TRANSPARENT;
+        level4.onClickEventId = MenuEvents.PLAY_LEVEL_4;
+        const level4Image=this.add.sprite(MenuImages.LEVEL4, MenuLayers.LEVEL_PREVIEW);
+        level4Image.position.set(center.x-125, 530);
 
         const level5 = <Button> this.add.uiElement(UIElementType.BUTTON, MenuLayers.LEVELS, {position: new Vec2(center.x + 125, 530), text: "Level Five"});
         level5.size.set(200,180);
