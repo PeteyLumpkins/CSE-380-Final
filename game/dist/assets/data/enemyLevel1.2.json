@@ -1,0 +1,101 @@
+{
+    "numEnemies": 17,
+    "enemies": [
+      {
+        "position": [740, 202],
+        "health": 5,
+        "type": "rat_enemy"
+      },
+      {
+        "position": [424, 906],
+        "health": 5,
+        "type": "rat_enemy"
+      },
+      {
+        "position": [512, 920],
+        "health": 5,
+        "type": "rat_enemy"
+      },
+  
+  
+      
+      {
+        "position": [1006, 980],
+        "health": 5,
+        "type": "rat_enemy"
+      },
+      {
+        "position": [966, 980],
+        "health": 5,
+        "type": "rat_enemy"
+      },
+      {
+        "position": [1410, 642],
+        "health": 5,
+        "type": "rat_enemy"
+      },
+  
+  
+      {
+        "position": [1410, 676],
+        "health": 5,
+        "type": "rat_enemy"
+      },
+      {
+        "position": [1618, 160],
+        "health": 5,
+        "type": "rat_enemy"
+      },
+      {
+        "position": [1620, 186],
+        "health": 5,
+        "type": "rat_enemy"
+      },
+  
+  
+      {
+        "position": [1746, 1164],
+        "health": 5,
+        "type": "rat_enemy"
+      },
+      {
+        "position": [1784, 1156],
+        "health": 5,
+        "type": "rat_enemy"
+      },
+  
+  
+      {
+        "position": [1776, 1220],
+        "health": 5,
+        "type": "rat_enemy"
+      },
+      {
+        "position": [1084, 1550],
+        "health": 5,
+        "type": "rat_enemy"
+      },
+      {
+        "position": [828, 1670],
+        "health": 5,
+        "type": "rat_enemy"
+      },
+      {
+        "position": [824, 1712],
+        "health": 5,
+        "type": "rat_enemy"
+      },
+      {
+        "position": [234, 1452],
+        "health": 5,
+        "type": "rat_enemy"
+      },
+      {
+        "position": [244, 1514],
+        "health": 5,
+        "type": "rat_enemy"
+      }
+      
+    ]
+  }
+  
