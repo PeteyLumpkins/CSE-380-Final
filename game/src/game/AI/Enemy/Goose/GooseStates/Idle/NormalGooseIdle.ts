@@ -1,7 +1,7 @@
-import GameEvent from "../../../../../Wolfie2D/Events/GameEvent";
-import GooseState from "./GooseState"
+import GameEvent from "../../../../../../Wolfie2D/Events/GameEvent";
+import GooseState from "../GooseState";
 
-export default class GooseMove extends GooseState {
+export default class GooseIdle extends GooseState {
 
     onEnter(options: Record<string, any>): void {
         throw new Error("Method not implemented.");
@@ -12,5 +12,5 @@ export default class GooseMove extends GooseState {
     onExit(): Record<string, any> {
         throw new Error("Method not implemented.");
     }
-    
+
 }
