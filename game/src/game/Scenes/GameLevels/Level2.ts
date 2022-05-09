@@ -17,6 +17,7 @@ import RatAI, { RatAIOptionType } from "../../AI/Enemy/Rat/RatAI";
 import { GraphicType } from "../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Navmesh from "../../../Wolfie2D/Pathfinding/Navmesh";
 import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
+import NormalGooseAI from "../../AI/Enemy/Goose/NormalGooseAI";
 
 export default class Level2 extends GameLevel {
 
@@ -71,11 +72,34 @@ export default class Level2 extends GameLevel {
         this.enemies = new Array<AnimatedSprite>();
         let enemyData = this.load.getObject("enemyData");
         let options = RatAI.optionsBuilder(RatAIOptionType.FAST, this.player);
+        let gooseOptions = { 
+            target: this.player,
+            health: 5,
+            sightRange: 200,
+            moveSpeed: 100,
+            attackRange: 75, 
+            attackDamage: 3
+        }
+
+        let scale = this.viewport.getZoomLevel();
+        let scalar = new Vec2(1/scale, 1/scale);
 
         for (let i = 0; i < enemyData.enemies.length; i++) {
-            this.enemies[i] = this.add.animatedSprite("whiteRat", GameLayers.PRIMARY);
+            let type = enemyData.enemies[i].type;
+            switch(type) {
+                case "goose": {
+                    this.enemies[i] = this.add.animatedSprite("normal_goose", GameLayers.PRIMARY);
+                    this.enemies[i].scale.mult(scalar);
+                    this.enemies[i].addAI(NormalGooseAI, gooseOptions);
+                    break;
+                } 
+                default: {
+                    this.enemies[i] = this.add.animatedSprite("whiteRat", GameLayers.PRIMARY);
+                    this.enemies[i].addAI(RatAI, options);
+                    break;
+                }
+            }
             this.enemies[i].position.set(enemyData.enemies[i].position[0], enemyData.enemies[i].position[1]);
-            this.enemies[i].addAI(RatAI, options);
             this.enemies[i].addPhysics();
         }
     }

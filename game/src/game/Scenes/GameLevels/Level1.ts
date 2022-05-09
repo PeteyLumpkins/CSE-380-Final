@@ -163,7 +163,7 @@ export default class Level1 extends GameLevel {
         
         this.enemies = new Array<AnimatedSprite>();
         let enemyData = this.load.getObject("enemyData");
-        let options = RatAI.optionsBuilder(RatAIOptionType.FAST, this.player);
+        let options = RatAI.optionsBuilder(RatAIOptionType.DEFAULT, this.player);
 
         for (let i = 0; i < enemyData.enemies.length; i++) {
             this.enemies[i] = this.add.animatedSprite("rat", GameLayers.PRIMARY);

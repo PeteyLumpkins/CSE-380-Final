@@ -161,7 +161,7 @@ export default class Level3 extends GameLevel {
             sightRange: 200,
             moveSpeed: 100,
             attackRange: 75, 
-            attackDamage: 1
+            attackDamage: 5
         }
         
         let scale = this.viewport.getZoomLevel();

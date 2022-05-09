@@ -88,12 +88,12 @@
       {
         "position": [234, 1452],
         "health": 5,
-        "type": "rat_enemy"
+        "type": "goose"
       },
       {
         "position": [244, 1514],
         "health": 5,
-        "type": "rat_enemy"
+        "type": "goose"
       }
       
     ]
