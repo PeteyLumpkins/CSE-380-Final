@@ -203,6 +203,11 @@ export default class PlayerController extends StateMachineAI {
 				this.addItem(item);
 				break;
 			}
+			case PickupTypes.HEALTH: {
+				// TODO: player a healthpickup sounnd or something here?
+				this.playerStats.setStat("HEALTH", this.playerStats.getStat("HEALTH") + event.data.get("amount"));
+				break;
+			}
 			default: {
 				console.log(`Unrecognized type on pickup event: ${event.data.get("type")}`);
 				break;

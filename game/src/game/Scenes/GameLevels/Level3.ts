@@ -167,8 +167,8 @@ export default class Level3 extends GameLevel {
             this.enemies[i].position.set(enemyData.enemies[i].position[0], enemyData.enemies[i].position[1]);
             this.enemies[i].scale.mult(scalar);
             this.enemies[i].addAI(DemonGooseAI, options);
-            this.enemies[i].addPhysics();
             this.enemies[i].setCollisionShape(new AABB(Vec2.ZERO, new Vec2(this.enemies[i].sizeWithZoom.x, this.enemies[i].sizeWithZoom.y).mult(scalar).div(new Vec2(3, 2))));
+            this.enemies[i].addPhysics();
         }
     }
 }
