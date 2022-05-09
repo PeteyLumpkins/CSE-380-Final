@@ -16,11 +16,14 @@ export default class GooseAttackRight extends GooseAttack {
 
     attack(dir: Vec2): void {
         if (this.owner instanceof AnimatedSprite) {
+            console.log("Starting attack animation");
             this.owner.animation.play("attackRight");
         }
     }
 
-    onEnter(options: Record<string, any>): void {}
+    onEnter(options: Record<string, any>): void {
+        console.log("Starting goose attack right state");
+    }
 
     handleInput(event: GameEvent): void {}
 

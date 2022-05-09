@@ -1,11 +1,18 @@
 import AABB from "../../../Wolfie2D/DataTypes/Shapes/AABB";
 import OrthogonalTilemap from "../../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 import PlayerController from "../../AI/Player/PlayerController";
+import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import { GameSprites, GameData, GameLayers } from "../../GameEnums";
 import Vec2 from "../../../Wolfie2D/DataTypes/Vec2";
 import PositionGraph from "../../../Wolfie2D/DataTypes/Graphs/PositionGraph";
 import Navmesh from "../../../Wolfie2D/Pathfinding/Navmesh";
 import { GraphicType } from "../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
+
+import { RatAIOptionType } from "../../AI/Enemy/Rat/RatAI";
+import RatAI from "../../AI/Enemy/Rat/RatAI";
+import { TurtleAIOptionType } from "../../AI/Enemy/Turtle/TurtleAI";
+import TurtleAI from "../../AI/Enemy/Turtle/TurtleAI";
+
 
 import GameLevel from "./GameLevel";
 import LevelEndAI from "../../AI/LevelEnd/LevelEndAI";
@@ -133,6 +140,29 @@ export default class Level4 extends GameLevel {
         }});
     }
 
-    initEnemies(): void {}
+    initEnemies(): void {
+        this.enemies = new Array<AnimatedSprite>();
+        let enemyData = this.load.getObject("enemyData");
+        let options = RatAI.optionsBuilder(RatAIOptionType.FAST, this.player);
+        let turtleOptions=TurtleAI.optionsBuilder(TurtleAIOptionType.DEFAULT, this.player);
+
+        for (let i = 0; i < enemyData.enemies.length; i++) {
+            if(enemyData.enemies[i].type=="rat"){
+                this.enemies[i] = this.add.animatedSprite("rat", GameLayers.PRIMARY);
+            }
+            else if(enemyData.enemies[i].type=="turtle"){
+                this.enemies[i]=this.add.animatedSprite("turtle", GameLayers.PRIMARY);
+            }
+            
+            this.enemies[i].position.set(enemyData.enemies[i].position[0], enemyData.enemies[i].position[1]);
+            if(enemyData.enemies[i].type=="rat"){
+                this.enemies[i].addAI(RatAI, options);
+            }
+            else if(enemyData.enemies[i].type=="turtle"){
+                this.enemies[i].addAI(TurtleAI, turtleOptions);
+            }
+            this.enemies[i].addPhysics();
+        }
+    }
 
 }

@@ -6,12 +6,13 @@ import { GooseAIStates } from "../../GooseAI"
 
 export default abstract class GooseIdle extends GooseState {
 
+    abstract canMove(): boolean;
+
     update(deltaT: number): void {
         super.update(deltaT);
 
-        let dir = this.owner.position.dirTo(this.parent.target.position);
-
-        if (!dir.isZero) {
+        if (this.canMove()) {
+            let dir = this.owner.position.dirTo(this.parent.target.position);
             this.move(dir);
         }
     }
@@ -19,7 +20,7 @@ export default abstract class GooseIdle extends GooseState {
     move(dir: Vec2): void {
         if (dir.x > 0) {
             this.finished(GooseAIStates.MOVE_RIGHT);
-        } else if (dir.x < 0) {
+        } else if (dir.x <= 0) {
             this.finished(GooseAIStates.MOVE_LEFT);
         }
     }

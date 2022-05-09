@@ -12,7 +12,7 @@ import RatKnockback from "./RatStates/RatKnockback";
 import RatMove from "./RatStates/RatMove";
 import RatDead from "./RatStates/RatDead";
 
-import AttackAction from "../Actions/AttackAction";
+import AttackAction, { AttackActionType } from "../Actions/AttackAction";
 import MoveAction from "../Actions/MoveAction";
 
 
@@ -37,7 +37,7 @@ export enum RatAIOptionType {
 export default class RatAI extends EnemyAI {
 
     /** Actions that the rat can perform/undergo kinda will go here? */
-    attack = new AttackAction({amount: 2});
+    attack: AttackAction;
     move = new MoveAction("navmesh", 100, true);
     knockback = new MoveAction("navmesh", 200, true);
 
@@ -100,6 +100,8 @@ export default class RatAI extends EnemyAI {
         this.moveSpeed = options.moveSpeed;
         this.attackRange = options.attackRange;
         this.attackDamage = options.attackDamage;
+
+        this.attack = AttackAction.attackActionBuilder(options.attackActionType, this.owner);
     }
 
     /** Initialize custom states for Rat */
@@ -137,11 +139,14 @@ export default class RatAI extends EnemyAI {
             case RatAIOptionType.DEFAULT: {
                 optionsTemplate = {
                     target: target,
+
+                    attackActionType: AttackActionType.BLACK_RAT,
+
                     health: 5,
                     sightRange: 100,
                     swarmRange: 50,
                     moveSpeed: 100,
-                    attackRange: 25, 
+                    attackRange: 40, 
                     attackDamage: 1
                 }
                 break;
@@ -149,11 +154,14 @@ export default class RatAI extends EnemyAI {
             case RatAIOptionType.FAST: {
                 optionsTemplate = {
                     target: target,
+
+                    attackActionType: AttackActionType.WHITE_RAT,
+
                     health: 2,
                     sightRange: 200,
                     swarmRange: 50,
                     moveSpeed: 150,
-                    attackRange: 25, 
+                    attackRange: 40, 
                     attackDamage: 1
                 }
                 break;

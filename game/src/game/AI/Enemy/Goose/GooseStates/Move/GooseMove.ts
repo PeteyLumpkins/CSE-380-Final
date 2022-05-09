@@ -13,25 +13,23 @@ export default abstract class GooseMove extends GooseState {
         let dir = this.owner.position.dirTo(this.parent.target.position);
 
         if (!this.inSightRange(this.parent.target.position)) {
-            this.idle();
-        }
+            console.log("Out of visible range - idling")
+            this.finished(GooseAIStates.IDLE_DEMON);
 
-        /** If we're not in range of target - move toward target */
-        if (!this.inAttackRange(this.parent.target.position)) {
+        } else if (!this.inAttackRange(this.parent.target.position)) {
+            console.log("Trying to move into attack range of target");
             this.move(dir)
             this.parent.moveAction.performAction(deltaT, {
                 "target": this.owner,
                 "position": this.parent.target.position
             }, ()=>{});
-        } 
 
-        /** Otherwise - transition to attacking state */
-        this.attack(dir);
+        } else {
+            this.attack(dir);
+        }
     }
 
     handleInput(event: GameEvent): void {}
-
-    abstract idle(): void;
      
     abstract move(dir: Vec2): void;
 
