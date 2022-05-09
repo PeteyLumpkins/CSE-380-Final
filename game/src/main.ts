@@ -18,7 +18,7 @@ import MainMenu from "./game/Scenes/MainMenu";
             { name: "pause", keys: ["escape"]},
             { name: "open", keys: ["e"]},
             { name: "close", keys: ["e"]},
-            { name: "nextlvl", keys: ["3"]},
+            { name: "nextlvl", keys: ["e"]},
             { name: "attack", keys: ["space"]},
 
             { name: "drop1", keys: ["1"]},
@@ -30,7 +30,11 @@ import MainMenu from "./game/Scenes/MainMenu";
             { name: "drop7", keys: ["7"]},
             { name: "drop8", keys: ["8"]},
             { name: "drop9", keys: ["9"]},
-            { name: "pickup", keys: ["q"]}
+            { name: "pickup", keys: ["q"]},
+
+            { name: "invincible", keys: ["i"]},
+            { name: "instakill", keys: ["o"]},
+            { name: "999money", keys: ["p"]}
         ],
         useWebGL: false,                        // Tell the game we want to use webgl
         showDebug: false                       // Whether to show debug messages. You can change this to true if you want

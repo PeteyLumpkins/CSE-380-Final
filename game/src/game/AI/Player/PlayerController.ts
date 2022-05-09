@@ -47,6 +47,9 @@ export enum PlayerEvents {
 }
 
 export default class PlayerController extends StateMachineAI {
+
+	invincible: boolean = false;
+ 	instakill: boolean = false;
 	
 	/* PLAYER GAME NODE */
 	owner: AnimatedSprite;
@@ -141,7 +144,9 @@ export default class PlayerController extends StateMachineAI {
 				break;
 			}
 			case EnemyActions.ATTACK: {
-				this.handleEnemyAttackEvent(event);
+				if (!this.invincible) {
+					this.handleEnemyAttackEvent(event);
+				}
 				break;
 			}
 			case StoreEvent.ITEM_PURCHASED: {
@@ -156,6 +161,18 @@ export default class PlayerController extends StateMachineAI {
 	};
 
 	update(deltaT: number): void {
+
+		if (Input.isPressed("invincible")) {
+			this.invincible = true;
+		}
+
+		if (Input.isPressed("instakill")) {
+			this.instakill = true;
+		}
+
+		if (Input.isPressed("999money")) {
+			this.playerStats.setStat("MONEY", 999);
+		}
 
 		// Updating the state machine will trigger the current state to be updated.
 		super.update(deltaT);
