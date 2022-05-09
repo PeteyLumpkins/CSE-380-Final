@@ -15,11 +15,14 @@ import GameLevel from "./GameLevel";
 
 import PlayerStats from "../../AI/Player/PlayerStats";
 import PlayerInventory from "../../AI/Player/PlayerInventory";
+import WolfieAI from "../../AI/Enemy/Wolfie/WolfieAI";
+import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 
 export default class Level5 extends GameLevel {
 
     public static readonly PLAYER_SPAWN_POS = new Vec2(896, 1824);
     protected walls: OrthogonalTilemap;
+    protected navmeshGraph: PositionGraph;
     // public static readonly STORE_LEVEL_POS = new Vec2(0, 0);
     // public static readonly NEXT_LEVEL_POS = new Vec2(0, 0);
 
@@ -35,6 +38,8 @@ export default class Level5 extends GameLevel {
         super.loadScene();
         this.load.tilemap("level", "assets/tilemaps/LevelFive.json");
         this.load.audio("level5", "assets/music/Level5.wav");
+        this.load.spritesheet("wolfie", "assets/spritesheets/enemies/boss.json");
+        this.load.object(GameData.NAVMESH, "assets/data/navmeshLevel5.json"); 
 
         /** TODO: Load level stuff here */
     }
@@ -55,7 +60,7 @@ export default class Level5 extends GameLevel {
     /** GAMELEVEL METHODS */
 
     initViewport(): void {
-        this.viewport.setZoomLevel(3);
+        this.viewport.setZoomLevel(1.2);
     }
 
     initPlayer(): void {
@@ -99,14 +104,41 @@ export default class Level5 extends GameLevel {
 
         let gLayer = this.addLayer(GameLayers.NAVMESH_GRAPH, 10);
         gLayer.setHidden(true);
+
+        let navmeshData = this.load.getObject(GameData.NAVMESH);
+
+         // Create the graph
+        this.navmeshGraph = new PositionGraph();
+
+        // Add all nodes to our graph
+        for(let node of navmeshData.nodes){
+            this.navmeshGraph.addPositionedNode(new Vec2(node[0], node[1]));
+            this.add.graphic(GraphicType.POINT, GameLayers.NAVMESH_GRAPH, {position: new Vec2(node[0], node[1])});
+        }
+
+        // Add all edges to our graph
+        for(let edge of navmeshData.edges){
+            this.navmeshGraph.addEdge(edge[0], edge[1]);
+            this.add.graphic(GraphicType.LINE, GameLayers.NAVMESH_GRAPH, {start: this.navmeshGraph.getNodePosition(edge[0]), end: this.navmeshGraph.getNodePosition(edge[1])})
+        }
+
+        // Set this graph as a navigable entity
+        let navmesh = new Navmesh(this.navmeshGraph);
+
+        this.navManager.addNavigableEntity("navmesh", navmesh);
     }
 
     initLevelLinks(): void {
 
     }
 
+    // Test pos: 992, 928
     initEnemies(): void {
-
+        this.enemies = new Array<AnimatedSprite>();
+        this.enemies[0] = this.add.animatedSprite("wolfie", GameLayers.PRIMARY);
+        this.enemies[0].position.set(992, 928);
+        this.enemies[0].addAI(WolfieAI, {"health":2, "moveSpeed":3, "target":this.player});
+        this.enemies[0].addPhysics();
     }
     
 }
