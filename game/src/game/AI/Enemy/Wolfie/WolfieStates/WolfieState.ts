@@ -12,9 +12,7 @@ export default abstract class WolfieState extends State {
     constructor(parent: WolfieAI, owner: GameNode){
         super(parent);
         this.owner = owner;
-        this.attackTimer = new Timer(5000, ()=>{
-            this.parent.attackAction.performAction(0, {}, ()=>{});
-        });
+        this.attackTimer = new Timer(5000);
     }
 
     protected attackReady(): boolean {

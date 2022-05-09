@@ -58,8 +58,9 @@ export default class WolfieAI extends EnemyAI {
 
     /** Cooldown timers for the knockback and attack of the rat */
     knockbackCooldownTimer: Timer = new Timer(2000);
-    chaseTimer: Timer = new Timer(5000);
+    chaseTimer: Timer = new Timer(10000);
     vulnerableTimer: Timer = new Timer(2000);
+    moveTimer: Timer = new Timer(3000);
     // attackTimer: Timer = new Timer(5000);
 
     update(deltaT: number): void {
@@ -133,7 +134,7 @@ export default class WolfieAI extends EnemyAI {
         this.angleDeg = 0;
         this.attackAction = new AttackAction({
             type: AttackActionType.WOLFIE,
-            damage: 1,
+            damage: 2,
             attacker: this.owner,
             attackRange: 160
         });

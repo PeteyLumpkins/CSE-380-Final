@@ -26,17 +26,18 @@ export default class WolfieMove extends WolfieState {
 
         let dir = this.owner.position.dirTo(this.parent.target.position);
 
-        if (!this.inAttackRange(this.parent.target.position)) {
-            console.log("Trying to move into attack range of target");
+        if (!this.parent.moveTimer.isStopped()) {
             this.parent.moveAction.performAction(deltaT, {
                 "target": this.owner,
                 "position": this.parent.target.position
             }, ()=>{});
-
-        } else {
-            this.parent.chaseTimer.start();
-            console.log(this.parent.chaseTimer.isStopped());
-            this.finished(WolfieAIStates.ATTACK);
+        } else{
+        // } else {
+        //     this.parent.chaseTimer.start();
+        //     this.finished(WolfieAIStates.ATTACK);
+        // }
+        this.parent.chaseTimer.start();
+        this.finished(WolfieAIStates.ATTACK);
         }
     }
 

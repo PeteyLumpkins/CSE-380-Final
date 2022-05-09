@@ -21,32 +21,37 @@ export default class WolfieCharge extends WolfieState {
         // targetPos.y = targetPos.y - (200 * (Math.cos(this.parent.target.position.angleToCCW(this.owner.position) + Math.PI) / (Math.PI + 180)));
 
 
-        if (!this.inAttackRange(this.parent.target.position) && !this.attackTimer.isStopped()) {
-            console.log("Not in range and timer is not stopped");
-            this.finished(WolfieAIStates.MOVE);
-        } 
-        else if(this.parent.chaseTimer.isStopped()){
+        // if (!this.inAttackRange(this.parent.target.position)) {
+        //     console.log("Not in range and timer is not stopped");
+        //     this.finished(WolfieAIStates.MOVE);
+        // } 
+        if(this.parent.chaseTimer.isStopped()){
             console.log("Done chasing");
             this.parent.vulnerableTimer.start();
             this.finished(WolfieAIStates.VULNERABLE);
         }
-        else if (this.attackReady() && this.attackTimer.isStopped()) {
+
+        else if ( this.attackTimer.isStopped()) {
             console.log("Attacking!!!");
             this.attackTimer.start();
             if (this.owner instanceof AnimatedSprite) {
                 this.owner.animation.play("charging");
             }
-            // this.parent.moveAction.performAction(deltaT, {
-            //     "target": this.owner,
-            //     "position": targetPos
-            // }, ()=>{});
-            this.parent.attackAction.performAction(0, {}, ()=>{});
-            this.finished(WolfieAIStates.VULNERABLE);
+
+            this.onExit();
         } 
     }
 
     handleInput(event: GameEvent): void {}
 
-    onExit(): Record<string, any> { return; }
+    onExit(): Record<string, any> { 
+        console.log("exiting");
+        if(this.parent.target.position.distanceTo(this.owner.position) <= 160){
+                        this.parent.attackAction.performAction(0, {}, ()=>{});
+
+        }    
+        this.parent.moveTimer.start();
+        return;
+    }
 
 }

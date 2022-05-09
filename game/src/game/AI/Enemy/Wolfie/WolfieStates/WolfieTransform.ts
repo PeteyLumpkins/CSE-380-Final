@@ -8,9 +8,8 @@ export default class WolfieTransform extends WolfieState {
 
     onEnter(options: Record<string, any>): void {        
         console.log("Entering the wolfie transform state");
-        this.parent.health = this.parent.maxHealth; // Refill on HP
+        this.parent.health = 200; // Refill on HP
         console.log(this.parent.health);
-        this.owner.disablePhysics();
         if (this.owner instanceof AnimatedSprite) {
             this.owner.animation.play("transform");
         }
