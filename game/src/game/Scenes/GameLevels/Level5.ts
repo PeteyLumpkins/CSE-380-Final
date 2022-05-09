@@ -132,12 +132,18 @@ export default class Level5 extends GameLevel {
 
     }
 
-    // Test pos: 992, 928
+    // Test pos: 992, 1120
     initEnemies(): void {
         this.enemies = new Array<AnimatedSprite>();
         this.enemies[0] = this.add.animatedSprite("wolfie", GameLayers.PRIMARY);
-        this.enemies[0].position.set(992, 928);
-        this.enemies[0].addAI(WolfieAI, {"health":2, "moveSpeed":3, "target":this.player});
+        let scale = this.viewport.getZoomLevel();
+        let scalar = new Vec2(1/scale, 1/scale).mult(new Vec2(2, 2));
+        this.enemies[0].scale.mult(scalar);
+
+        this.enemies[0].position.set(992, 960);
+        // this.enemies[0].route = this.enemies[0].route.map((index: number) => this.navmeshGraph.getNodePosition(index));                
+
+        this.enemies[0].addAI(WolfieAI, {"health":4, "moveSpeed":2.5,"attackRange":150, "target":this.player});
         this.enemies[0].addPhysics();
     }
     

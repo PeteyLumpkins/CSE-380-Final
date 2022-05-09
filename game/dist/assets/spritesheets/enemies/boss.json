@@ -1,14 +1,14 @@
 {
     "name": "boss",
     "spriteSheetImage": "boss.png",
-    "spriteWidth": 32,
-    "spriteHeight": 32,
+    "spriteWidth": 96,
+    "spriteHeight": 83,
     "leftBuffer": 0,
     "rightBuffer": 0,
     "topBuffer": 0,
     "bottomBuffer": 0,
-    "columns": 8,
-    "rows": 1,
+    "columns": 5,
+    "rows": 4,
     "animations": [
         {
             "name": "idle",
@@ -31,11 +31,11 @@
                     "duration": 50
                 },
                 {
-                    "index": 4,
+                    "index": 0,
                     "duration": 50
                 },
                 {
-                    "index": 5,
+                    "index": 0,
                     "duration": 50
                 }
             ]
@@ -45,8 +45,20 @@
             "repeat": false,
             "frames": [
                 {
+                    "index": 4,
+                    "duration": 100
+                },
+                {
+                    "index": 5,
+                    "duration": 100
+                },
+                {
                     "index": 6,
-                    "duration": 1000
+                    "duration": 100
+                },
+                {
+                    "index": 7,
+                    "duration": 100
                 }
             ]
         },
@@ -55,8 +67,60 @@
             "repeat": true,
             "frames": [
                 {
-                    "index": 7,
+                    "index": 8,
                     "duration": 5000
+                }
+            ]
+        },
+        {
+            "name": "charging",
+            "repeat": true,
+            "frames": [
+                {
+                    "index": 8,
+                    "duration": 50
+                },
+                {
+                    "index": 9,
+                    "duration": 50
+                },
+                {
+                    "index": 10,
+                    "duration": 50
+                },
+                {
+                    "index": 11,
+                    "duration": 35
+                },
+                {
+                    "index": 12,
+                    "duration": 35
+                },
+                {
+                    "index": 13,
+                    "duration": 50
+                }
+            ]
+        },
+        {
+            "name": "vulnerable",
+            "repeat": true,
+            "frames": [
+                {
+                    "index": 14,
+                    "duration": 20
+                },
+                {
+                    "index": 15,
+                    "duration": 20
+                },
+                {
+                    "index": 16,
+                    "duration": 20
+                },
+                {
+                    "index": 17,
+                    "duration": 20
                 }
             ]
         }

@@ -8,7 +8,8 @@ export enum AttackActionType {
     BLACK_RAT = "BLACK_RAT_ATTACK",
     WHITE_RAT = "WHITE_RAT_ATTACK",
     NORMAL_GOOSE = "NORMAL_GOOSE_ATTACK",
-    DEMON_GOOSE = "DEMON_GOOSE_ATTACK"
+    DEMON_GOOSE = "DEMON_GOOSE_ATTACK",
+    WOLFIE = "WOLFIE_ATTACK"
 }
 
 /**
@@ -45,7 +46,7 @@ export default class AttackAction implements EnemyAction {
      * @returns a new AttackAction object for the given AttackActionType
      */
     public static attackActionBuilder(type: AttackActionType, attacker: GameNode): AttackAction {
-
+        console.log("Hello from attac");
         let opt = {};
         switch(type) {
             case AttackActionType.BLACK_RAT: {
@@ -72,6 +73,16 @@ export default class AttackAction implements EnemyAction {
                     damage: 5,
                     attacker: attacker,
                     attackRange: 75
+                }
+                break;
+            }
+            case AttackActionType.WOLFIE: {
+                console.log("wolfie");
+                opt = {
+                    type: AttackActionType.WOLFIE,
+                    damage: 6,
+                    attacker: attacker,
+                    attackRange: 200
                 }
                 break;
             }

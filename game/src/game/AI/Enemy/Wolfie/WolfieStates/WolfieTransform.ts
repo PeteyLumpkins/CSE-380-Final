@@ -10,19 +10,22 @@ export default class WolfieTransform extends WolfieState {
         console.log("Entering the wolfie transform state");
         this.parent.health = this.parent.maxHealth; // Refill on HP
         console.log(this.parent.health);
+        this.owner.disablePhysics();
         if (this.owner instanceof AnimatedSprite) {
             this.owner.animation.play("transform");
         }
+
     }
     handleInput(event: GameEvent): void {
     }
 
     update(deltaT: number): void {
-        // if (!this.owner.animation.isPlaying("ENVY_TFORM")) {
-        //     this.finished(BossStates.ENVY_WALK);
-        // }        
-        if (!this.owner.animation.isPlaying("transform")) {
-            this.finished(WolfieAIStates.MOVE);
+        if (this.owner instanceof AnimatedSprite) {
+
+            if (!this.owner.animation.isPlaying("transform")) {
+                this.parent.transformed = true;
+                this.finished(WolfieAIStates.MOVE);
+            }
         }
     }
 

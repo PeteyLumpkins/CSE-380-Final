@@ -1,12 +1,9 @@
-import Vec2 from "../../../../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../../../../Wolfie2D/Events/GameEvent";
-import GameNode from "../../../../../Wolfie2D/Nodes/GameNode";
-import Receiver from "../../../../../Wolfie2D/Events/Receiver";
 import AnimatedSprite from "../../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
-
-
-import WolfieState from "./WolfieState";
 import { WolfieAIStates } from "../WolfieAI";
+import WolfieState from "./WolfieState";
+
+
 
 export default class WolfieIdle extends WolfieState {
 

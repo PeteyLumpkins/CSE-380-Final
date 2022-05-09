@@ -1,25 +1,34 @@
 import State from "../../../../../Wolfie2D/DataTypes/State/State";
 import Vec2 from "../../../../../Wolfie2D/DataTypes/Vec2";
 import GameNode from "../../../../../Wolfie2D/Nodes/GameNode";
+import Timer from "../../../../../Wolfie2D/Timing/Timer";
 import WolfieAI, { WolfieAIStates } from "../WolfieAI";
 
 export default abstract class WolfieState extends State {
     protected parent: WolfieAI;
     protected owner: GameNode;
+    protected attackTimer: Timer;
 
     constructor(parent: WolfieAI, owner: GameNode){
         super(parent);
         this.owner = owner;
+        this.attackTimer = new Timer(5000, ()=>{
+            this.parent.attackAction.performAction(0, {}, ()=>{});
+        });
     }
 
     protected attackReady(): boolean {
-        return this.parent.attackCooldownTimer.isStopped();
+        return this.attackTimer.isStopped();
     }
     update(deltaT: number): void {
 
         // If the wolfie is dead - transition to the dead state
         if (this.isDead()) {
-            this.finished(WolfieAIStates.TRANSFORM);
+            if(!this.parent.transformed){
+                this.finished(WolfieAIStates.TRANSFORM);
+            } else{
+                this.finished(WolfieAIStates.DEAD);
+            }
         }
 
     }

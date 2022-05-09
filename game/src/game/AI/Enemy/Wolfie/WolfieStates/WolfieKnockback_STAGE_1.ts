@@ -6,7 +6,7 @@ import WolfieState from "./WolfieState";
 
 
 
-export default class WolfieKnockback extends WolfieState {
+export default class WolfieKnockback_STAGE_1 extends WolfieState {
 
     private playerPosition: Vec2;
     private knockbackPosition: Vec2;
@@ -26,7 +26,7 @@ export default class WolfieKnockback extends WolfieState {
 
         if (this.parent.knockbackCooldownTimer.isStopped()) {
             console.log('knockback ended');
-            this.finished(WolfieAIStates.IDLE);
+            this.finished(WolfieAIStates.MOVE);
         }
 
         this.parent.knockbackAction.performAction(deltaT, {
