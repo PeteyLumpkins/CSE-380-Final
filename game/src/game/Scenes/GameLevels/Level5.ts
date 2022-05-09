@@ -34,17 +34,22 @@ export default class Level5 extends GameLevel {
     loadScene(): void {
         super.loadScene();
         this.load.tilemap("level", "assets/tilemaps/LevelFive.json");
+        this.load.audio("level5", "assets/music/Level5.wav");
 
         /** TODO: Load level stuff here */
     }
 
     unloadScene(): void {
         super.unloadScene();
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level5"});
+
     }
 
     startScene(): void {
         this.addLayer(GameLayers.PRIMARY, 5);
         super.startScene();
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level5", loop: true, holdReference: true});
+
     }
 
     /** GAMELEVEL METHODS */
