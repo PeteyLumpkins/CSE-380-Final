@@ -68,7 +68,7 @@ export default class TurtleAI extends EnemyAI {
         switch(event.type) {
             case PlayerEvents.ATTACKED: {
                 console.log("Caught player attacked event in TurtleAI");
-                this.handlePlayeTurtletackEvent(event);
+                this.handlePlayerAttackEvent(event);
                 break;
             }
             default: {
@@ -78,7 +78,7 @@ export default class TurtleAI extends EnemyAI {
         }
     }
 
-    handlePlayeTurtletackEvent(event: GameEvent): void {
+    handlePlayerAttackEvent(event: GameEvent): void {
         if (this.owner.collisionShape.overlaps(event.data.get("hitbox"))) {
             this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "hitSound", loop: false, holdReference: true});
             this.health -= event.data.get("damage");
@@ -98,6 +98,8 @@ export default class TurtleAI extends EnemyAI {
         this.swarmRange = options.swarmRange;
 
         this.moveSpeed = options.moveSpeed;
+        console.log("creating turtle with move speed: "+ this.moveSpeed);
+        this.move = new MoveAction("navmesh", this.moveSpeed, true);
         this.attackRange = options.attackRange;
         this.attackDamage = options.attackDamage;
     }
@@ -140,7 +142,7 @@ export default class TurtleAI extends EnemyAI {
                     health: 10,
                     sightRange: 100,
                     swarmRange: 50,
-                    moveSpeed: 50,
+                    moveSpeed: 25,
                     attackRange: 25, 
                     attackDamage: 2
                 }
@@ -152,7 +154,7 @@ export default class TurtleAI extends EnemyAI {
                     health: 7,
                     sightRange: 200,
                     swarmRange: 50,
-                    moveSpeed: 75,
+                    moveSpeed: 35,
                     attackRange: 25, 
                     attackDamage: 1
                 }
