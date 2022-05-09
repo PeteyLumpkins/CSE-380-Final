@@ -13,6 +13,9 @@ import Level1 from "../GameLevels/Level1";
 import StoreItems from "../../AI/Store/StoreItems";
 import LevelEndAI from "../../AI/LevelEnd/LevelEndAI";
 
+import items from "./items.json";
+import RandUtils from "../../../Wolfie2D/Utils/RandUtils";
+
 
 export default class Shop extends GameLevel {
 
@@ -69,11 +72,19 @@ export default class Shop extends GameLevel {
     initEnemies(): void {}
 
     initStore(): void {
+        let storeRandItem=new Array<string>();
+        for(let i=0; i<3; i++){
+            let j = RandUtils.randInt(0,items.length);
+            while(storeRandItem.includes(items[j].key)){ //Ensures that no dupes are in the store
+                j = RandUtils.randInt(0,items.length);
+            }
+            storeRandItem[i]=items[j].key;
+        }
         let storeItems = new StoreItems(
             [
-                {key: "moldy_bread", count: 1},
-                {key: "old_boot", count: 1},
-                {key: "mystery_liquid", count: 1}
+                {key: storeRandItem[0], count: 1},
+                {key: storeRandItem[1], count: 1},
+                {key: storeRandItem[2], count: 1}
             ]
         )
 

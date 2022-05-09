@@ -11,7 +11,7 @@
         "name": "Mystery Liquid",
         "cost": 2,
         "buffs": [
-            {"type": "MOVE_SPEED", "scale": 2},
+            {"type": "MOVE_SPEED", "scale": 1.1},
             {"type": "ATTACK_DMG", "scale": 10}
         ]
     }, 
@@ -22,5 +22,50 @@
         "buffs": [
             
         ]
+    },
+    "banana": {
+        "name": "Old Banana",
+        "spriteKey": "banana",
+        "cost": 1,
+        "buffs": [
+            {"type": "MOVE_SPEED", "scale": 1.05},
+            {"type": "DMG_RESIST", "scale": 1.1}
+        ]
+    },
+    "bunny_head":{
+        "name": "ChocoBunny",
+        "spriteKey": "bunny_head",
+        "cost": 5,
+        "buffs": [
+            {"type": "MOVE_SPEED", "scale": 1.2},
+            {"type": "ATTACK_DMG", "scale": 1}
+        ]
+    },
+    "stark_shirt":{
+        "name": "Skart Shirt",
+        "spriteKey": "stark_shirt",
+        "cost": 6,
+        "buffs": [
+            {"type": "MOVE_SPEED", "scale": 0.9},
+            {"type": "DMG_RESIST", "scale": 4}
+        ]
+    },
+    "deflated_ball":{
+        "name": "Deflated Ball",
+        "spriteKey": "deflated_ball",
+        "cost": 2,
+        "buffs": [
+            {"type": "MOVE_SPEED", "scale": 1.03}
+        ]
+    },
+    "mystery_meat":{
+        "name": "WSD Meat",
+        "spriteKey": "mystery_meat",
+        "cost": 4,
+        "buffs": [
+            {"type": "MOVE_SPEED", "scale": 0.9},
+            {"type": "ATTACK_DMG", "scale": 10}
+        ]
     }
+
 }

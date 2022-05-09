@@ -12,7 +12,7 @@ import TurtleKnockback from "./TurtleStates/TurtleKnockback";
 import TurtleMove from "./TurtleStates/TurtleMove";
 import TurtleDead from "./TurtleStates/TurtleDead";
 
-import AttackAction from "../Actions/AttackAction";
+import AttackAction, { AttackActionType } from "../Actions/AttackAction";
 import MoveAction from "../Actions/MoveAction";
 
 
@@ -37,7 +37,7 @@ export enum TurtleAIOptionType {
 export default class TurtleAI extends EnemyAI {
 
     /** Actions that the Turtle can perform/undergo kinda will go here? */
-    attack = new AttackAction({amount: 2});
+    attack : AttackAction
     move = new MoveAction("navmesh", 100, true);
     knockback = new MoveAction("navmesh", 200, true);
 
@@ -102,6 +102,13 @@ export default class TurtleAI extends EnemyAI {
         this.move = new MoveAction("navmesh", this.moveSpeed, true);
         this.attackRange = options.attackRange;
         this.attackDamage = options.attackDamage;
+
+        this.attack = new AttackAction({
+            type: AttackActionType.WHITE_RAT,
+            damage: 2, 
+            attacker: this.owner,
+            attackRange: 40
+        });
     }
 
     /** Initialize custom states for Turtle */
@@ -143,7 +150,7 @@ export default class TurtleAI extends EnemyAI {
                     sightRange: 100,
                     swarmRange: 50,
                     moveSpeed: 25,
-                    attackRange: 25, 
+                    attackRange: 40, 
                     attackDamage: 2
                 }
                 break;
@@ -155,7 +162,7 @@ export default class TurtleAI extends EnemyAI {
                     sightRange: 200,
                     swarmRange: 50,
                     moveSpeed: 35,
-                    attackRange: 25, 
+                    attackRange: 40, 
                     attackDamage: 1
                 }
                 break;

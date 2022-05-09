@@ -322,6 +322,9 @@ export default abstract class GameLevel extends Scene {
 
         healthChange: (ev: GameEvent) => {
             let hp = ev.data.get("amount");
+            console.log("unrounded hp value: " + hp);
+            hp=Math.round(hp * 100) / 100;
+            console.log("rounded hp value: "+ hp);
             this.playerHealthLabel.text = `Health: ${hp}`;
             // TODO: this is where the gameover event will be triggered I'm pretty sure?
             if (hp <= 0) {
