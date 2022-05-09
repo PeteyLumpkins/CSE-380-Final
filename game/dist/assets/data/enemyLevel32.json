@@ -22,7 +22,7 @@
       {
         "position": [1439, 1176],
         "health": 5,
-        "type": "rat"
+        "type": "goose"
       },
       {
         "position": [733, 1281],
@@ -56,7 +56,7 @@
       {
         "position": [1012, 331],
         "health": 5,
-        "type": "rat"
+        "type": "goose"
       },
       {
         "position": [458, 446],
