@@ -16,6 +16,7 @@ export default class WolfieMove extends WolfieState {
     onEnter(options: Record<string, any>): void {
         console.log("Entering the wolfie move state");
 
+        if (this.owner instanceof AnimatedSprite)
             this.owner.animation.play("move");
             // this.owner.disablePhysics();
 
