@@ -84,6 +84,7 @@ export default class Level2 extends GameLevel {
         this.getTilemap("Floor").getLayer().setDepth(1);
         this.getTilemap("UpperWall").getLayer().setDepth(1);
         this.getTilemap("UpperWallPipes").getLayer().setDepth(6);
+        this.getTilemap("GroundProps").getLayer().setDepth(0);
 
         this.walls = <OrthogonalTilemap>tilemapLayers[0].getItems()[0];
 
