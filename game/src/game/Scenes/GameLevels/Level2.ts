@@ -16,6 +16,7 @@ import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import RatAI, { RatAIOptionType } from "../../AI/Enemy/Rat/RatAI";
 import { GraphicType } from "../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Navmesh from "../../../Wolfie2D/Pathfinding/Navmesh";
+import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 
 export default class Level2 extends GameLevel {
 
@@ -31,10 +32,13 @@ export default class Level2 extends GameLevel {
         this.load.tilemap("level", "assets/tilemaps/level1.2.json");
         this.load.object("enemyData", "assets/data/enemyLevel1.2.json");
         this.load.object(GameData.NAVMESH, "assets/data/navmeshLevel1.2.json"); 
+        this.load.audio("level1", "assets/music/Level1.wav");
     }
 
     unloadScene(): void {
         super.unloadScene();
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level1"});
+
     }
 
     initScene(init: Record<string, any>): void {
@@ -46,6 +50,7 @@ export default class Level2 extends GameLevel {
     startScene(): void {
         this.addLayer(GameLayers.PRIMARY, 5);
         super.startScene();
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level1", loop: true, holdReference: true});
     }
 
     initPlayer(): void {
@@ -84,6 +89,7 @@ export default class Level2 extends GameLevel {
         this.getTilemap("Floor").getLayer().setDepth(1);
         this.getTilemap("UpperWall").getLayer().setDepth(1);
         this.getTilemap("UpperWallPipes").getLayer().setDepth(6);
+        this.getTilemap("GroundProps").getLayer().setDepth(0);
 
         this.walls = <OrthogonalTilemap>tilemapLayers[0].getItems()[0];
 

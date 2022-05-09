@@ -21,6 +21,8 @@ import PlayerStats from "../../AI/Player/PlayerStats";
 import PlayerInventory from "../../AI/Player/PlayerInventory";
 import Shop from "./Shop";
 import Level5 from "./Level5";
+import DemonGooseAI from "../../AI/Enemy/Goose/DemonGooseAI";
+import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 
 export default class Level4 extends GameLevel {
 
@@ -43,15 +45,20 @@ export default class Level4 extends GameLevel {
         this.load.tilemap("level", "assets/tilemaps/Level32.json");
         this.load.object(GameData.NAVMESH, "assets/data/navmeshLevel32.json");
         this.load.object("enemyData", "assets/data/enemyLevel32.json");
+        this.load.audio("level3", "assets/music/Level3.wav");
+
     }
 
     unloadScene(): void {
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level3"});
         super.unloadScene();
     }
 
     startScene(): void {
         this.addLayer(GameLayers.PRIMARY, 5);
         super.startScene();
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level3", loop: true, holdReference: true});
+
     }
 
     initViewport(): void {
@@ -143,24 +150,42 @@ export default class Level4 extends GameLevel {
     initEnemies(): void {
         this.enemies = new Array<AnimatedSprite>();
         let enemyData = this.load.getObject("enemyData");
+        
         let options = RatAI.optionsBuilder(RatAIOptionType.FAST, this.player);
         let turtleOptions=TurtleAI.optionsBuilder(TurtleAIOptionType.DEFAULT, this.player);
+        let gooseOptions = {
+            target: this.player,
+            health: 5,
+            sightRange: 200,
+            moveSpeed: 100,
+            attackRange: 75, 
+            attackDamage: 1
+        }
+
+        let scale = this.viewport.getZoomLevel();
+        let scalar = new Vec2(1/scale, 1/scale).mult(new Vec2(2, 2));
 
         for (let i = 0; i < enemyData.enemies.length; i++) {
-            if(enemyData.enemies[i].type=="rat"){
-                this.enemies[i] = this.add.animatedSprite("rat", GameLayers.PRIMARY);
+            let type = enemyData.enemies[i].type;
+            switch(type) {
+                case "rat": {
+                    this.enemies[i] = this.add.animatedSprite("rat", GameLayers.PRIMARY);
+                    this.enemies[i].addAI(RatAI, options);
+                    break;
+                }
+                case "turtle": {
+                    this.enemies[i]=this.add.animatedSprite("turtle", GameLayers.PRIMARY);
+                    this.enemies[i].addAI(TurtleAI, turtleOptions);
+                    break;
+                }
+                case "goose":{
+                    this.enemies[i] = this.add.animatedSprite("goose", GameLayers.PRIMARY);
+                    this.enemies[i].scale.mult(scalar);
+                    this.enemies[i].addAI(DemonGooseAI, gooseOptions);
+                    this.enemies[i].setCollisionShape(new AABB(Vec2.ZERO, new Vec2(this.enemies[i].sizeWithZoom.x, this.enemies[i].sizeWithZoom.y).mult(scalar).div(new Vec2(3, 2))));
+                }
             }
-            else if(enemyData.enemies[i].type=="turtle"){
-                this.enemies[i]=this.add.animatedSprite("turtle", GameLayers.PRIMARY);
-            }
-            
             this.enemies[i].position.set(enemyData.enemies[i].position[0], enemyData.enemies[i].position[1]);
-            if(enemyData.enemies[i].type=="rat"){
-                this.enemies[i].addAI(RatAI, options);
-            }
-            else if(enemyData.enemies[i].type=="turtle"){
-                this.enemies[i].addAI(TurtleAI, turtleOptions);
-            }
             this.enemies[i].addPhysics();
         }
     }

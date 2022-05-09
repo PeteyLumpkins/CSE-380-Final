@@ -10,5 +10,25 @@
     {
         "key": "moldy_bread",
         "path": "assets/itemsprites/moldBread.png"
+    },
+    {
+        "key": "banana",
+        "path": "assets/itemsprites/banana.png"
+    },
+    {
+        "key": "bunny_head",
+        "path": "assets/itemsprites/bunnyHead.png"
+    },
+    {
+        "key": "stark_shirt",
+        "path": "assets/itemsprites/starkShirt.png"
+    },
+    {
+        "key": "deflated_ball",
+        "path": "assets/itemsprites/deflatedBall.png"
+    },
+    {
+        "key": "mystery_meat",
+        "path": "assets/itemsprites/mysteryMeat.png"
     }
 ]

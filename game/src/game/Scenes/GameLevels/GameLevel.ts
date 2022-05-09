@@ -106,6 +106,7 @@ export default abstract class GameLevel extends Scene {
         this.load.spritesheet("turtle", "assets/spritesheets/enemies/turtle.json");
 
         this.load.spritesheet(GameSprites.COIN, "assets/spritesheets/coin.json");
+        this.load.image("healthpickup", "assets/itemsprites/healthkit.png");
 
         /** Loads any data/object files that all the levels will need - probs just item data */
         this.load.object('item-data', 'assets/data/item-data.json');
@@ -144,6 +145,7 @@ export default abstract class GameLevel extends Scene {
         this.load.keepSpritesheet("goose");
 
         this.load.keepSpritesheet(GameSprites.COIN);
+        this.load.keepImage("healthpickup");
 
         /** Keeps the objects we'll need later */
         this.load.keepObject('item-data');
@@ -322,6 +324,9 @@ export default abstract class GameLevel extends Scene {
 
         healthChange: (ev: GameEvent) => {
             let hp = ev.data.get("amount");
+            console.log("unrounded hp value: " + hp);
+            hp=Math.round(hp * 100) / 100;
+            console.log("rounded hp value: "+ hp);
             this.playerHealthLabel.text = `Health: ${hp}`;
             // TODO: this is where the gameover event will be triggered I'm pretty sure?
             if (hp <= 0) {
