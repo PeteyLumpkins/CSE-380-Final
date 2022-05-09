@@ -43,10 +43,11 @@ export default class Level1 extends GameLevel {
 
     loadScene(){
         super.loadScene();
+
+        this.load.tilemap("level", "assets/tilemaps/levelOne.json");
         this.load.object(GameData.NAVMESH, "assets/data/navmeshLevel1.json"); 
         this.load.object("enemyData", "assets/data/enemyLevel1.json");
         this.load.audio("level1", "assets/music/Level1.wav");
-        this.load.tilemap("level", "assets/tilemaps/levelOne.json");
     }
 
     unloadScene(): void {
