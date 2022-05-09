@@ -38,6 +38,8 @@ export default abstract class PlayerState extends State {
 	sendPlayerAttacked(position: Vec2) {
 		let damage = this.parent.playerStats.getStat(PlayerStat.ATTACK_DMG) !== null ? this.parent.playerStats.getStat(PlayerStat.ATTACK_DMG) : 1;
 
+		if (this.parent.instakill) { damage = Infinity; }
+
 		let dir = Vec2.ZERO;
 		let hitbox = null;
 		switch(this.attackType) {
