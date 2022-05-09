@@ -15,7 +15,6 @@ import Level1 from "../GameLevels/Level1";
 import StoreItems from "../../AI/Store/StoreItems";
 import LevelEndAI from "../../AI/LevelEnd/LevelEndAI";
 
-import items from "./items.json";
 import RandUtils from "../../../Wolfie2D/Utils/RandUtils";
 
 
