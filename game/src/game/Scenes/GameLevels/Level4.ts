@@ -45,7 +45,8 @@ export default class Level4 extends GameLevel {
         this.load.tilemap("level", "assets/tilemaps/Level32.json");
         this.load.object(GameData.NAVMESH, "assets/data/navmeshLevel32.json");
         this.load.object("enemyData", "assets/data/enemyLevel32.json");
-        this.load.audio("level3", "assets/music/level3.wav");
+        this.load.audio("level3", "assets/music/Level3.wav");
+
     }
 
     unloadScene(): void {
