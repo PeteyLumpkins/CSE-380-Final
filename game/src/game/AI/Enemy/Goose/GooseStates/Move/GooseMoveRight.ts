@@ -6,13 +6,10 @@ import GooseMove from "./GooseMove";
 export default class GooseMoveRight extends GooseMove {
 
     onEnter(options: Record<string, any>): void {
+        console.log("Starting gooose move right state!");
         if (this.owner instanceof AnimatedSprite) {
             this.owner.animation.play("WalkRight");
         }
-    }
-
-    idle(): void {
-        this.finished(GooseAIStates.IDLE_RIGHT);
     }
 
     move(dir: Vec2) {

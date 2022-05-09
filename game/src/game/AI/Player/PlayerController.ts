@@ -219,11 +219,14 @@ export default class PlayerController extends StateMachineAI {
 	private handleEnemyAttackEvent(event: GameEvent): void {
 		/** Checks to see if player has a damage resisit buff applied? */
 		let damageResist = this.playerStats.getStat(PlayerStat.DMG_RESIST) !== null ? this.playerStats.getStat(PlayerStat.DMG_RESIST) : 1;
-		console.log("Damage resist: " + damageResist);
-		let damage = event.data.get("amount") / damageResist;
+		let damage = event.data.get("damage") / damageResist;
 
-		console.log("Taking damagee with damage resist appliied: " + damage);
-		this.playerStats.setStat(PlayerStat.HEALTH, this.playerStats.getStat(PlayerStat.HEALTH) - damage)
+		console.log("Player attacked");
+		if (this.owner.position.distanceTo(event.data.get("attacker").position) <= event.data.get("attackRange")) {
+			console.log("Playr hit!")
+			this.playerStats.setStat(PlayerStat.HEALTH, this.playerStats.getStat(PlayerStat.HEALTH) - damage);
+		}
+		
 	}
 
 	private itemDropped(): number {

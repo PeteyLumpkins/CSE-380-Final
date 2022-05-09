@@ -5,6 +5,7 @@ import GooseIdle from "./GooseIdle";
 export default class DemonGooseIdle extends GooseIdle {
 
     onEnter(options: Record<string, any>): void {
+        console.log("Starting goose idle state!");
         if (this.owner instanceof AnimatedSprite) {
             this.owner.animation.play("idle_aggro");
         }

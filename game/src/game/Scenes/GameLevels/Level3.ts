@@ -11,11 +11,14 @@ import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 import GameLevel from "./GameLevel";
 import LevelEndAI from "../../AI/LevelEnd/LevelEndAI";
 
+import GooseAI from "../../AI/Enemy/Goose/GooseAI";
+
 import PlayerStats from "../../AI/Player/PlayerStats";
 import PlayerInventory from "../../AI/Player/PlayerInventory";
 import Shop from "./Shop";
 import Level4 from "./Level4";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import DemonGooseAI from "../../AI/Enemy/Goose/DemonGooseAI";
 
 
 export default class Level3 extends GameLevel {
@@ -32,6 +35,7 @@ export default class Level3 extends GameLevel {
         super.loadScene();
         this.load.tilemap("level", "assets/tilemaps/levelThree.json");
         this.load.object(GameData.NAVMESH, "assets/data/navmeshLevel3.json");
+        this.load.object("enemyData", "assets/data/enemyLevel3.json");
     }
 
     unloadScene(): void {
@@ -144,15 +148,27 @@ export default class Level3 extends GameLevel {
     }
 
     initEnemies(): void {
-        // this.enemies = new Array<AnimatedSprite>();
-        // let enemyData = this.load.getObject("enemyData");
-        // let options = RatAI.optionsBuilder(RatAIOptionType.FAST, this.player);
+        this.enemies = new Array<AnimatedSprite>();
+        let enemyData = this.load.getObject("enemyData");
+        let options = {
+            target: this.player,
+            health: 5,
+            sightRange: 200,
+            moveSpeed: 100,
+            attackRange: 75, 
+            attackDamage: 1
+        }
+        
+        let scale = this.viewport.getZoomLevel();
+        let scalar = new Vec2(1/scale, 1/scale).mult(new Vec2(2, 2));
 
-        // for (let i = 0; i < enemyData.enemies.length; i++) {
-        //     this.enemies[i] = this.add.animatedSprite("whiteRat", GameLayers.PRIMARY);
-        //     this.enemies[i].position.set(enemyData.enemies[i].position[0], enemyData.enemies[i].position[1]);
-        //     this.enemies[i].addAI(RatAI, options);
-        //     this.enemies[i].addPhysics();
-        // }
+        for (let i = 0; i < enemyData.enemies.length; i++) {
+            this.enemies[i] = this.add.animatedSprite("goose", GameLayers.PRIMARY);
+            this.enemies[i].position.set(enemyData.enemies[i].position[0], enemyData.enemies[i].position[1]);
+            this.enemies[i].scale.mult(scalar);
+            this.enemies[i].addAI(DemonGooseAI, options);
+            this.enemies[i].addPhysics();
+            this.enemies[i].setCollisionShape(new AABB(Vec2.ZERO, new Vec2(this.enemies[i].sizeWithZoom.x, this.enemies[i].sizeWithZoom.y).mult(scalar).div(new Vec2(3, 2))));
+        }
     }
 }

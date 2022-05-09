@@ -1,17 +1,11 @@
 import EnemyAction from "./EnemyAction";
 
-/**
- * The MoveAction takes 3 items in it's options parameter. The keys associated with these values are defined here:
- * 
- * options.target - the GameNode of the enemy AI that we are trying to move
- * options.toPos - the position we want to move the GameNode to
- * options.speed - a scalar that indicates how fast we want to move the enemy
- * 
- * It is assumed that the fromPosition the target will be moving from is it's current position (target.position)
- */
-export enum MoveOptionKey {
-    TARGET = "MOVE_OPTION_TARGET",
-    TO_POS = "MOVE_OPTION_TO_POS",
+export enum MoveActionType {
+    BLACK_RAT_MOVE = "BLACK_RAT_MOVE_ACTION",
+    WHITE_RAT_MOVE = "WHITE_RAT_MOVE_ACTION",
+
+    RAT_KNOCKBACK = "RAT_KNOCKBACK_ACTION",
+    GOOSE_KNOCKBACK = "GOOSE_KNOCKBACK_ACTION"
 }
 
 /**

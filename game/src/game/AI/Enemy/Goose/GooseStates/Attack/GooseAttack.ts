@@ -9,13 +9,12 @@ export default abstract class GooseAttack extends GooseState {
 
         let dir = this.owner.position.dirTo(this.parent.target.position);
 
-        if (!this.inAttackRange(this.parent.target.position)) {
+        if (!this.inAttackRange(this.parent.target.position) && this.attackTimer.isStopped()) {
             this.move(dir);
-        }
-
-        if (this.attackReady()) {
+        } else if (this.attackReady()) {
             this.attack(dir);
-            this.parent.attackAction.performAction(deltaT, {}, ()=>{this.parent.attackCooldownTimer.start()});
+            this.attackTimer.start();
+            this.parent.attackCooldownTimer.start()
         }
         
     }

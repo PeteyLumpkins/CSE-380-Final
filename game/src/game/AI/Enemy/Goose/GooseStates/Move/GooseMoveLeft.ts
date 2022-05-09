@@ -7,13 +7,10 @@ import AnimatedSprite from "../../../../../../Wolfie2D/Nodes/Sprites/AnimatedSpr
 export default class GooseMoveLeft extends GooseMove {
 
     onEnter(options: Record<string, any>): void {
+        console.log("Starting goose move left state!");
         if (this.owner instanceof AnimatedSprite) {
             this.owner.animation.play("WalkLeft");
         }
-    }
-
-    idle(): void {
-        this.finished(GooseAIStates.IDLE_LEFT);
     }
 
     move(dir: Vec2): void {
