@@ -104,6 +104,7 @@ export default abstract class GameLevel extends Scene {
         this.load.spritesheet("whiteRat", "assets/spritesheets/enemies/whiteRat.json");
         this.load.spritesheet("goose", "assets/spritesheets/enemies/goose.json");
         this.load.spritesheet("turtle", "assets/spritesheets/enemies/turtle.json");
+        this.load.spritesheet("normal_goose", "assets/spritesheets/enemies/goose_normal.json");
 
         this.load.spritesheet(GameSprites.COIN, "assets/spritesheets/coin.json");
         this.load.image("healthpickup", "assets/itemsprites/healthkit.png");
@@ -143,6 +144,7 @@ export default abstract class GameLevel extends Scene {
         this.load.keepSpritesheet("rat");
         this.load.keepSpritesheet("whiteRat");
         this.load.keepSpritesheet("goose");
+        this.load.keepSpritesheet("normal_goose");
 
         this.load.keepSpritesheet(GameSprites.COIN);
         this.load.keepImage("healthpickup");

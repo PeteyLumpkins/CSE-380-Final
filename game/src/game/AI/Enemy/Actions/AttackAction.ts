@@ -86,6 +86,15 @@ export default class AttackAction implements EnemyAction {
                 }
                 break;
             }
+            case AttackActionType.NORMAL_GOOSE: {
+                opt = {
+                    type: AttackActionType.NORMAL_GOOSE, 
+                    damage: 3,
+                    attacker: attacker,
+                    attackRange: 50
+                }
+                break;
+            }
             default: {
                 throw new Error("Unknown attack action type");
             }

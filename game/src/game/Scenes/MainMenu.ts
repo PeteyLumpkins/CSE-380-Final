@@ -260,7 +260,19 @@ export default class MainMenu extends Scene {
         const pauseText = "- ESC to pause the game";
         const pause = <Label>this.add.uiElement(UIElementType.LABEL, MenuLayers.CONTROLS, {position: new Vec2(center.x, center.y + 50), text: pauseText});
         pause.textColor = Color.WHITE;
-        
+
+
+        const cheat1Text = "- I to make yourself invincible";
+        const cheat1 = <Label>this.add.uiElement(UIElementType.LABEL, MenuLayers.CONTROLS, {position: new Vec2(center.x, center.y + 100), text: cheat1Text});
+        cheat1.textColor = Color.WHITE;
+
+        const cheat2Text = "- O to give yourself instakill";
+        const cheat2 = <Label>this.add.uiElement(UIElementType.LABEL, MenuLayers.CONTROLS, {position: new Vec2(center.x, center.y + 150), text: cheat2Text});
+        cheat2.textColor = Color.WHITE;
+
+        const cheat3Text = "- P to give yourself 999 gold";
+        const cheat3 = <Label>this.add.uiElement(UIElementType.LABEL, MenuLayers.CONTROLS, {position: new Vec2(center.x, center.y + 200), text: cheat3Text});
+        cheat3.textColor = Color.WHITE;
 
         const constBack = <Button> this.add.uiElement(UIElementType.BUTTON, MenuLayers.CONTROLS, {position: new Vec2(125, 100), text: "Back"});
         constBack.font = "menu";
@@ -279,7 +291,7 @@ export default class MainMenu extends Scene {
         const aboutHeader = <Label>this.add.uiElement(UIElementType.LABEL, MenuLayers.HELP, {position: new Vec2(center.x, center.y - 300), text: "Story"});
         aboutHeader.textColor = Color.WHITE;
 
-        const text1 = "Deep beneath Stony Brook Universities West Campus, evil stirs...";
+        const text1 = "Deep beneath Stony Brook University West Campus, evil stirs...";
         const text2 = "Recently, Peter's friends have been mysteriously disappearing around the Old Computer Science buidling. One day, when Peter";
         const text3 = "was leaving his office hours, he noticed a mysterious\n door he'd never seen before. Upon further inspection, he found a stairwell";
         const text4 = "that lead to the Old CS basement.";
