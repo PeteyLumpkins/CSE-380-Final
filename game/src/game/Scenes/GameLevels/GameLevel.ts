@@ -106,6 +106,7 @@ export default abstract class GameLevel extends Scene {
         this.load.spritesheet("turtle", "assets/spritesheets/enemies/turtle.json");
 
         this.load.spritesheet(GameSprites.COIN, "assets/spritesheets/coin.json");
+        this.load.image("healthpickup", "assets/itemsprites/healthkit.png");
 
         /** Loads any data/object files that all the levels will need - probs just item data */
         this.load.object('item-data', 'assets/data/item-data.json');
@@ -144,6 +145,7 @@ export default abstract class GameLevel extends Scene {
         this.load.keepSpritesheet("goose");
 
         this.load.keepSpritesheet(GameSprites.COIN);
+        this.load.keepImage("healthpickup");
 
         /** Keeps the objects we'll need later */
         this.load.keepObject('item-data');
