@@ -10,8 +10,9 @@ export default class GooseAttackLeft extends GooseAttack {
     move(dir: Vec2): void {
         if (dir.x > 0) {
             this.finished(GooseAIStates.MOVE_RIGHT);
+        } else {
+            this.finished(GooseAIStates.MOVE_LEFT);
         }
-        this.finished(GooseAIStates.MOVE_LEFT);
     }
 
     attack(dir: Vec2): void {
@@ -20,7 +21,9 @@ export default class GooseAttackLeft extends GooseAttack {
         }
     }
 
-    onEnter(options: Record<string, any>): void {}
+    onEnter(options: Record<string, any>): void {
+        console.log("Starting attack left goose state!");
+    }
 
     handleInput(event: GameEvent): void {}
 

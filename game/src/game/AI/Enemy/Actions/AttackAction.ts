@@ -1,10 +1,14 @@
 import Emitter from "../../../../Wolfie2D/Events/Emitter";
+import GameNode from "../../../../Wolfie2D/Nodes/GameNode";
 
 import { EnemyActions } from "../../../GameEnums";
 import EnemyAction from "./EnemyAction";
 
 export enum AttackActionType {
-    RAT = "RAT_ATTACK"
+    BLACK_RAT = "BLACK_RAT_ATTACK",
+    WHITE_RAT = "WHITE_RAT_ATTACK",
+    NORMAL_GOOSE = "NORMAL_GOOSE_ATTACK",
+    DEMON_GOOSE = "DEMON_GOOSE_ATTACK"
 }
 
 /**
@@ -40,14 +44,34 @@ export default class AttackAction implements EnemyAction {
      * @param type The type of the attack action that we want
      * @returns a new AttackAction object for the given AttackActionType
      */
-    public static attackActionBuilder(type: AttackActionType): AttackAction {
+    public static attackActionBuilder(type: AttackActionType, attacker: GameNode): AttackAction {
 
         let opt = {};
         switch(type) {
-            case AttackActionType.RAT: {
+            case AttackActionType.BLACK_RAT: {
                 opt = {
-                    type: AttackActionType.RAT,
-                    amount: 1
+                    type: AttackActionType.BLACK_RAT,
+                    damage: 1,
+                    attacker: attacker,
+                    attackRange: 40
+                }
+                break;
+            }
+            case AttackActionType.WHITE_RAT: {
+                opt = {
+                    type: AttackActionType.WHITE_RAT,
+                    damage: 2, 
+                    attacker: attacker,
+                    attackRange: 40
+                }
+                break;
+            }
+            case AttackActionType.DEMON_GOOSE: {
+                opt = {
+                    type: AttackActionType.DEMON_GOOSE,
+                    damage: 5,
+                    attacker: attacker,
+                    attackRange: 75
                 }
                 break;
             }
