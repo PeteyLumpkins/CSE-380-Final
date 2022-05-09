@@ -37,7 +37,7 @@ export default class Level5 extends GameLevel {
     loadScene(): void {
         super.loadScene();
         this.load.tilemap("level", "assets/tilemaps/LevelFive.json");
-        this.load.audio("level5", "assets/music/Level5.wav");
+        this.load.audio("level5", "assets/music/level5.wav");
         this.load.spritesheet("wolfie", "assets/spritesheets/enemies/boss.json");
         this.load.object(GameData.NAVMESH, "assets/data/navmeshLevel5.json"); 
 
