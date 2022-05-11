@@ -9,7 +9,7 @@ export default class MovingRight extends Moving {
 
     onEnter(options: Record<string, any>): void {
         this.animation = MovingRight.ANIMATION;
-        this.onEnter(options);
+        super.onEnter(options);
     }
 
     idle(): void {
@@ -17,11 +17,11 @@ export default class MovingRight extends Moving {
     }
 
     move(dir: Vec2): void {
-        if (dir.x < 0) {
+        if (dir.x < 0 && dir.y == 0) {
             this.finished(PlayerStates.MOVING_LEFT);
-        } else if (dir.y < 0) {
+        } else if (dir.y < 0 && dir.x == 0) {
             this.finished(PlayerStates.MOVING_DOWN);
-        } else if (dir.y > 0) {
+        } else if (dir.y > 0 && dir.x == 0) {
             this.finished(PlayerStates.MOVING_DOWN);
         } 
     }
