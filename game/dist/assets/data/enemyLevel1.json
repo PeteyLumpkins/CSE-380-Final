@@ -4,17 +4,17 @@
     {
       "position": [1120, 1024],
       "health": 5,
-      "type": "rat_enemy"
+      "type": "default_rat"
     },
     {
       "position": [1152, 960],
       "health": 5,
-      "type": "rat_enemy"
+      "type": "default_rat"
     },
     {
       "position": [1184, 1024],
       "health": 5,
-      "type": "rat_enemy"
+      "type": "default_rat"
     },
 
 
@@ -22,58 +22,58 @@
     {
       "position": [480, 960],
       "health": 5,
-      "type": "rat_enemy"
+      "type": "default_rat"
     },
     {
       "position": [480, 1024],
       "health": 5,
-      "type": "rat_enemy"
+      "type": "default_rat"
     },
     {
       "position": [544, 1024],
       "health": 5,
-      "type": "rat_enemy"
+      "type": "default_rat"
     },
 
 
     {
       "position": [1504, 416],
       "health": 5,
-      "type": "rat_enemy"
+      "type": "default_rat"
     },
     {
       "position": [1440, 448],
       "health": 5,
-      "type": "rat_enemy"
+      "type": "default_rat"
     },
     {
       "position": [1536, 512],
       "health": 5,
-      "type": "rat_enemy"
+      "type": "default_rat"
     },
 
 
     {
       "position": [1024, 512],
       "health": 5,
-      "type": "rat_enemy"
+      "type": "default_rat"
     },
     {
       "position": [1120, 1312],
       "health": 5,
-      "type": "rat_enemy"
+      "type": "default_rat"
     },
 
 
     {
       "position": [2432, 608],
       "health": 5,
-      "type": "monkey_enemy"
+      "type": "fast_rat"
     },
     {
       "position": [2688, 992],
       "health": 5,
-      "type": "monkey_enemy"
+      "type": "fast_rat"
     }
     
   ]

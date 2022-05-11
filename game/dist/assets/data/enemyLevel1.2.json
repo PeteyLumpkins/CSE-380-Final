@@ -78,22 +78,29 @@
       {
         "position": [828, 1670],
         "health": 5,
-        "type": "rat_enemy"
+        "type": "normal_goose"
       },
       {
         "position": [824, 1712],
         "health": 5,
-        "type": "rat_enemy"
+        "type": "normal_goose"
       },
+
       {
         "position": [234, 1452],
         "health": 5,
-        "type": "goose"
+        "type": "normal_goose"
       },
+
+      {
+        "position": [254, 1452], 
+        "type": "normal_goose"
+      },
+
       {
         "position": [244, 1514],
         "health": 5,
-        "type": "goose"
+        "type": "demon_goose"
       }
       
     ]
