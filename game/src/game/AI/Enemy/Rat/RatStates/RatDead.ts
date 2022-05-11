@@ -8,6 +8,8 @@ import RatState from "./RatState";
 
 export default class RatDead extends RatState {
 
+    public static readonly ANIMATION = ""
+
     onEnter(options: Record<string, any>): void {
         console.log("STARTED RAT DEATH");
 

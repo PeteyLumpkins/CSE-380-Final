@@ -11,6 +11,8 @@ export default abstract class RatState extends State {
     protected parent: RatAI;
     protected owner: GameNode;
 
+    protected animation: string;
+
     constructor(parent: RatAI, owner: GameNode){
         super(parent);
         this.owner = owner;
@@ -23,6 +25,12 @@ export default abstract class RatState extends State {
             this.finished(RatAIStates.DEAD);
         }
 
+    }
+
+    handleInput(event: GameEvent): void {
+        switch(event.type) {
+            
+        }
     }
 
     protected attackReady(): boolean {

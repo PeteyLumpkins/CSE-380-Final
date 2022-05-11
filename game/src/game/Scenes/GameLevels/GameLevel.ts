@@ -129,7 +129,7 @@ export default abstract class GameLevel extends Scene {
     unloadScene(): void {
 
         /** Keeps all the images the next level will need */
-        this.load.image(GameSprites.LADDER, "assets/sprites/EndOfLevel.png");
+        this.load.keepImage(GameSprites.LADDER);
         for (let i = 0; i < items.length; i++) {
             this.load.keepImage(items[i].key);
         }

@@ -13,7 +13,7 @@ import RatMove from "./RatStates/RatMove";
 import RatDead from "./RatStates/RatDead";
 
 import AttackAction, { AttackActionType } from "../Actions/AttackAction";
-import MoveAction from "../Actions/MoveAction";
+import MoveAction, { MoveActionType } from "../Actions/MoveAction";
 
 
 export enum RatAIStates {
@@ -38,8 +38,8 @@ export default class RatAI extends EnemyAI {
 
     /** Actions that the rat can perform/undergo kinda will go here? */
     attack: AttackAction;
-    move = new MoveAction("navmesh", 100, true);
-    knockback = new MoveAction("navmesh", 200, true);
+    move: MoveAction;
+    knockback: MoveAction;
 
     /** Custom attributes specific to the rat ai go here */
     maxHealth: number;
@@ -101,7 +101,9 @@ export default class RatAI extends EnemyAI {
         this.attackRange = options.attackRange;
         this.attackDamage = options.attackDamage;
 
-        this.attack = AttackAction.attackActionBuilder(options.attackActionType, this.owner);
+        this.attack = AttackAction.attackActionBuilder(options.attackAction, this.owner);
+        this.move = MoveAction.moveActionBuilder(options.moveAction, "navmesh", true);
+        this.knockback = MoveAction.moveActionBuilder(options.knockbackAction, "navmesh", true);
     }
 
     /** Initialize custom states for Rat */
@@ -135,12 +137,13 @@ export default class RatAI extends EnemyAI {
         let optionsTemplate: Record<string, any>;
 
         switch(type) {
-
             case RatAIOptionType.DEFAULT: {
                 optionsTemplate = {
                     target: target,
 
-                    attackActionType: AttackActionType.BLACK_RAT,
+                    attackAction: AttackActionType.BLACK_RAT,
+                    moveAction: MoveActionType.DEFAULT_RAT_MOVE,
+                    knockbackAction: MoveActionType.DEFAULT_RAT_KNOCKBACK,
 
                     health: 2,
                     sightRange: 100,
@@ -155,7 +158,9 @@ export default class RatAI extends EnemyAI {
                 optionsTemplate = {
                     target: target,
 
-                    attackActionType: AttackActionType.WHITE_RAT,
+                    attackAction: AttackActionType.WHITE_RAT,
+                    moveAction: MoveActionType.FAST_RAT_MOVE,
+                    knockbackAction: MoveActionType.FAST_RAT_KNOCKBACK,
 
                     health: 2,
                     sightRange: 200,
