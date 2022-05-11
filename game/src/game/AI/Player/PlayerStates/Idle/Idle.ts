@@ -4,30 +4,28 @@ import Vec2 from "../../../../../Wolfie2D/DataTypes/Vec2";
 
 export default abstract class Idle extends PlayerState {
 
+    onEnter(options: Record<string, any>): void {
+        this.owner.animation.play(this.animation);
+    }
+
     update(deltaT: number): void {
         super.update(deltaT);
 
         let dir = this.getInputDirection();
 
         if (this.isAttacking()) {
-          this.attack();
+            console.log("Transitioning from Idle to Attack")
+            this.attack();
         }
 
         if(!dir.isZero()){
-           this.move(dir);
+            console.log("Transitioning from Idle to Move");
+            this.move(dir);
         }
 	  }
 
     move(dir: Vec2): void {
-      if (dir.x > 0 && dir.y > 0) {
-        // Up-right?
-      } else if (dir.x > 0 && dir.y < 0) {
-        // Down-right?
-      } else if (dir.x < 0 && dir.y > 0) {
-        // Up-left?
-      } else if (dir.x < 0 && dir.y < 0) {
-        // Down-left?
-      } else if (dir.x < 0) {
+      if (dir.x < 0) {
         this.finished(PlayerStates.MOVING_LEFT);
       } else if (dir.y < 0) {
         this.finished(PlayerStates.MOVING_DOWN);

@@ -15,60 +15,18 @@ import { PlayerStat } from "../PlayerStats";
 export default abstract class PlayerState extends State {
 
 	parent: PlayerController;
-    protected owner: AnimatedSprite;
+    owner: AnimatedSprite;
 
-	protected attackTimer: Timer;
-	protected attackType: string;
+	/** This represents the current animation being played */
+	protected animation: string;
 
 	constructor(parent: StateMachine, owner: AnimatedSprite){
 		super(parent);
 		this.owner = owner;
-
-		this.attackTimer = new Timer(880/2, () => {
-			console.log("Player attack timer ended");
-			this.sendPlayerAttacked(this.owner.position);
-		});
 	}
 
     handleInput(event: GameEvent): void {
 		
-	}
-
-	// Gets called after the player has finished attacking
-	sendPlayerAttacked(position: Vec2) {
-		let damage = this.parent.playerStats.getStat(PlayerStat.ATTACK_DMG) !== null ? this.parent.playerStats.getStat(PlayerStat.ATTACK_DMG) : 1;
-
-		if (this.parent.instakill) { damage = Infinity; }
-
-		let dir = Vec2.ZERO;
-		let hitbox = null;
-		switch(this.attackType) {
-			case PlayerStates.PUNCH_DOWN: {
-				hitbox = this.parent.getDownHitbox();
-				dir.y = -1;
-				break;
-			}
-			case PlayerStates.PUNCH_LEFT: {
-				hitbox = this.parent.getLeftHitbox();
-				dir.x = -1;
-				break;
-			}
-			case PlayerStates.PUNCH_RIGHT: {
-				hitbox = this.parent.getRightHitbox();
-				dir.x = 1;
-				break;
-			}
-			case PlayerStates.PUNCH_UP: {
-				hitbox = this.parent.getUpHitbox();
-				dir.y = 1;
-				break;
-			}
-			default: {
-				console.log("Unknown attack type while sending attack?");
-				break;
-			}
-		}
-		this.emitter.fireEvent(PlayerEvents.ATTACKED, {position: position, dir: dir, hitbox: hitbox, damage: damage});
 	}
 
 	/** 
@@ -82,7 +40,11 @@ export default abstract class PlayerState extends State {
 	}
 
 	isAttacking(): boolean {
-		return Input.isPressed("attack");
+		return this.parent.numAttacks > 0;
+	}
+
+	getAttacking(): boolean {
+		return Input.isJustPressed("attack");
 	}
 
     /** 
@@ -91,9 +53,17 @@ export default abstract class PlayerState extends State {
 	update(deltaT: number): void {
 		let speedScale = this.parent.playerStats.getStat(PlayerStat.MOVE_SPEED) !== null ? this.parent.playerStats.getStat(PlayerStat.MOVE_SPEED) : 1;
 		let dir = this.getInputDirection()
+
+		/** If player attacked - increase num attacks by 1 */
+		if (this.getAttacking()) {
+			console.log("Incrementing player attacks in update!");
+			this.parent.numAttacks += 1;
+		}
+
 		if (!dir.isZero) {
 			this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "footstep", loop: false, holdReference: true});
 		}
+
 		this.owner.move(dir.mult(new Vec2(speedScale, speedScale))); 
 		
 	}

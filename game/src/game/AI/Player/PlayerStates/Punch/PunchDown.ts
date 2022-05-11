@@ -5,10 +5,16 @@ import { PlayerStates } from "../../PlayerController";
 
 export default class PunchDown extends Punch {
 
+    public static readonly animationKey = "PUNCH_DOWN";
+
     onEnter(options: Record<string, any>): void {
+        /** Initialize animation name */
+        this.animation = PunchDown.animationKey;
+        
+        /** Initialize the hitbox */
+        this.hitbox = this.parent.getDownHitbox();
+
         super.onEnter(options);
-        this.attackType = PlayerStates.PUNCH_DOWN;
-        this.owner.animation.play("PUNCH_DOWN");
     }
 
     idle(): void {

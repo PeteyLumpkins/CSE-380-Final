@@ -4,8 +4,12 @@ import { PlayerStates } from "../../PlayerController";
 
 export default class IdleDown extends Idle {
 
+	public static readonly animationKey = "IDLE_DOWN";
+
     onEnter(options: Record<string, any>): void {
-		this.owner.animation.play("IDLE_DOWN");
+		/** Set the animation we want to play */
+		this.animation = IdleDown.animationKey;
+		super.onEnter(options);
 	}
 
 	attack(): void {

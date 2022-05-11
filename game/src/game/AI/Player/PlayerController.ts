@@ -48,8 +48,15 @@ export enum PlayerEvents {
 
 export default class PlayerController extends StateMachineAI {
 
+	/* CHEAT FLAGS */
 	invincible: boolean = false;
  	instakill: boolean = false;
+
+	/* NUM ATTACKS */
+	numAttacks: number = 0;
+
+	/* PLAYER HIT BOX SCALE */
+	hitboxScale: number = 1/2;
 	
 	/* PLAYER GAME NODE */
 	owner: AnimatedSprite;
@@ -59,7 +66,6 @@ export default class PlayerController extends StateMachineAI {
 
 	/* PLAYER STATS */
 	playerStats: PlayerStats;
-
 
 	initializeAI(owner: AnimatedSprite, options: Record<string, any>): void {
 		this.owner = owner;
@@ -89,50 +95,39 @@ export default class PlayerController extends StateMachineAI {
 	}
 
 	/**
-	 * 
 	 * @returns the downward attack hitbox of the player
 	 */
 	getDownHitbox(): AABB {
-		let scale = 1/2;
-
 		let y = this.owner.boundary.bottomRight.y;
         let x = this.owner.position.x;
-        return new AABB(new Vec2(x, y), new Vec2(this.owner.boundary.halfSize.x * scale, this.owner.boundary.halfSize.y * scale));
+        return new AABB(new Vec2(x, y), new Vec2(this.owner.boundary.halfSize.x * this.hitboxScale, this.owner.boundary.halfSize.y * this.hitboxScale));
 	}
 
 	/**
-	 * Computes and returns the left attack hitbox of the player as an AABB 
-	 * 
 	 * @returns the left attack hitbox of the player
 	 */
 	getLeftHitbox(): AABB {
-		let scale = 1/2;
-
 		let y = this.owner.position.y;
         let x = this.owner.boundary.topLeft.x;
-        return new AABB(new Vec2(x, y), new Vec2(this.owner.boundary.halfSize.x * scale, this.owner.boundary.halfSize.y * scale));
+        return new AABB(new Vec2(x, y), new Vec2(this.owner.boundary.halfSize.x * this.hitboxScale, this.owner.boundary.halfSize.y * this.hitboxScale));
 	}
 
 	/**
 	 * @returns the right attack hitbox of the player
 	 */
 	getRightHitbox(): AABB {
-		let scale = 1/2;
-
 		let y = this.owner.position.y;
         let x = this.owner.boundary.topRight.x;
-        return new AABB(new Vec2(x, y), new Vec2(this.owner.boundary.halfSize.x * scale, this.owner.boundary.halfSize.y * scale));
+        return new AABB(new Vec2(x, y), new Vec2(this.owner.boundary.halfSize.x * this.hitboxScale, this.owner.boundary.halfSize.y * this.hitboxScale));
 	}
 
 	/**
 	 * @returns the upper attack hitbox of the player
 	 */
 	getUpHitbox(): AABB {
-		let scale = 1/2;
-
 		let y = this.owner.boundary.topRight.y;
         let x = this.owner.position.x;
-        return new AABB(new Vec2(x, y), new Vec2(this.owner.boundary.halfSize.x * scale, this.owner.boundary.halfSize.y * scale));
+        return new AABB(new Vec2(x, y), new Vec2(this.owner.boundary.halfSize.x * this.hitboxScale, this.owner.boundary.halfSize.y * this.hitboxScale));
 	}
 
 	activate(options: Record<string, any>): void {};
@@ -243,7 +238,6 @@ export default class PlayerController extends StateMachineAI {
 		let damageResist = this.playerStats.getStat(PlayerStat.DMG_RESIST) !== null ? this.playerStats.getStat(PlayerStat.DMG_RESIST) : 1;
 		let damage = event.data.get("damage") / damageResist;
 
-		console.log("Player attacked");
 		if (this.owner.position.distanceTo(event.data.get("attacker").position) <= event.data.get("attackRange")) {
 			console.log("Playr hit!")
 			this.playerStats.setStat(PlayerStat.HEALTH, this.playerStats.getStat(PlayerStat.HEALTH) - damage);

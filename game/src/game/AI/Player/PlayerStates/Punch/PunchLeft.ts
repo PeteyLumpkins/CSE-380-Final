@@ -5,10 +5,16 @@ import { PlayerStates } from "../../PlayerController";
 
 export default class PunchLeft extends Punch {
 
+    public static readonly animationKey = "PUNCH_LEFT"
+
     onEnter(options: Record<string, any>): void {
+        /** Set the animation name */
+        this.animation = PunchLeft.animationKey;
+        
+        /** Set the hitbox */
+        this.hitbox = this.parent.getLeftHitbox();
+
         super.onEnter(options);
-        this.attackType = PlayerStates.PUNCH_LEFT;
-        this.owner.animation.play("PUNCH_LEFT");
     }
 
     idle(): void {

@@ -142,7 +142,7 @@ export default class RatAI extends EnemyAI {
 
                     attackActionType: AttackActionType.BLACK_RAT,
 
-                    health: 2,
+                    health: 5,
                     sightRange: 100,
                     swarmRange: 50,
                     moveSpeed: 100,
