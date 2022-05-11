@@ -1,6 +1,6 @@
 {
-	"name": "rat",
-	"spriteSheetImage": "rat.png",
+	"name": "whiteRat",
+	"spriteSheetImage": "whiteRat.png",
 	"spriteWidth": 32,
 	"spriteHeight": 32,
 	"leftBuffer": 0,

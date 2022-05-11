@@ -343,7 +343,7 @@ export default abstract class GameLevel extends Scene {
         let scale = this.getViewScale();
         let scalar = new Vec2(scale, scale);
 
-        this.playerHealthLabel = <Label>this.add.uiElement(UIElementType.LABEL, UILayers.PRIMARY, {position: new Vec2(120, 32).div(scalar), text: "Health: " + (this.startingStats["HEALTH"])});
+        this.playerHealthLabel = <Label>this.add.uiElement(UIElementType.LABEL, UILayers.PRIMARY, {position: new Vec2(120, 32).div(scalar), text: "Health: " + (Math.round(this.startingStats["HEALTH"]*100)/100)});
         this.playerHealthLabel.size.set(100, 50);
         this.playerHealthLabel.scale.div(scalar);
         this.playerHealthLabel.textColor = Color.WHITE;
