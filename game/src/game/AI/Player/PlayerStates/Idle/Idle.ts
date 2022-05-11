@@ -2,6 +2,7 @@ import PlayerState from "../PlayerState";
 import { PlayerStates } from "../../PlayerController";
 import Vec2 from "../../../../../Wolfie2D/DataTypes/Vec2";
 
+
 export default abstract class Idle extends PlayerState {
 
     onEnter(options: Record<string, any>): void {
@@ -23,6 +24,10 @@ export default abstract class Idle extends PlayerState {
             this.move(dir);
         }
 	  }
+
+    onExit(): Record<string, any> {
+      return {};
+    }
 
     move(dir: Vec2): void {
       if (dir.x < 0) {

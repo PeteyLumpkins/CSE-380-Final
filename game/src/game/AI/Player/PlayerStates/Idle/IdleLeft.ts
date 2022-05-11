@@ -4,15 +4,15 @@ import { PlayerStates } from "../../PlayerController";
 
 export default class IdleRight extends Idle {
 
+	public static readonly ANIMATION = "IDLE_LEFT";
+
     onEnter(options: Record<string, any>): void {
-		this.owner.animation.play("IDLE_LEFT");
+		this.animation = IdleRight.ANIMATION;
+		super.onEnter(options);
 	}
 
 	attack(): void {
 		this.finished(PlayerStates.PUNCH_LEFT);
 	}
 
-    onExit(): Record<string, any> {
-		return {};
-	}
 }

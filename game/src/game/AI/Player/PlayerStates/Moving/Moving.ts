@@ -1,7 +1,12 @@
 import Vec2 from "../../../../../Wolfie2D/DataTypes/Vec2";
 import PlayerState from "../PlayerState";
 
+
 export default abstract class Moving extends PlayerState {
+
+    onEnter(options: Record<string, any>): void {
+        this.owner.animation.play(this.animation);
+    }
 
     update(deltaT: number): void {
         super.update(deltaT);
@@ -17,6 +22,10 @@ export default abstract class Moving extends PlayerState {
         } 
         
         this.move(dir);
+    }
+
+    onExit(): Record<string, any> {
+        return;
     }
 
     abstract idle(): void;

@@ -5,8 +5,11 @@ import Moving from "./Moving";
 
 export default class MovingRight extends Moving {
 
+    public static readonly ANIMATION = "WALK_RIGHT";
+
     onEnter(options: Record<string, any>): void {
-        this.owner.animation.play("WALK_RIGHT");
+        this.animation = MovingRight.ANIMATION;
+        this.onEnter(options);
     }
 
     idle(): void {
@@ -14,15 +17,7 @@ export default class MovingRight extends Moving {
     }
 
     move(dir: Vec2): void {
-        if (dir.x > 0 && dir.y > 0) {
-            // Up-right?
-        } else if (dir.x > 0 && dir.y < 0) {
-            // Down-right?
-        } else if (dir.x < 0 && dir.y > 0) {
-            // Up-left?
-        } else if (dir.x < 0 && dir.y < 0) {
-            // Down-left?
-        } else if (dir.x < 0) {
+        if (dir.x < 0) {
             this.finished(PlayerStates.MOVING_LEFT);
         } else if (dir.y < 0) {
             this.finished(PlayerStates.MOVING_DOWN);
@@ -33,10 +28,6 @@ export default class MovingRight extends Moving {
 
     attack(): void {
         this.finished(PlayerStates.PUNCH_RIGHT);
-    }
-
-    onExit(): Record<string, any> {
-        return
     }
     
 }
