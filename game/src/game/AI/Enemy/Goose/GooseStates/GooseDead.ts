@@ -6,6 +6,8 @@ import { PickupTypes } from "../../../Pickup/PickupTypes";
 import GooseState from "./GooseState";
 
 export default class GooseDead extends GooseState {
+
+    takeDamage(): void {}
     
     onEnter(options: Record<string, any>): void {
         let drop = RandUtils.randInt(1, 3);

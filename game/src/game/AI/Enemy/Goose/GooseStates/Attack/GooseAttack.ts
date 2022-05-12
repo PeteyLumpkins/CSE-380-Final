@@ -1,29 +1,40 @@
-import Vec2 from "../../../../../../Wolfie2D/DataTypes/Vec2";
+import GameEvent from "../../../../../../Wolfie2D/Events/GameEvent";
+import AnimatedSprite from "../../../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import { GooseAIEvents, GooseAIStates } from "../../GooseAI";
 import GooseState from "../GooseState";
-
 
 export default abstract class GooseAttack extends GooseState {
 
-    update(deltaT: number): void {
-        super.update(deltaT);
-
-        let dir = this.owner.position.dirTo(this.parent.target.position);
-
-        if (!this.inAttackRange(this.parent.target.position) && this.attackTimer.isStopped()) {
-            this.move(dir);
-        } else if (this.attackReady()) {
-            this.attack(dir);
-            this.attackTimer.start();
-            this.parent.attackCooldownTimer.start()
+    onEnter(options: Record<string, any>): void {
+        console.log("Starting a goose attack");
+        if (this.owner instanceof AnimatedSprite) {
+            this.owner.animation.playIfNotAlready(this.animation, false, GooseAIEvents.ATTACK_FINISHED);
         }
-        
+    }
+    handleInput(event: GameEvent): void {
+        switch(event.type) {
+            case GooseAIEvents.ATTACK_FINISHED: {
+                this.handleAttackFinished();
+                break;
+            }
+            default: {
+                super.handleInput(event);
+                break;
+            }
+        }
+    }
+    update(deltaT: number): void { 
+        super.update(deltaT); 
+    }
+    onExit(): Record<string, any> { 
+        return super.onExit();
     }
 
-    abstract move(dir: Vec2): void;
-    
-    abstract attack(dir: Vec2): void;
+    handleAttackFinished(): void { 
+        this.parent.attackAction.performAction(0, {}, ()=>{});
+        this.finished(GooseAIStates.IDLE)
+    }
 }
-
 
 import GooseAttackLeft from "./GooseAttackLeft";
 import GooseAttackRight from "./GooseAttackRight";

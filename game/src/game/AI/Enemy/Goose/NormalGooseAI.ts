@@ -2,13 +2,16 @@ import { PlayerEvents } from "../../Player/PlayerController";
 import AttackAction, { AttackActionType } from "../Actions/AttackAction";
 
 import GooseAI, { GooseAIStates } from "./GooseAI";
+import { NormalGooseIdle } from "./GooseStates/GooseState";
 
 
 export default class NormalGooseAI extends GooseAI {
 
     initStates(): void {
         super.initStates();
-        this.initialize(GooseAIStates.IDLE_NORMAL);
+
+        this.addState(GooseAIStates.IDLE, new NormalGooseIdle(this, this.owner))
+        this.initialize(GooseAIStates.IDLE);
     }
 
     initOptions(options: Record<string, any>): void {
@@ -17,7 +20,7 @@ export default class NormalGooseAI extends GooseAI {
     }
 
     subscribeToEvents(): void {
-        this.receiver.subscribe(PlayerEvents.ATTACKED);
+        super.subscribeToEvents();
     }
     
 }

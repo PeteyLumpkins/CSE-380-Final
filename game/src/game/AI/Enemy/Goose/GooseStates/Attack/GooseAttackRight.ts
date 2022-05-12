@@ -1,32 +1,31 @@
-import Vec2 from "../../../../../../Wolfie2D/DataTypes/Vec2";
 import GameEvent from "../../../../../../Wolfie2D/Events/GameEvent";
-import AnimatedSprite from "../../../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import { GooseAIStates } from "../../GooseAI";
 import GooseAttack from "./GooseAttack";
 
-
 export default class GooseAttackRight extends GooseAttack {
 
-    move(dir: Vec2): void {
-        if (dir.x < 0) {
-            this.finished(GooseAIStates.MOVE_LEFT);
-        }
-        this.finished(GooseAIStates.MOVE_RIGHT);
-    }
-
-    attack(dir: Vec2): void {
-        if (this.owner instanceof AnimatedSprite) {
-            console.log("Starting attack animation");
-            this.owner.animation.play("attackRight");
-        }
-    }
+    public static readonly ANIMATION = "attackRight";
 
     onEnter(options: Record<string, any>): void {
-        console.log("Starting goose attack right state");
+        this.animation = GooseAttackRight.ANIMATION;
+        super.onEnter(options);
+    }
+    handleInput(event: GameEvent): void {
+        switch(event.type) {
+            default: {
+                super.handleInput(event);
+                break;
+            }
+        }
+    }
+    update(deltaT: number): void { 
+        super.update(deltaT); 
+    }
+    onExit(): Record<string, any> { 
+        return super.onExit(); 
     }
 
-    handleInput(event: GameEvent): void {}
-
-    onExit(): Record<string, any> { return; }
-    
+    takeDamage(): void {
+        this.finished(GooseAIStates.HIT_RIGHT);
+    }
 }

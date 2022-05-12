@@ -12,13 +12,21 @@ import MoveAction from "../Actions/MoveAction";
 import {
     GooseAttackRight, GooseAttackLeft,  
     GooseMoveRight, GooseMoveLeft,
-    NormalGooseIdle, DemonGooseIdle,
+    GooseHitRight, GooseHitLeft, 
+    GooseDyingRight, GooseDyingLeft,
     GooseDead
 } from "./GooseStates/GooseState";
 
+export enum GooseAIEvents {
+    ATTACK_FINISHED = "GOOSE_ATTACK_FINISHED_EVENT",
+    PLAYER_SEEN = "GOOSE_PLAYER_SEEN_EVENT",
+    TOOK_DAMAGE = "GOOSE_TOOK_DAMAGE_EVENT",
+    HIT_OVER = "GOOSE_HIT_OVER_EVENT",
+    DYING_OVER = "GOOSE_DYING_OVER_EVENT"
+}
+
 export enum GooseAIStates {
-    IDLE_NORMAL = "GOOSE_IDLE_NORMAL_STATE",
-    IDLE_DEMON = "GOOSE_IDLE_DEMON_STATE",
+    IDLE = "GOOSE_IDLE_STATE",
 
     MOVE_LEFT = "GOOSE_MOVE_LEFT_STATE",
     MOVE_RIGHT = "GOOSE_MOVE_RIGHT_STATE",
@@ -26,7 +34,12 @@ export enum GooseAIStates {
     ATTACK_LEFT = "GOOSE_ATTACK_LEFT_STATE",
     ATTACK_RIGHT = "GOOSE_ATTACK_RIGHT_STATE",
 
-    KNOCK_BACK = "GOOSE_KNOCKED_BACK_STATE",
+    HIT_LEFT = "GOOSE_HIT_LEFT_STATE",
+    HIT_RIGHT = "GOOSE_HIT_RIGHT_STATE",
+
+    DYING_LEFT = "GOOSE_DYING_LEFT_STATE",
+    DYING_RIGHT = "GOOSE_DYING_RIGHT_STATE",
+
     DEAD = "GOOSE_DEAD_STATE"
 }
 
@@ -44,38 +57,6 @@ export default class GooseAI extends EnemyAI {
     attackRange: number;
     attackDamage: number;
 
-    /** Cooldown timers for the knockback and attack of the goose */
-    attackCooldownTimer: Timer = new Timer(2000);
-    knockbackCooldownTimer: Timer = new Timer(2000);
-
-    update(deltaT: number): void {
-        super.update(deltaT);
-        while(this.receiver.hasNextEvent()){
-			this.handleEvent(this.receiver.getNextEvent());
-		}
-    }
-
-    handleEvent(event: GameEvent): void {
-        switch(event.type) {
-            case PlayerEvents.ATTACKED: {
-                console.log("Caught player attacked event in GooseAI");
-                this.handlePlayerAttackEvent(event);
-                break;
-            }
-            default: {
-                console.log("Unhandled event caught in GoooseAI");
-                break;
-            }
-        }
-    }
-
-    handlePlayerAttackEvent(event: GameEvent): void {
-        if (this.owner.collisionShape.overlaps(event.data.get("hitbox"))) {
-            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "hitSound", loop: false, holdReference: true});
-            this.health -= event.data.get("damage");
-        }
-    }
-
     initStates(): void {
 
         this.addState(GooseAIStates.ATTACK_LEFT, new GooseAttackLeft(this, this.owner));
@@ -84,10 +65,14 @@ export default class GooseAI extends EnemyAI {
         this.addState(GooseAIStates.MOVE_LEFT, new GooseMoveLeft(this, this.owner));
         this.addState(GooseAIStates.MOVE_RIGHT, new GooseMoveRight(this, this.owner));
 
+        this.addState(GooseAIStates.HIT_LEFT, new GooseHitLeft(this, this.owner));
+        this.addState(GooseAIStates.HIT_RIGHT, new GooseHitRight(this, this.owner));
+
+        this.addState(GooseAIStates.DYING_LEFT, new GooseDyingLeft(this, this.owner));
+        this.addState(GooseAIStates.DYING_RIGHT, new GooseDyingRight(this, this.owner));
+
         this.addState(GooseAIStates.DEAD, new GooseDead(this, this.owner));
 
-        this.addState(GooseAIStates.IDLE_DEMON, new DemonGooseIdle(this, this.owner));
-        this.addState(GooseAIStates.IDLE_NORMAL, new NormalGooseIdle(this, this.owner));
     }
 
     initOptions(options: Record<string, any>): void {
@@ -101,6 +86,9 @@ export default class GooseAI extends EnemyAI {
 
     subscribeToEvents(): void {
         this.receiver.subscribe(PlayerEvents.ATTACKED);
+        this.receiver.subscribe(GooseAIEvents.DYING_OVER);
+        this.receiver.subscribe(GooseAIEvents.PLAYER_SEEN);
+        this.receiver.subscribe(GooseAIEvents.HIT_OVER);
     }
     
 }
