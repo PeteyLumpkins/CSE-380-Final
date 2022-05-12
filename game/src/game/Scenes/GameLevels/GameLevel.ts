@@ -21,6 +21,7 @@ import PlayerController from "../../AI/Player/PlayerController";
 import InventoryManager from "../../GameSystems/InventoryManager";
 import PauseManager from "../../GameSystems/PauseManager";
 import StoreManager from "../../GameSystems/StoreManager";
+import AABB from "../../../Wolfie2D/DataTypes/Shapes/AABB";
 
 
 export enum UILayers {
@@ -56,6 +57,7 @@ export default abstract class GameLevel extends Scene {
     /* MORE UI COMPONENTS */
     protected itemBarBackground: Sprite;
     protected pauseButton: Button;
+    protected hurtIndicator: Label;
 
     /* NEXT AND PREV LEVELS LINKS */
     protected nextLevel: Sprite;
@@ -122,6 +124,11 @@ export default abstract class GameLevel extends Scene {
         this.load.audio("itemdrop", "assets/soundEffects/itemDrop.wav");
         this.load.audio("itempickup", "assets/soundEffects/itemPickup.wav");
         this.load.audio("invalidbuy", "assets/soundEffects/invalidStore.wav");
+
+        this.load.audio("ratDamaged", "assets/soundEffects/enemySounds/ratDamaged.wav");
+        this.load.audio("ratAttack", "assets/soundEffects/enemySounds/ratAttack.wav");
+        this.load.audio("gooseAttack", "assets/soundEffects/enemySounds/gooseAttack.wav");
+        this.load.audio("gooseDamaged", "assets/soundEffects/enemySounds/gooseDamaged.wav");
     }
 
     unloadScene(): void {
@@ -162,6 +169,11 @@ export default abstract class GameLevel extends Scene {
         this.load.keepAudio("itemdrop");
         this.load.keepAudio("itempickup");
         this.load.keepAudio("invalidbuy");
+
+        this.load.keepAudio("ratDamaged");
+        this.load.keepAudio("ratAttack");
+        this.load.keepAudio("gooseAttack");
+        this.load.keepAudio("gooseDamaged");
     }
 
     startScene(): void {
@@ -374,6 +386,15 @@ export default abstract class GameLevel extends Scene {
         this.itemBarBackground = this.add.sprite("itembarbg", UILayers.ITEM_BAR);
         this.itemBarBackground.position.set(center.x, 32 / scale);
         this.itemBarBackground.scale.div(scalar);
+
+        /** Setting up the hurt red hurt indicator box thingy? */
+        let size = this.viewport.getView().halfSize;
+        size.mult(new Vec2(2, 2))
+
+        this.hurtIndicator = <Label>this.add.uiElement(UIElementType.LABEL, UILayers.PRIMARY, {position: new Vec2(center.x, center.y), text: ""});
+        this.hurtIndicator.size.set(size.x, size.y);
+        this.hurtIndicator.backgroundColor = Color.TRANSPARENT;
+
     }
 
     /**
