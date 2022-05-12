@@ -44,11 +44,11 @@ export default abstract class RatHit extends RatState {
             console.log("Playing rat dying animation");
             this.die();
         } else {
-            this.idle();
+            this.move();
         }
     }
 
-    abstract idle(): void;
+    abstract move(): void;
 
     abstract die(): void;
 

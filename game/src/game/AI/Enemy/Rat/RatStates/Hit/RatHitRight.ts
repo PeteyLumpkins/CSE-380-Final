@@ -10,8 +10,8 @@ export default class RatHitRight extends RatHit {
         super.onEnter(options);
     }
 
-    idle(): void {
-        this.finished(RatAIStates.IDLE_RIGHT);
+    move(): void {
+        this.finished(RatAIStates.MOVE_RIGHT);
     }
 
     die(): void {
