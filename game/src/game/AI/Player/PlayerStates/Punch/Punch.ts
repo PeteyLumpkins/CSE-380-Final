@@ -7,39 +7,42 @@ import PlayerState from "../PlayerState";
 
 export default abstract class Punch extends PlayerState {
 
-    protected attackTimer: Timer;
-    protected hitbox: AABB;
+    /** STATE METHODS */
 
     onEnter(options: Record<string, any> ): void {
-
-        /** Initialize the attack timer */
-        this.attackTimer = new Timer(200, () => {
-			this.parent.numAttacks -= 1;
-			this.sendPlayerAttacked(this.owner.position);
-		});
-
-        /** Start attack timer */
-        this.attackTimer.start();
-
-        /** Start the animation */
-        this.owner.animation.play(this.animation);
+        this.owner.animation.playIfNotAlready(this.animation, false, PlayerEvents.ATTACK_ENDED);
     }
 
-    update(deltaT: number): void {
-        super.update(deltaT);
-
-        if (this.attackTimer.isStopped()) {
-            this.idle();
+    handleInput(event: GameEvent): void {
+        switch(event.type) {
+            case PlayerEvents.ATTACK_ENDED: {
+                this.sendPlayerAttacked()
+            }
+            default: {
+                super.handleInput(event);
+                break;
+            }
         }
+    }
+
+    update(deltaT: number): void {}
+
+    onExit(): Record<string, any> { return; }
+
+    sendPlayerAttacked(): void {
+        let damage = this.parent.playerStats.getStat(PlayerStat.ATTACK_DMG) !== null ? this.parent.playerStats.getStat(PlayerStat.ATTACK_DMG) : 1;
+        let hitbox = this.getHitbox();
+
+        if (this.parent.instakill) { damage = Infinity; }
+
+        this.emitter.fireEvent(PlayerEvents.ATTACKED, {hitbox: hitbox, damage: damage});
+
+        this.idle();
     }
 
     abstract idle(): void;
 
-    sendPlayerAttacked(position: Vec2): void {
-        let damage = this.parent.playerStats.getStat(PlayerStat.ATTACK_DMG) !== null ? this.parent.playerStats.getStat(PlayerStat.ATTACK_DMG) : 1;
-        if (this.parent.instakill) { damage = Infinity; }
-        this.emitter.fireEvent(PlayerEvents.ATTACKED, {position: position, hitbox: this.hitbox, damage: damage});
-    }
+    abstract getHitbox(): AABB;
 
 }
 
@@ -48,5 +51,6 @@ import PunchRight from "./PunchRight";
 import PunchDown from "./PunchDown";
 import PunchUp from "./PunchUp";
 import { PlayerStat } from "../../PlayerStats";
+import GameEvent from "../../../../../Wolfie2D/Events/GameEvent";
 
 export { PunchLeft, PunchRight, PunchDown, PunchUp }

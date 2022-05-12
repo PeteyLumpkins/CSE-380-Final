@@ -1,4 +1,5 @@
 import Emitter from "../../../Wolfie2D/Events/Emitter";
+import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 
 export enum InventoryEvent {
     CHANGED = "INVENTORY_CHANGED_EVENT"
@@ -29,6 +30,7 @@ export default class Inventory {
         } else {
             this.inventory.push(itemKey);
             this.emitter.fireEvent(InventoryEvent.CHANGED, {items: this.getCopy()});
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "itempickup", loop: false, holdReference: true});
             return itemKey;
         }
     }

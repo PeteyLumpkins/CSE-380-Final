@@ -1,7 +1,6 @@
 import Idle from "./Idle";
 import { PlayerStates } from "../../PlayerController";
 
-
 export default class IdleDown extends Idle {
 
 	public static readonly ANIMATION = "IDLE_DOWN";

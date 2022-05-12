@@ -1,20 +1,28 @@
+import Vec2 from "../../../../../Wolfie2D/DataTypes/Vec2";
+import GameEvent from "../../../../../Wolfie2D/Events/GameEvent";
 import PlayerState from "../PlayerState";
 import { PlayerStates } from "../../PlayerController";
-import Vec2 from "../../../../../Wolfie2D/DataTypes/Vec2";
-
 
 export default abstract class Idle extends PlayerState {
 
     onEnter(options: Record<string, any>): void {
-        this.owner.animation.play(this.animation);
+        this.owner.animation.playIfNotAlready(this.animation);
+    }
+
+    handleInput(event: GameEvent) {
+        switch(event.type) {
+            default: {
+                super.handleInput(event);
+                break;
+            }
+        }
     }
 
     update(deltaT: number): void {
-        super.update(deltaT);
+        let dir = this.parent.getInputDirection();
+        let attacking = this.parent.getAttacking();
 
-        let dir = this.getInputDirection();
-
-        if (this.isAttacking()) {
+        if (attacking) {
             console.log("Transitioning from Idle to Attack")
             this.attack();
         }
@@ -25,9 +33,7 @@ export default abstract class Idle extends PlayerState {
         }
 	  }
 
-    onExit(): Record<string, any> {
-      return {};
-    }
+    onExit(): Record<string, any> { return; }
 
     move(dir: Vec2): void {
       if (dir.x < 0) {
@@ -42,7 +48,6 @@ export default abstract class Idle extends PlayerState {
     }
 
     abstract attack(): void;
-
 }
 
 import IdleLeft from "./IdleLeft";
