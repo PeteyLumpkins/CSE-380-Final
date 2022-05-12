@@ -54,10 +54,12 @@ export default abstract class PlayerState extends State {
 		let pickupType = event.data.get("type");
 		switch(pickupType) {
 			case PickupTypes.HEALTH: {
+				this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "healthpickup", loop: false, holdReference: true});
 				this.parent.playerStats.setStat(PlayerStat.HEALTH, this.parent.playerStats.getStat(PlayerStat.HEALTH) + event.data.get("amount"));
 				break;
 			}
 			case PickupTypes.MONEY: {
+				this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "coinSound", loop: false, holdReference: true});
 				this.parent.playerStats.setStat(PlayerStat.MONEY, this.parent.playerStats.getStat(PlayerStat.MONEY) + event.data.get("amount"));
 				break;
 			}

@@ -184,7 +184,6 @@ export default class Level1 extends GameLevel {
                 }
             }
             this.enemies[i].position.set(enemyData.enemies[i].position[0], enemyData.enemies[i].position[1]);
-            this.enemies[i].addAI(RatAI, options);
             this.enemies[i].addPhysics(null, null, false);
         }
     }

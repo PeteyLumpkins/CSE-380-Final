@@ -129,6 +129,8 @@ export default abstract class GameLevel extends Scene {
         this.load.audio("ratAttack", "assets/soundEffects/enemySounds/ratAttack.wav");
         this.load.audio("gooseAttack", "assets/soundEffects/enemySounds/gooseAttack.wav");
         this.load.audio("gooseDamaged", "assets/soundEffects/enemySounds/gooseDamaged.wav");
+
+        this.load.audio("healthpickup", "assets/soundEffects/heal.wav");
     }
 
     unloadScene(): void {
@@ -174,6 +176,8 @@ export default abstract class GameLevel extends Scene {
         this.load.keepAudio("ratAttack");
         this.load.keepAudio("gooseAttack");
         this.load.keepAudio("gooseDamaged");
+
+        this.load.keepAudio("healthpickup");
     }
 
     startScene(): void {
@@ -388,12 +392,7 @@ export default abstract class GameLevel extends Scene {
         this.itemBarBackground.scale.div(scalar);
 
         /** Setting up the hurt red hurt indicator box thingy? */
-        let size = this.viewport.getView().halfSize;
-        size.mult(new Vec2(2, 2))
-
-        this.hurtIndicator = <Label>this.add.uiElement(UIElementType.LABEL, UILayers.PRIMARY, {position: new Vec2(center.x, center.y), text: ""});
-        this.hurtIndicator.size.set(size.x, size.y);
-        this.hurtIndicator.backgroundColor = Color.TRANSPARENT;
+        
 
     }
 

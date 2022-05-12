@@ -56,13 +56,11 @@ export default class PlayerStats {
     setStat(key: string, value: any): void {
         this.stats[key] = value;
         switch(key) {
-            case "MONEY": {
-                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "itempickup", loop: false, holdReference: true});
+            case PlayerStat.MONEY: {
                 this.emitter.fireEvent(PlayerEvents.MONEY_CHANGE, {amount: value});
                 break;
             }
-            case "HEALTH": {
-                // TODO: Play the health pickup sound here...
+            case PlayerStat.HEALTH: {
                 this.emitter.fireEvent(PlayerEvents.HEALTH_CHANGE, {amount: value});
                 break;
             }

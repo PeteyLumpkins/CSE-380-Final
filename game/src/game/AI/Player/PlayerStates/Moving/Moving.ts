@@ -12,7 +12,7 @@ export default abstract class Moving extends PlayerState {
         let speedScale = this.parent.playerStats.getStat(PlayerStat.MOVE_SPEED) !== null ? this.parent.playerStats.getStat(PlayerStat.MOVE_SPEED) : 1;
 		this.owner.move(dir.mult(new Vec2(speedScale, speedScale))); 
 
-        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "footstep", loop: false, holdReference: true});
+        // this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "footstep", loop: false, holdReference: true});
     }
 
     handleInput(event: GameEvent): void {

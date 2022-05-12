@@ -70,6 +70,9 @@ export default class MoveAction implements EnemyAction {
             case MoveActionType.DEFAULT_RAT_KNOCKBACK: {
                 return new MoveAction(navkey, 200, direct);
             }
+            case MoveActionType.FAST_RAT_KNOCKBACK: {
+                return new MoveAction(navkey, 200, direct);
+            }
             default: {
                 throw new Error(`Unknown move action type: ${type}`);
             }
