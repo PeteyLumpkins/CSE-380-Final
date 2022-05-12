@@ -8,4 +8,6 @@ export default class RatDyingLeft extends RatDying {
         this.animation = RatDyingLeft.ANIMATION;
         super.onEnter(options);
     }
+
+    takeDamage(): void {}
 }

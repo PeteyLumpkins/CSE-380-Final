@@ -1,6 +1,6 @@
 {
-	"name": "goose",
-	"spriteSheetImage": "goose.png",
+	"name": "goose_demon",
+	"spriteSheetImage": "goose_demon.png",
 	"spriteWidth": 128,
 	"spriteHeight": 64,
 	"leftBuffer": 0,
@@ -8,7 +8,7 @@
 	"topBuffer": 0,
 	"bottomBuffer": 0,
 	"columns": 6,
-	"rows": 6,
+	"rows": 9,
 	"animations": [
         {
 			"name": "idle_not_aggro",
@@ -180,6 +180,102 @@
                 {
                     "index": 32,
                     "duration": 10
+                }
+			]
+		},
+        {
+			"name": "hurtLeft",
+			"repeat": true,
+			"frames": [
+                {
+                    "index": 33,
+                    "duration": 30
+                },
+                {
+                    "index": 34,
+                    "duration": 30
+                },
+                {
+                    "index": 35,
+                    "duration": 30
+                },
+                {
+                    "index": 36,
+                    "duration": 30
+                }
+			]
+		},
+        {
+			"name": "hurtRight",
+			"repeat": true,
+			"frames": [
+                {
+                    "index": 37,
+                    "duration": 30
+                },
+                {
+                    "index": 38,
+                    "duration": 30
+                },
+                {
+                    "index": 39,
+                    "duration": 30
+                },
+                {
+                    "index": 40,
+                    "duration": 30
+                }
+			]
+		},
+        {
+			"name": "dyingLeft",
+			"repeat": true,
+			"frames": [
+                {
+                    "index": 41,
+                    "duration": 30
+                },
+                {
+                    "index": 42,
+                    "duration": 30
+                },
+                {
+                    "index": 43,
+                    "duration": 30
+                },
+                {
+                    "index": 44,
+                    "duration": 30
+                },
+                {
+                    "index": 45,
+                    "duration": 30
+                }
+			]
+		},
+        {
+			"name": "dyingRight",
+			"repeat": true,
+			"frames": [
+                {
+                    "index": 46,
+                    "duration": 30
+                },
+                {
+                    "index": 47,
+                    "duration": 30
+                },
+                {
+                    "index": 48,
+                    "duration": 30
+                },
+                {
+                    "index": 49,
+                    "duration": 30
+                },
+                {
+                    "index": 50,
+                    "duration": 30
                 }
 			]
 		}

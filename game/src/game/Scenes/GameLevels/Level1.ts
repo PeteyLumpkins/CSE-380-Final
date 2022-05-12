@@ -162,13 +162,30 @@ export default class Level1 extends GameLevel {
         
         this.enemies = new Array<AnimatedSprite>();
         let enemyData = this.load.getObject("enemyData");
-        let options = RatAI.optionsBuilder(RatAIOptionType.DEFAULT, this.player);
+
+        let defaultRatoptions = RatAI.optionsBuilder(RatAIOptionType.DEFAULT, this.player);
+        let fastRatoptions = RatAI.optionsBuilder(RatAIOptionType.FAST, this.player)
 
         for (let i = 0; i < enemyData.enemies.length; i++) {
-            this.enemies[i] = this.add.animatedSprite("rat", GameLayers.PRIMARY);
+            let type = enemyData.enemies[i].type;
+            switch(type) {
+                case "fast_rat": {
+                    this.enemies[i] = this.add.animatedSprite("whiteRat", GameLayers.PRIMARY);
+                    this.enemies[i].addAI(RatAI, fastRatoptions);
+                    break;
+                }
+                case "default_rat": {
+                    this.enemies[i] = this.add.animatedSprite("rat", GameLayers.PRIMARY);
+                    this.enemies[i].addAI(RatAI, defaultRatoptions);
+                    break;
+                }
+                default: {
+                    throw new Error("Unrecognized enemy type in enemyData file at index " + i);
+                }
+            }
             this.enemies[i].position.set(enemyData.enemies[i].position[0], enemyData.enemies[i].position[1]);
             this.enemies[i].addAI(RatAI, options);
-            this.enemies[i].addPhysics();
+            this.enemies[i].addPhysics(null, null, false);
         }
     }
 

@@ -18,6 +18,7 @@ import { GraphicType } from "../../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Navmesh from "../../../Wolfie2D/Pathfinding/Navmesh";
 import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 import NormalGooseAI from "../../AI/Enemy/Goose/NormalGooseAI";
+import DemonGooseAI from "../../AI/Enemy/Goose/DemonGooseAI";
 
 export default class Level2 extends GameLevel {
 
@@ -87,12 +88,17 @@ export default class Level2 extends GameLevel {
         for (let i = 0; i < enemyData.enemies.length; i++) {
             let type = enemyData.enemies[i].type;
             switch(type) {
-                case "goose": {
+                case "normal_goose": {
                     this.enemies[i] = this.add.animatedSprite("normal_goose", GameLayers.PRIMARY);
                     this.enemies[i].scale.mult(scalar);
                     this.enemies[i].addAI(NormalGooseAI, gooseOptions);
                     break;
                 } 
+                case "demon_goose": {
+                    this.enemies[i] = this.add.animatedSprite("goose", GameLayers.PRIMARY);
+                    this.enemies[i].addAI(DemonGooseAI, gooseOptions);
+                    break;
+                }
                 default: {
                     this.enemies[i] = this.add.animatedSprite("whiteRat", GameLayers.PRIMARY);
                     this.enemies[i].addAI(RatAI, options);

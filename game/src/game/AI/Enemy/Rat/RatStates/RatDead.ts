@@ -8,7 +8,7 @@ import RatState from "./RatState";
 
 export default class RatDead extends RatState {
 
-    public static readonly ANIMATION = ""
+    public static readonly ANIMATION = "";
 
     onEnter(options: Record<string, any>): void {
         console.log("STARTED RAT DEATH");
@@ -60,7 +60,12 @@ export default class RatDead extends RatState {
     }
 
     handleInput(event: GameEvent): void {
+        switch(event.type) {
+
+        }
     }
+
+    takeDamage(): void {}
 
     update(deltaT: number): void {}
 

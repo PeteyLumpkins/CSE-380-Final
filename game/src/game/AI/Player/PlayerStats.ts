@@ -1,4 +1,5 @@
 import Emitter from "../../../Wolfie2D/Events/Emitter";
+import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 import { PlayerEvents } from "./PlayerController";
 
 /**
@@ -29,7 +30,6 @@ export default class PlayerStats {
      */
     addBuffs(buffs: Array<Record<string,any>>): void {
         for (let buff of buffs) {
-            console.log(buff.type + " " + buff.scale);
             this.setStat(buff.type, (this.getStat(buff.type) !== null ? this.getStat(buff.type) : 1)*buff.scale);
         }
     }
@@ -42,7 +42,6 @@ export default class PlayerStats {
     removeBuffs(buffs: Array<Record<string,any>>): void {
         // Should be a case for each of the stats a player can have
         for (let buff of buffs) {
-            console.log(buff.type + " " + buff.scale);
             this.setStat(buff.type, (this.getStat(buff.type) !== null ? this.getStat(buff.type) : 1)/buff.scale);
         }
     }
@@ -58,10 +57,12 @@ export default class PlayerStats {
         this.stats[key] = value;
         switch(key) {
             case "MONEY": {
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "itempickup", loop: false, holdReference: true});
                 this.emitter.fireEvent(PlayerEvents.MONEY_CHANGE, {amount: value});
                 break;
             }
             case "HEALTH": {
+                // TODO: Play the health pickup sound here...
                 this.emitter.fireEvent(PlayerEvents.HEALTH_CHANGE, {amount: value});
                 break;
             }
