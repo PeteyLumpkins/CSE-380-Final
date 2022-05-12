@@ -3,29 +3,45 @@ import GameNode from "../../../../Wolfie2D/Nodes/GameNode";
 import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
 import Timer from "../../../../Wolfie2D/Timing/Timer";
 
+
 import { PlayerEvents } from "../../Player/PlayerController";
-import { GameEventType } from "../../../../Wolfie2D/Events/GameEventType";
-
-import RatIdle from "./RatStates/RatIdle";
-import RatAttack from "./RatStates/RatAttack";
-import RatKnockback from "./RatStates/RatKnockback";
-import RatMove from "./RatStates/RatMove";
-import RatDead from "./RatStates/RatDead";
-
 import AttackAction, { AttackActionType } from "../Actions/AttackAction";
 import MoveAction, { MoveActionType } from "../Actions/MoveAction";
 
+import { 
+    RatIdleLeft, RatIdleRight, 
+    RatAttackLeft, RatAttackRight,
+    RatDyingLeft, RatDyingRight,
+    RatHitLeft, RatHitRight,
+    RatMoveLeft, RatMoveRight,
+    RatDead
+} from "./RatStates/RatState";
+
 
 export enum RatAIStates {
-    IDLE = "RAT_IDLE_STATE",
-    MOVE = "RAT_MOVING_STATE",
-    ATTACK = "RAT_ATTACKING_STATE",
-    KNOCK_BACK = "RAT_KNOCKED_BACK_STATE",
-    DEAD = "RAT_DEAD_STATE"
+    IDLE_LEFT = "RAT_IDLE_LEFT_STATE",
+    IDLE_RIGHT = "RAT_IDLE_RIGHT_STATE",
+
+    MOVE_LEFT = "RAT_MOVE_LEFT_STATE",
+    MOVE_RIGHT = "RAT_MOVE_RIGHT_STATE",
+
+    ATTACK_LEFT = "RAT_ATTACK_LEFT_STATE",
+    ATTACK_RIGHT = "RAT_ATTACK_RIGHT_STATE",
+
+    DEAD = "RAT_DEAD_STATE",
+
+    HURT_LEFT = "RAT_HURT_LEFT_STATE",
+    HURT_RIGHT = "RAT_HURT_RIGHT_STATE",
+
+    DYING_LEFT = "RAT_DYING_LEFT_STATE",
+    DYING_RIGHT = "RAT_DYING_RIGHT_STATE",
 }
 
 export enum RatAIEvents {
-    PLAYER_SEEN = "RAT_PLAYER_SEEN_EVENT"
+    PLAYER_SEEN = "RAT_PLAYER_SEEN_EVENT",
+    RAT_DEAD = "RAT_DEAD_EVENT",
+    RAT_HIT_OVER = "RAT_HIT_OVER_EVENT",
+    RAT_DROP_ITEM = "RAT_DROP_ITEM_EVENT"
 }
 
 export enum RatAIOptionType {
@@ -55,39 +71,6 @@ export default class RatAI extends EnemyAI {
 
     /** Cooldown timers for the knockback and attack of the rat */
     attackCooldownTimer: Timer = new Timer(2000);
-    knockbackCooldownTimer: Timer = new Timer(2000);
-
-    update(deltaT: number): void {
-        super.update(deltaT);
-        while(this.receiver.hasNextEvent()){
-			this.handleEvent(this.receiver.getNextEvent());
-		}
-    }
-
-    handleEvent(event: GameEvent): void {
-        switch(event.type) {
-            case PlayerEvents.ATTACKED: {
-                console.log("Caught player attacked event in RatAI");
-                this.handlePlayerAttackEvent(event);
-                break;
-            }
-            default: {
-                console.log("Unhandled event caught in RatAI");
-                break;
-            }
-        }
-    }
-
-    handlePlayerAttackEvent(event: GameEvent): void {
-        if (this.owner.collisionShape.overlaps(event.data.get("hitbox"))) {
-            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "hitSound", loop: false, holdReference: true});
-            this.health -= event.data.get("damage");
-            if (this.knockbackCooldownTimer.isStopped()) {
-                this.knockbackCooldownTimer.start();
-                this.changeState(RatAIStates.KNOCK_BACK);
-            }
-        }
-    }
 
     /** Initialize custom attributes for Rat */
     initOptions(options: Record<string, any>): void {
@@ -108,19 +91,32 @@ export default class RatAI extends EnemyAI {
 
     /** Initialize custom states for Rat */
     initStates(): void {
-        this.addState(RatAIStates.IDLE, new RatIdle(this, this.owner));
-        this.addState(RatAIStates.ATTACK, new RatAttack(this, this.owner));
-        this.addState(RatAIStates.DEAD, new RatDead(this, this.owner));
-        this.addState(RatAIStates.MOVE, new RatMove(this, this.owner));
-        this.addState(RatAIStates.KNOCK_BACK, new RatKnockback(this, this.owner));
+        this.addState(RatAIStates.IDLE_LEFT, new RatIdleLeft(this, this.owner));
+        this.addState(RatAIStates.IDLE_RIGHT, new RatIdleRight(this, this.owner));
 
-        this.initialize(RatAIStates.IDLE);
+        this.addState(RatAIStates.HURT_LEFT, new RatHitLeft(this, this.owner));
+        this.addState(RatAIStates.HURT_RIGHT, new RatHitRight(this, this.owner));
+
+        this.addState(RatAIStates.MOVE_LEFT, new RatMoveLeft(this, this.owner));
+        this.addState(RatAIStates.MOVE_RIGHT, new RatMoveRight(this, this.owner));
+
+        this.addState(RatAIStates.ATTACK_LEFT, new RatAttackLeft(this, this.owner));
+        this.addState(RatAIStates.ATTACK_RIGHT, new RatAttackRight(this, this.owner));
+
+        this.addState(RatAIStates.DYING_LEFT, new RatDyingLeft(this, this.owner));
+        this.addState(RatAIStates.DYING_RIGHT, new RatDyingRight(this, this.owner));
+        
+        this.addState(RatAIStates.DEAD, new RatDead(this, this.owner));
+
+        this.initialize(RatAIStates.IDLE_LEFT);
     }
 
     /** Subscribe to any rat specific events that the rats need to know about */
     subscribeToEvents(): void {
         this.receiver.subscribe(RatAIEvents.PLAYER_SEEN);
         this.receiver.subscribe(PlayerEvents.ATTACKED);
+        this.receiver.subscribe(RatAIEvents.RAT_HIT_OVER);
+        this.receiver.subscribe(RatAIEvents.RAT_DEAD);
     }
 
     /**
