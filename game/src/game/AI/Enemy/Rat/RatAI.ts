@@ -141,7 +141,7 @@ export default class RatAI extends EnemyAI {
                     moveAction: MoveActionType.DEFAULT_RAT_MOVE,
                     knockbackAction: MoveActionType.DEFAULT_RAT_KNOCKBACK,
 
-                    health: 2,
+                    health: 5,
                     sightRange: 100,
                     swarmRange: 50,
                     moveSpeed: 100,
