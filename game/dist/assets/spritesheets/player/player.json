@@ -8,7 +8,7 @@
     "rightBuffer": 0,
     "topBuffer": 0,
     "bottomBuffer": 0,
-    "rows": 9,
+    "rows": 11,
     "durationType": "time",
     "animations": [
         { 
@@ -174,6 +174,54 @@
                 {"index": 74, "duration": 2}, 
                 {"index": 75, "duration": 2}
 
+            ]
+        },
+        {
+            "name": "HURT_DOWN",
+            "repeat": true,
+            "frames": [ 
+                {"index": 76, "duration": 2}, 
+                {"index": 77, "duration": 2}, 
+                {"index": 78, "duration": 2}
+            ]
+        },
+        {
+            "name": "HURT_UP",
+            "repeat": true,
+            "frames": [ 
+                {"index": 79, "duration": 2}, 
+                {"index": 80, "duration": 2}, 
+                {"index": 81, "duration": 2}
+            ]
+        },
+        {
+            "name": "HURT_LEFT",
+            "repeat": true,
+            "frames": [ 
+                {"index": 82, "duration": 2}, 
+                {"index": 83, "duration": 2}, 
+                {"index": 84, "duration": 2}
+            ]
+        },
+        {
+            "name": "HURT_RIGHT",
+            "repeat": true,
+            "frames": [ 
+                {"index": 85, "duration": 2}, 
+                {"index": 86, "duration": 2}, 
+                {"index": 87, "duration": 2}
+            ]
+        },
+        {
+            "name": "DYING",
+            "repeat": true,
+            "frames": [ 
+                {"index": 88, "duration": 2}, 
+                {"index": 89, "duration": 2}, 
+                {"index": 90, "duration": 2},
+                {"index": 91, "duration": 2}, 
+                {"index": 92, "duration": 2}, 
+                {"index": 93, "duration": 2}
             ]
         }
 
