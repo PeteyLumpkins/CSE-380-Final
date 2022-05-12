@@ -1,17 +1,22 @@
 import EnemyAction from "./EnemyAction";
 
 export enum MoveActionType {
-    BLACK_RAT_MOVE = "BLACK_RAT_MOVE_ACTION",
-    WHITE_RAT_MOVE = "WHITE_RAT_MOVE_ACTION",
+    DEFAULT_RAT_MOVE = "BLACK_RAT_MOVE_ACTION",
+    FAST_RAT_MOVE = "WHITE_RAT_MOVE_ACTION",
+    DEMON_GOOSE_MOVE = "DEMON_GOOSE_MOVE_ACTION",
+    NORMAL_GOOSE_MOVE = "NORMAL_GOOSE_MOVE_ACTION",
 
-    RAT_KNOCKBACK = "RAT_KNOCKBACK_ACTION",
-    GOOSE_KNOCKBACK = "GOOSE_KNOCKBACK_ACTION"
+    DEFAULT_RAT_KNOCKBACK = "DEFAULT_RAT_KNOCKBACK_ACTION",
+    FAST_RAT_KNOCKBACK = "FAST_RAT_KNOCKBACK_ACTION",
+    NORMAL_GOOSE_KNOCKBACK = "GOOSE_KNOCKBACK_ACTION"
 }
 
 /**
  * The MoveAction for an EnemyAI - moves the target along a path towards a desired position
  */
 export default class MoveAction implements EnemyAction {
+
+    public static readonly DEFAULT_NAVKEY = "navmesh"
 
     private navkey: string;
     private direct: boolean;
@@ -44,5 +49,30 @@ export default class MoveAction implements EnemyAction {
         target.moveOnPath(this.speed*deltaT, path);
 
         effects();
+    }
+
+    public static moveActionBuilder(type: MoveActionType, navkey: string, direct: boolean): MoveAction {
+
+        switch(type) {
+
+            case MoveActionType.DEFAULT_RAT_MOVE: {
+                return new MoveAction(navkey, 100, direct);
+            }
+            case MoveActionType.FAST_RAT_MOVE: {
+                return new MoveAction(navkey, 200, direct);
+            }
+            case MoveActionType.NORMAL_GOOSE_MOVE: {
+                return new MoveAction(navkey, 75, direct);
+            }
+            case MoveActionType.DEMON_GOOSE_MOVE: {
+                return new MoveAction(navkey, 75, direct);
+            }
+            case MoveActionType.DEFAULT_RAT_KNOCKBACK: {
+                return new MoveAction(navkey, 200, direct);
+            }
+            default: {
+                throw new Error(`Unknown move action type: ${type}`);
+            }
+        }
     }
 }

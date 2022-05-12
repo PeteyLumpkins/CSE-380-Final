@@ -36,14 +36,12 @@ export default class Level3 extends GameLevel {
         this.load.tilemap("level", "assets/tilemaps/levelThree.json");
         this.load.object(GameData.NAVMESH, "assets/data/navmeshLevel3.json");
         this.load.object("enemyData", "assets/data/enemyLevel3.json");
-        this.load.audio("level3", "assets/music/Level3.wav");
-
+        this.load.audio("level3", "assets/music/level3.wav");
     }
 
     unloadScene(): void {
         this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level3"});
         console.log("Unloading!");
-
     }
 
     /**

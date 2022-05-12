@@ -43,11 +43,10 @@ export default class Level1 extends GameLevel {
 
     loadScene(){
         super.loadScene();
-
-        this.load.tilemap("level", "assets/tilemaps/levelOne.json");
         this.load.object(GameData.NAVMESH, "assets/data/navmeshLevel1.json"); 
         this.load.object("enemyData", "assets/data/enemyLevel1.json");
         this.load.audio("level1", "assets/music/Level1.wav");
+        this.load.tilemap("level", "assets/tilemaps/levelOne.json");
     }
 
     unloadScene(): void {
@@ -185,7 +184,8 @@ export default class Level1 extends GameLevel {
                 }
             }
             this.enemies[i].position.set(enemyData.enemies[i].position[0], enemyData.enemies[i].position[1]);
-            this.enemies[i].addPhysics();
+            this.enemies[i].addAI(RatAI, options);
+            this.enemies[i].addPhysics(null, null, false);
         }
     }
 

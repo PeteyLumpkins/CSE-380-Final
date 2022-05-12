@@ -7,9 +7,30 @@
 	"rightBuffer": 0,
 	"topBuffer": 0,
 	"bottomBuffer": 0,
-	"columns": 2,
-	"rows": 2,
+	"columns": 4,
+	"rows": 4,
 	"animations": [
+		{
+			"name": "IDLE_RIGHT",
+			"repeat": true,
+			"frames": [
+				{
+					"index": 0,
+					"duration" : 0
+				}
+			]
+		},
+		{
+			"name": "IDLE_LEFT",
+			"repeat": true,
+			"frames": [
+				{
+					"index": 2,
+					"duration" : 0
+				}
+			]
+		},
+		
 		{
 			"name": "WalkRight",
 			"repeat": true,
@@ -38,6 +59,70 @@
                     "duration": 10
                 }
 			]
+		},
+		{
+			"name": "DieRight",
+			"repeat": false,
+			"frames":[
+				{
+					"index": 4,
+					"duration": 10
+				},
+				{
+					"index": 5,
+					"duration": 10
+				},
+				{
+					"index": 6,
+					"duration": 10
+				}
+			]		
+		},
+		{
+			"name": "DieLeft",
+			"repeat": false,
+			"frames":[
+				{
+					"index": 7,
+					"duration": 10
+				},
+				{
+					"index": 8,
+					"duration": 10
+				},
+				{
+					"index": 9,
+					"duration": 10
+				}
+			]		
+		},
+		{
+			"name": "HurtRight",
+			"repeat": false,
+			"frames":[
+				{
+					"index": 10,
+					"duration": 10
+				},
+				{
+					"index": 11,
+					"duration": 10
+				}
+			]		
+		},
+		{
+			"name": "HurtLeft",
+			"repeat": false,
+			"frames":[
+				{
+					"index": 12,
+					"duration": 10
+				},
+				{
+					"index": 13,
+					"duration": 10
+				}
+			]		
 		}
     ]
 }
