@@ -16,6 +16,7 @@ import StoreItems from "../../AI/Store/StoreItems";
 import LevelEndAI from "../../AI/LevelEnd/LevelEndAI";
 
 import RandUtils from "../../../Wolfie2D/Utils/RandUtils";
+import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 
 
 export default class Shop extends GameLevel {
@@ -33,10 +34,12 @@ export default class Shop extends GameLevel {
         this.load.spritesheet("merchant", "assets/spritesheets/store/merchant.json");
         this.load.audio("buySound", "assets/soundEffects/shopBuy.wav");
         this.load.audio("textbox", "assets/soundEffects/textbox.wav");
+        this.load.audio("shopMusic", "assets/music/shop.wav");
     }
 
     unloadScene(): void {
         super.unloadScene();
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "shopMusic"});
     }
 
     initScene(init: Record<string, any>): void {
@@ -51,6 +54,7 @@ export default class Shop extends GameLevel {
     startScene(): void {
         this.addLayer(GameLayers.PRIMARY, 5);
         super.startScene();
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "shopMusic", loop: true, holdReference: true});
     }
 
     initPlayer(): void {
