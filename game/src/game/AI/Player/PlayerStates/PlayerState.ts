@@ -2,6 +2,9 @@ import State from "../../../../Wolfie2D/DataTypes/State/State";
 import StateMachine from "../../../../Wolfie2D/DataTypes/State/StateMachine";
 import AnimatedSprite from "../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import GameEvent from "../../../../Wolfie2D/Events/GameEvent";
+import { EnemyActions, GameEvents } from "../../../GameEnums";
+import { PickupTypes } from "../../Pickup/PickupTypes";
+import { StoreEvent } from "../../../GameSystems/StoreManager";
 
 import PlayerController from "../PlayerController";
 import { GameEventType } from "../../../../Wolfie2D/Events/GameEventType";
@@ -19,6 +22,8 @@ export default abstract class PlayerState extends State {
 		super(parent);
 		this.owner = owner;
 	}
+
+	abstract takeDamage(): void;
 
     handleInput(event: GameEvent): void {
 		switch(event.type) {
@@ -47,6 +52,7 @@ export default abstract class PlayerState extends State {
 
 		if (this.owner.position.distanceTo(event.data.get("attacker").position) <= event.data.get("attackRange")) {
 			this.parent.playerStats.setStat(PlayerStat.HEALTH, this.parent.playerStats.getStat(PlayerStat.HEALTH) - damage);
+			this.takeDamage();
 		}	
 	}
 
@@ -94,12 +100,13 @@ export default abstract class PlayerState extends State {
 import { IdleLeft, IdleRight, IdleDown, IdleUp } from "./Idle/Idle";
 import { MovingLeft, MovingRight, MovingDown, MovingUp } from "./Moving/Moving";
 import { PunchLeft, PunchRight, PunchDown, PunchUp } from "./Punch/Punch";
-import { EnemyActions, GameEvents } from "../../../GameEnums";
-import { PickupTypes } from "../../Pickup/PickupTypes";
-import { StoreEvent } from "../../../GameSystems/StoreManager";
+import { HurtLeft, HurtRight, HurtDown, HurtUp } from "./Hurt/Hurt";
+import Dying from "./Dying";
 
 export {
 	IdleLeft, IdleRight, IdleDown, IdleUp,
 	MovingLeft, MovingRight, MovingDown, MovingUp,
-	PunchLeft, PunchRight, PunchDown, PunchUp
+	PunchLeft, PunchRight, PunchDown, PunchUp,
+	HurtLeft, HurtRight, HurtDown, HurtUp,
+	Dying
 }

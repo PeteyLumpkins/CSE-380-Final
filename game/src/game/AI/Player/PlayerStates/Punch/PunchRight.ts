@@ -18,4 +18,8 @@ export default class PunchRight extends Punch {
     getHitbox(): AABB {
         return this.parent.getRightHitbox();
     }
+
+    takeDamage(): void {
+        this.finished(PlayerStates.HURT_RIGHT);
+    }
 }

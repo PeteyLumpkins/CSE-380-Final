@@ -10,7 +10,9 @@ import {
 
 	IdleLeft, IdleRight, IdleDown, IdleUp,
 	MovingLeft, MovingRight, MovingDown, MovingUp,
-	PunchLeft, PunchRight, PunchDown, PunchUp
+	PunchLeft, PunchRight, PunchDown, PunchUp,
+	HurtLeft, HurtRight, HurtDown, HurtUp,
+	Dying
 
 } from "./PlayerStates/PlayerState";
 
@@ -34,15 +36,24 @@ export enum PlayerStates {
 
 	PUNCH_RIGHT = "PUNCH_RIGHT_PLAYER_STATE",
 	PUNCH_LEFT = "PUNCH_LEFT_PLAYER_STATE",
+	PUNCH_DOWN = "PUNCH_DOWN_PLAYER_STATE",
 	PUNCH_UP = "PUNCH_UP_PLAYER_STATE",
-	PUNCH_DOWN = "PUNCH_DOWN_PLAYER_STATE"
+
+	HURT_RIGHT = "HURT_RIGHT_PLAYER_STATE",
+	HURT_LEFT = "HURT_LEFT_PLAYER_STATE",
+	HURT_DOWN = "HURT_DOWN_PLAYER_STATE",
+	HURT_UP = "HURT_UP_PLAYER_STATE",
+
+	DYING = "DYING_PLAYER_STATE"
 }
 
 export enum PlayerEvents {
 	ATTACKED = "PLAYER_EVENT_ATTACKED",
 	HEALTH_CHANGE = "PLAYER_EVENT_HEALTH_CHANGE",
 	MONEY_CHANGE = "PLAYER_EVENT_MONEY_CHANGE",
-	ATTACK_ENDED = "PLAYER_EVENT_ATTACK_ENDED"
+	ATTACK_ENDED = "PLAYER_EVENT_ATTACK_ENDED",
+	HURT_ENDED = "PLAYER_EVENT_HURT_ENDED",
+	PLAYER_DIED = "PLAYER_EVENT_PLAYER_DIED"
 }
 
 export default class PlayerController extends StateMachineAI {
@@ -86,13 +97,22 @@ export default class PlayerController extends StateMachineAI {
 		this.addState(PlayerStates.PUNCH_RIGHT, new PunchRight(this, this.owner));
 		this.addState(PlayerStates.PUNCH_DOWN, new PunchDown(this, this.owner));
 		this.addState(PlayerStates.PUNCH_UP, new PunchUp(this, this.owner));
+
+		this.addState(PlayerStates.HURT_LEFT, new HurtLeft(this, this.owner));
+		this.addState(PlayerStates.HURT_RIGHT, new HurtRight(this, this.owner));
+		this.addState(PlayerStates.HURT_DOWN, new HurtDown(this, this.owner));
+		this.addState(PlayerStates.HURT_UP, new HurtUp(this, this.owner));
+
+		this.addState(PlayerStates.DYING, new Dying(this, this.owner));
 		
         this.initialize(PlayerStates.IDLE_RIGHT);
 
 		this.receiver.subscribe(StoreEvent.ITEM_PURCHASED);
+		this.receiver.subscribe(PlayerEvents.HURT_ENDED);
 		this.receiver.subscribe(GameEvents.PICKUP_ITEM);
 		this.receiver.subscribe(EnemyActions.ATTACK);
 		this.receiver.subscribe(PlayerEvents.ATTACK_ENDED);
+		this.receiver.subscribe(PlayerEvents.PLAYER_DIED);
 	}
 
 	activate(options: Record<string, any>): void {};
@@ -118,7 +138,6 @@ export default class PlayerController extends StateMachineAI {
 
 		// Updating the state machine will trigger the current state to be updated.
 		super.update(deltaT);
-
 	}
 
 	private handleItemDropEvent(index: number): void {

@@ -18,4 +18,8 @@ export default class PunchUp extends Punch {
     getHitbox(): AABB {
         return this.parent.getUpHitbox();
     }
+
+    takeDamage(): void {
+        this.finished(PlayerStates.HURT_UP);
+    }
 }
