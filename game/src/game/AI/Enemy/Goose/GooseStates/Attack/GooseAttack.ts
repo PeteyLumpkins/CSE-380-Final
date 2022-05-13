@@ -31,6 +31,7 @@ export default abstract class GooseAttack extends GooseState {
     }
 
     handleAttackFinished(): void { 
+        console.log("Finishing goose attack");
         this.parent.attackAction.performAction(0, {}, ()=>{});
         this.finished(GooseAIStates.IDLE)
     }

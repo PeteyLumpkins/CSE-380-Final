@@ -15,7 +15,7 @@ export default abstract class GooseHit extends GooseState {
         this.knockbackPosition = this.parent.target.position.dirTo(this.owner.position).mult(new Vec2(100, 100)).add(this.parent.target.position);
 
         if (this.owner instanceof AnimatedSprite) {
-            this.owner.animation.play(this.animation, false, GooseAIEvents.HIT_OVER);
+            this.owner.animation.playIfNotAlready(this.animation, false, GooseAIEvents.HIT_OVER);
         }
     }
     handleInput(event: GameEvent): void {

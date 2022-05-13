@@ -12,7 +12,6 @@ export default class DemonGooseIdle extends GooseIdle {
         this.animation = DemonGooseIdle.ANIMATION;
         super.onEnter(options);
     }
-
     handleInput(event: GameEvent) {
         switch(event.type) {
             case GooseAIEvents.PLAYER_SEEN: {
@@ -25,14 +24,14 @@ export default class DemonGooseIdle extends GooseIdle {
             }
         }
     }
-
     update(deltaT: number): void {
         if (this.inSightRange(this.parent.target.position)) {
             this.emitter.fireEvent(GooseAIEvents.PLAYER_SEEN);
         }
     }
-
-    onExit(): Record<string, any> { return super.onExit(); }
+    onExit(): Record<string, any> { 
+        return super.onExit(); 
+    }
 
     handlePlayerSeenEvent(event: GameEvent): void {
         let dir = this.owner.position.dirTo(this.parent.target.position);
@@ -42,7 +41,6 @@ export default class DemonGooseIdle extends GooseIdle {
             this.finished(GooseAIStates.MOVE_LEFT);
         }
     }
-
     takeDamage(): void { 
         this.finished(GooseAIStates.HIT_LEFT);
     }

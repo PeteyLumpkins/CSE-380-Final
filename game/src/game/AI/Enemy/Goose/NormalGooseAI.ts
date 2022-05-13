@@ -16,6 +16,7 @@ export default class NormalGooseAI extends GooseAI {
 
     initOptions(options: Record<string, any>): void {
         super.initOptions(options);
+        
         this.attackAction = AttackAction.attackActionBuilder(AttackActionType.NORMAL_GOOSE, this.owner);
     }
 
