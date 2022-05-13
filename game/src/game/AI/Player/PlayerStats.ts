@@ -54,13 +54,15 @@ export default class PlayerStats {
     }
 
     setStat(key: string, value: any): void {
-        this.stats[key] = value;
+        
         switch(key) {
             case PlayerStat.MONEY: {
+                value = value < 0 ? 0 : value;
                 this.emitter.fireEvent(PlayerEvents.MONEY_CHANGE, {amount: value});
                 break;
             }
             case PlayerStat.HEALTH: {
+                value = value < 0 ? 0 : value;
                 this.emitter.fireEvent(PlayerEvents.HEALTH_CHANGE, {amount: value});
                 break;
             }
@@ -68,7 +70,7 @@ export default class PlayerStats {
                 break;
             }
         }
-    
+        this.stats[key] = value;
     }
 
     getCopy(): Record<string, any> { 

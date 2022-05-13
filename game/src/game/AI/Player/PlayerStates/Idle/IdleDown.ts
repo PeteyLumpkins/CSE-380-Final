@@ -13,5 +13,8 @@ export default class IdleDown extends Idle {
 	attack(): void {
 		this.finished(PlayerStates.PUNCH_DOWN);
 	}
-	
+
+	takeDamage(): void {
+		this.finished(PlayerStates.HURT_DOWN);
+	}
 }

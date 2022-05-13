@@ -1,22 +1,17 @@
 import { PlayerStates } from "../../PlayerController";
-import Moving from "./Moving";
+import Hurt from "./Hurt";
 
-export default class MovingDown extends Moving {
-
-    public static readonly ANIMATION = "WALK_DOWN";
+export default class HurtDown extends Hurt {
+    public static readonly ANIMATION = "HURT_DOWN"
 
     onEnter(options: Record<string, any>): void {
-        this.animation = MovingDown.ANIMATION;
+        this.animation = HurtDown.ANIMATION;
         super.onEnter(options);
     }
 
     idle(): void {
         this.finished(PlayerStates.IDLE_DOWN);
     }
-
-    attack(): void {
-        this.finished(PlayerStates.PUNCH_DOWN);
-    }  
 
     takeDamage(): void {
         this.finished(PlayerStates.HURT_DOWN);

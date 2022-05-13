@@ -18,4 +18,8 @@ export default class PunchDown extends Punch {
     getHitbox(): AABB {
         return this.parent.getDownHitbox();
     }
+
+    takeDamage(): void {
+        this.finished(PlayerStates.HURT_DOWN);
+    }
 }

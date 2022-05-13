@@ -14,4 +14,8 @@ export default class IdleRight extends Idle {
 		this.finished(PlayerStates.PUNCH_LEFT);
 	}
 
+	takeDamage(): void {
+		this.finished(PlayerStates.HURT_LEFT);
+	}
+
 }
