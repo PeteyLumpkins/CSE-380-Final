@@ -216,12 +216,12 @@
             "name": "DYING",
             "repeat": true,
             "frames": [ 
-                {"index": 88, "duration": 2}, 
-                {"index": 89, "duration": 2}, 
-                {"index": 90, "duration": 2},
-                {"index": 91, "duration": 2}, 
-                {"index": 92, "duration": 2}, 
-                {"index": 93, "duration": 2}
+                {"index": 88, "duration": 30}, 
+                {"index": 89, "duration": 30}, 
+                {"index": 90, "duration": 30},
+                {"index": 91, "duration": 30}, 
+                {"index": 92, "duration": 30}, 
+                {"index": 93, "duration": 30}
             ]
         }
 
