@@ -16,7 +16,8 @@ export default abstract class Punch extends PlayerState {
     handleInput(event: GameEvent): void {
         switch(event.type) {
             case PlayerEvents.ATTACK_ENDED: {
-                this.sendPlayerAttacked()
+                this.sendPlayerAttacked();
+                break;
             }
             default: {
                 super.handleInput(event);

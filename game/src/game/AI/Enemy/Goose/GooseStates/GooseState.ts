@@ -1,48 +1,59 @@
 import State from "../../../../../Wolfie2D/DataTypes/State/State";
 import GameNode from "../../../../../Wolfie2D/Nodes/GameNode";
 import Vec2 from "../../../../../Wolfie2D/DataTypes/Vec2";
-import Timer from "../../../../../Wolfie2D/Timing/Timer";
+import GameEvent from "../../../../../Wolfie2D/Events/GameEvent";
+import { GameEventType } from "../../../../../Wolfie2D/Events/GameEventType";
+import { PlayerEvents } from "../../../Player/PlayerController";
 import GooseAI from "../GooseAI";
-import { GooseAIStates } from "../GooseAI"
 
 export default abstract class GooseState extends State {
 
     parent: GooseAI;
-
     owner: GameNode;
 
-    attackTimer: Timer;
+    animation: string;
 
     constructor(parent: GooseAI, owner: GameNode){
         super(parent);
         this.owner = owner;
-        this.attackTimer = new Timer(2000, ()=>{
-            this.parent.attackAction.performAction(0, {}, ()=>{});
-        });
     }
 
-    update(deltaT: number): void {
-        if(this.isDead()) {
-            this.finished(GooseAIStates.DEAD);
+    handleInput(event: GameEvent): void {
+        switch(event.type) {
+            case PlayerEvents.ATTACKED: {
+                this.handlePlayerAttackEvent(event);
+                break;
+            } 
+            default: {
+                console.warn("Unknown event type seen in goose state: " + event.type);
+                break;
+            }
         }
     }
 
-    protected attackReady(): boolean {
-        return this.parent.attackCooldownTimer.isStopped();
+    update(deltaT: number): void {}
+
+    onExit(): Record<string, any> { return; }
+
+    handlePlayerAttackEvent(event: GameEvent): void {
+        if (this.owner.collisionShape.overlaps(event.data.get("hitbox"))) {
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "hitSound", loop: false, holdReference: true});
+            this.parent.health -= event.data.get("damage");
+            this.takeDamage();
+        }
     }
+
+    abstract takeDamage(): void;
 
     protected isDead(): boolean {
         return this.parent.health <= 0;
     }
-
     protected hasBeenHit(): boolean {
         return this.parent.health < this.parent.maxHealth;
     }
-
     protected inSightRange(position: Vec2) {
         return this.owner.position.distanceTo(position) <= this.parent.sightRange;
     }
-
     protected inAttackRange(position: Vec2) {
         return this.owner.position.distanceTo(position) <= this.parent.attackRange;
     }
@@ -51,16 +62,17 @@ export default abstract class GooseState extends State {
 
 import { GooseAttackRight, GooseAttackLeft } from "./Attack/GooseAttack";
 import { GooseMoveRight, GooseMoveLeft } from "./Move/GooseMove";
-import { NormalGooseIdle, DemonGooseIdle } from "./Idle/GooseIdle"
+import { NormalGooseIdle, DemonGooseIdle } from "./Idle/GooseIdle";
+import { GooseHitRight, GooseHitLeft } from "./Hit/GooseHit";
+import { GooseDyingRight, GooseDyingLeft } from "./Dying/GooseDying";
 import GooseDead from "./GooseDead";
 
 export { 
-    GooseAttackRight, 
-    GooseAttackLeft, 
-    GooseMoveRight, 
-    GooseMoveLeft,
-    NormalGooseIdle, 
-    DemonGooseIdle,
+    GooseAttackRight, GooseAttackLeft, 
+    GooseMoveRight, GooseMoveLeft,
+    NormalGooseIdle, DemonGooseIdle,
+    GooseHitRight, GooseHitLeft,
+    GooseDyingRight, GooseDyingLeft,
     GooseDead
 } 
 

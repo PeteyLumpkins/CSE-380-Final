@@ -20,6 +20,6 @@ export default class RatHitLeft extends RatHit {
 
     takeDamage(): void {
         console.log("Taking damage in hit left state!");
-        this.finished(RatAIStates.HURT_RIGHT);
+        this.finished(RatAIStates.HURT_LEFT);
     }
 }
