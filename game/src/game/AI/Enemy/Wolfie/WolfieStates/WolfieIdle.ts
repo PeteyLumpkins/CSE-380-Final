@@ -1,5 +1,6 @@
 import GameEvent from "../../../../../Wolfie2D/Events/GameEvent";
 import AnimatedSprite from "../../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import { PlayerEvents } from "../../../Player/PlayerController";
 import { WolfieAIStates } from "../WolfieAI";
 import WolfieState from "./WolfieState";
 
@@ -15,31 +16,25 @@ export default class WolfieIdle extends WolfieState {
     }
 
     handleInput(event: GameEvent): void { 
-
         switch (event.type) {
-
-            case WolfieAIStates.PLAYER_SEEN: {
-                this.handlePlayerSeenEvent(event);
+            case PlayerEvents.ATTACKED: {
+                this.handlePlayerAttackEvent(event);
                 break;
             }
             default: {
-                console.log("Unknown event caught in RatIdle state");
                 break;
             }
         }
     }
 
-    handlePlayerSeenEvent(event: GameEvent): void {
-        console.log("Handlign a player seen event");
+    handlePlayerAttackEvent(event: GameEvent): void {
+        if (this.owner.collisionShape.overlaps(event.data.get("hitbox"))) {
+            this.finished(WolfieAIStates.TRANSFORM);
+        }
     }
 
     update(deltaT: number): void {
         super.update(deltaT);
-
-        // If we're in range of the player - rat should start trying to move toward the player
-        // if (this.inSightRange(this.parent.target.position)) {
-        //     this.finished(WolfieAIStates.MOVE);
-        // }
     }
 
     onExit(): Record<string, any> { return; }

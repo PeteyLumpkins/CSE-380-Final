@@ -143,7 +143,7 @@ export default class Level5 extends GameLevel {
         this.enemies[0].position.set(992, 960);
         // this.enemies[0].route = this.enemies[0].route.map((index: number) => this.navmeshGraph.getNodePosition(index));                
 
-        this.enemies[0].addAI(WolfieAI, {"health":2, "moveSpeed":2.5,"attackRange":150, "target":this.player});
+        this.enemies[0].addAI(WolfieAI, {"health":2, "moveSpeed":2.5,"attackRange":120, "target":this.player});
         this.enemies[0].addPhysics(null, null, false);
     }
     
