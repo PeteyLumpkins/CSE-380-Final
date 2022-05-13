@@ -15,7 +15,7 @@ export default class WolfieKnockback extends WolfieState {
         this.playerPosition = this.parent.target.position;
 
         // Player -> target is direction we want to move
-        this.knockbackPosition = this.playerPosition.dirTo(this.owner.position).mult(new Vec2(100, 100)).add(this.playerPosition);
+        this.knockbackPosition = this.parent.target.position.dirTo(this.owner.position).mult(new Vec2(100, 100)).add(this.parent.target.position);
 
         console.log('Entering knockback state');
     }

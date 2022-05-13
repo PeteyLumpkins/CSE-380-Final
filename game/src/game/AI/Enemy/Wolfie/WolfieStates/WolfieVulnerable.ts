@@ -11,7 +11,7 @@ export default class WolfieVulnerable extends WolfieState {
         if (this.owner instanceof AnimatedSprite) {
             this.owner.animation.play("vulnerable");
         }
-        console.log("Entering the wolfie idle state");
+        console.log("Entering the wolfie vulnerable state");
     }
 
     handleInput(event: GameEvent): void { return; }

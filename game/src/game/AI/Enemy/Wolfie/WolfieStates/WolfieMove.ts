@@ -18,7 +18,6 @@ export default class WolfieMove extends WolfieState {
 
         if (this.owner instanceof AnimatedSprite)
             this.owner.animation.play("move");
-            // this.owner.disablePhysics();
 
     }
 
@@ -33,10 +32,7 @@ export default class WolfieMove extends WolfieState {
                 "position": this.parent.target.position
             }, ()=>{});
         } else{
-        // } else {
-        //     this.parent.chaseTimer.start();
-        //     this.finished(WolfieAIStates.ATTACK);
-        // }
+
         this.parent.chaseTimer.start();
         this.finished(WolfieAIStates.ATTACK);
         }

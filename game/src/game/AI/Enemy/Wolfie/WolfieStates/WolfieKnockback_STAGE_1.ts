@@ -17,7 +17,7 @@ export default class WolfieKnockback_STAGE_1 extends WolfieState {
         // Player -> target is direction we want to move
         this.knockbackPosition = this.playerPosition.dirTo(this.owner.position).mult(new Vec2(100, 100)).add(this.playerPosition);
 
-        console.log('Entering knockback state');
+        console.log('Entering knockback state while transformed');
     }
     handleInput(event: GameEvent): void {}
 
