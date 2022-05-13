@@ -68,7 +68,7 @@ export default class Level1 extends GameLevel {
     /** GAMELEVEL METHODS */
 
     initViewport(): void {
-        this.viewport.setZoomLevel(3);
+        this.viewport.setZoomLevel(1);
     }
 
     initPlayer(): void {
@@ -110,7 +110,7 @@ export default class Level1 extends GameLevel {
         this.viewport.setBounds(0, 0, tilemapSize.x, tilemapSize.y);
 
         let gLayer = this.addLayer(GameLayers.NAVMESH_GRAPH, 10);
-        gLayer.setHidden(true);
+        // gLayer.setHidden(true);
 
         let navmeshData = this.load.getObject(GameData.NAVMESH);
 

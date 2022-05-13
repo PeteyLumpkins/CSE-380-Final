@@ -281,6 +281,7 @@ export default abstract class GameLevel extends Scene {
 
         this.receiver.subscribe(PlayerEvents.MONEY_CHANGE);
         this.receiver.subscribe(PlayerEvents.HEALTH_CHANGE);
+        this.receiver.subscribe(PlayerEvents.PLAYER_DIED);
         this.receiver.subscribe(GameEventType.KEY_DOWN);
     }
 
@@ -304,6 +305,11 @@ export default abstract class GameLevel extends Scene {
             case PlayerEvents.HEALTH_CHANGE: {
                 console.log("Change in player's health caught in GameLevel!");
                 this.eventHandlers.healthChange(event);
+                break;
+            }
+            case PlayerEvents.PLAYER_DIED: {
+                console.log("Player death caught in GameLevel!");
+                this.eventHandlers.playerDied(event);
                 break;
             }
             case GameEventType.KEY_DOWN: {
