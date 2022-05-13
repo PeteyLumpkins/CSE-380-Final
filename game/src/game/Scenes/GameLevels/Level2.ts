@@ -19,6 +19,7 @@ import Navmesh from "../../../Wolfie2D/Pathfinding/Navmesh";
 import { GameEventType } from "../../../Wolfie2D/Events/GameEventType";
 import NormalGooseAI from "../../AI/Enemy/Goose/NormalGooseAI";
 import DemonGooseAI from "../../AI/Enemy/Goose/DemonGooseAI";
+import Level5 from "./Level5";
 
 export default class Level2 extends GameLevel {
 
@@ -171,8 +172,8 @@ export default class Level2 extends GameLevel {
         // NEXT LEVEL
         this.nextLevel = this.add.sprite(GameSprites.LADDER, GameLayers.PRIMARY);
         this.nextLevel.position.copy(Level2.NEXT_LEVEL_POS);
-        this.nextLevel.addAI(LevelEndAI, {player: this.player, range: 25, nextLevel: Level3, nextLevelData: {
-            spawn: Level3.PLAYER_SPAWN_POS, 
+        this.nextLevel.addAI(LevelEndAI, {player: this.player, range: 25, nextLevel: Level5, nextLevelData: {
+            spawn: Level5.PLAYER_SPAWN_POS, 
             inventory: (<PlayerController>this.player._ai).playerInventory,
             stats: (<PlayerController>this.player._ai).playerStats
         }});

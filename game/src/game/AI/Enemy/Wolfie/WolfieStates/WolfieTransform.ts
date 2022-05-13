@@ -1,7 +1,8 @@
 
 import GameEvent from "../../../../../Wolfie2D/Events/GameEvent";
 import AnimatedSprite from "../../../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
-import WolfieAI, { WolfieAIStates } from "../WolfieAI";
+import { PlayerEvents } from "../../../Player/PlayerController";
+import WolfieAI, { WolfieAIStates, WolfieAIEvent } from "../WolfieAI";
 import WolfieState from "./WolfieState";
 
 export default class WolfieTransform extends WolfieState {
@@ -11,22 +12,29 @@ export default class WolfieTransform extends WolfieState {
         this.parent.health = 200; // Refill on HP
         console.log(this.parent.health);
         if (this.owner instanceof AnimatedSprite) {
-            this.owner.animation.play("transform");
+            this.owner.animation.playIfNotAlready("transform", false, WolfieAIEvent.TRANSFORMED);
         }
 
     }
     handleInput(event: GameEvent): void {
-    }
-
-    update(deltaT: number): void {
-        if (this.owner instanceof AnimatedSprite) {
-
-            if (!this.owner.animation.isPlaying("transform")) {
-                this.parent.transformed = true;
+        switch(event.type) {
+            case WolfieAIEvent.TRANSFORMED: {
+                console.log("Starting wolfie move state?");
                 this.finished(WolfieAIStates.MOVE);
+                break;
+            }
+            case PlayerEvents.ATTACKED: {
+                // Do nothing - cannot take dmg while transforming
+                break;
+            }
+            default: {
+                super.handleInput(event);
+                break;
             }
         }
     }
+
+    update(deltaT: number): void {}
 
     onExit(): Record<string, any> { return; }
 

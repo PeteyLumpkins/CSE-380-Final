@@ -10,32 +10,31 @@ import WolfieState from "./WolfieState";
 
 export default class WolfieMove extends WolfieState {
 
-
-
-
     onEnter(options: Record<string, any>): void {
-        console.log("Entering the wolfie move state");
-
-        if (this.owner instanceof AnimatedSprite)
+        console.log("Starting wolfie move state");
+        this.parent.moveTimer.start();
+        if (this.owner instanceof AnimatedSprite) {
             this.owner.animation.play("move");
-
+        }
     }
 
     update(deltaT: number): void {
         super.update(deltaT);
 
-        let dir = this.owner.position.dirTo(this.parent.target.position);
-
-        if (!this.parent.moveTimer.isStopped()) {
-            this.parent.moveAction.performAction(deltaT, {
-                "target": this.owner,
-                "position": this.parent.target.position
-            }, ()=>{});
-        } else{
-
-        this.parent.chaseTimer.start();
-        this.finished(WolfieAIStates.ATTACK);
+        if (this.parent.moveTimer.isStopped()) {
+            console.log("Starting wolfie vulnerable state");
+            this.finished(WolfieAIStates.VULNERABLE);
         }
+
+        if (this.inAttackRange(this.parent.target.position)) {
+            console.log("Starting wolfie attack");
+            this.finished(WolfieAIStates.ATTACK);
+        }
+
+        this.parent.moveAction.performAction(deltaT, {
+            "target": this.owner,
+            "position": this.parent.target.position
+        }, ()=>{});
     }
 
     handleInput(event: GameEvent): void {}

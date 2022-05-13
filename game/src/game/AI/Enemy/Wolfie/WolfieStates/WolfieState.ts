@@ -1,35 +1,43 @@
 import State from "../../../../../Wolfie2D/DataTypes/State/State";
 import Vec2 from "../../../../../Wolfie2D/DataTypes/Vec2";
+import GameEvent from "../../../../../Wolfie2D/Events/GameEvent";
+import { GameEventType } from "../../../../../Wolfie2D/Events/GameEventType";
 import GameNode from "../../../../../Wolfie2D/Nodes/GameNode";
 import Timer from "../../../../../Wolfie2D/Timing/Timer";
+import { PlayerEvents } from "../../../Player/PlayerController";
 import WolfieAI, { WolfieAIStates } from "../WolfieAI";
 
 export default abstract class WolfieState extends State {
     protected parent: WolfieAI;
     protected owner: GameNode;
-    protected attackTimer: Timer;
 
     constructor(parent: WolfieAI, owner: GameNode){
         super(parent);
         this.owner = owner;
-        this.attackTimer = new Timer(5000);
     }
 
-    protected attackReady(): boolean {
-        return this.attackTimer.isStopped();
-    }
     update(deltaT: number): void {
+        console.log(this.parent.health);
+    }
 
-        // If the wolfie is dead - transition to the dead state
-        if (this.isDead()) {
-            if(!this.parent.transformed){
-                this.finished(WolfieAIStates.TRANSFORM);
-            } else{
-                this.finished(WolfieAIStates.DEAD);
+    handleInput(event: GameEvent): void {
+        switch(event.type) {
+            case PlayerEvents.ATTACKED: {
+                if (this.owner.collisionShape.overlaps(event.data.get("hitbox"))) {
+                    this.parent.health -= event.data.get("damage");
+                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "hitSound", loop: false, holdReference: true});
+                    if (this.isDead()) {
+                        this.finished(WolfieAIStates.DEAD);
+                    }
+                }
+                break;
+            }
+            default: {
+                console.warn("Unhandled event caught in wolfiestate: " + event.type);
             }
         }
-
     }
+
     protected isDead(): boolean {
         return this.parent.health <= 0;
     }

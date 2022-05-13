@@ -17,9 +17,11 @@ import WolfieVulnerable from "./WolfieStates/WolfieVulnerable";
 import WolfieDead from "./WolfieStates/WolfieDead";
 
 
-
-
-
+export enum WolfieAIEvent {
+    TRANSFORMED = "WOLFIE_TRANSFORMED",
+    ATTACKED = "WOLFIE_ATTACKED",
+    VULNERABLE_ENDED = "WOLFIE_VULNERABLE_ENDED"
+}
 
 export enum WolfieAIStates {
     IDLE = "WOLFIE_IDLE_STATE",
@@ -59,55 +61,12 @@ export default class WolfieAI extends EnemyAI {
     /** Cooldown timers for the knockback and attack of the rat */
     knockbackCooldownTimer: Timer = new Timer(2000);
     chaseTimer: Timer = new Timer(10000);
-    vulnerableTimer: Timer = new Timer(2000);
+    vulnerableTimer: Timer = new Timer(3000, ()=>{this.emitter.fireEvent(WolfieAIEvent.VULNERABLE_ENDED)});
     moveTimer: Timer = new Timer(3000);
     // attackTimer: Timer = new Timer(5000);
 
     update(deltaT: number): void {
-
         super.update(deltaT);
-        // if(this.angle.isStopped()){
-        //     this.angle.start();
-        //     this.angleDeg >= 360 ? this.angleDeg = 0 : this.angleDeg+=10;
-
-        //     console.log(this.angleDeg);
-        // }
-        while(this.receiver.hasNextEvent()){
-            this.handleEvent(this.receiver.getNextEvent());
-        }
-    }
-
-    handleEvent(event: GameEvent): void {
-        switch(event.type) {
-            case PlayerEvents.ATTACKED: {
-                console.log("Caught player attacked event in Wolfie");
-                this.handlePlayerAttackEvent(event);
-                break;
-            }
-            default: {
-                console.log("Unhandled event caught in WOLFIE");
-                break;
-            }
-        }
-    }
-
-    handlePlayerAttackEvent(event: GameEvent): void {
-        
-            if (this.owner.collisionShape.overlaps(event.data.get("hitbox"))) {
-                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "hitSound", loop: false, holdReference: true});
-                this.health -= event.data.get("damage");
-                if (this.knockbackCooldownTimer.isStopped()) {
-                    this.knockbackCooldownTimer.start();
-                    if(!this.transformed){
-                        this.changeState(WolfieAIStates.KNOCK_BACK);
-                    }
-                    else{
-                        this.changeState(WolfieAIStates.KNOCK_BACK_STAGE_1);
-
-                    }
-                }
-            }
-
     }
 
     initStates(): void {
@@ -143,7 +102,10 @@ export default class WolfieAI extends EnemyAI {
     }
     subscribeToEvents(): void {
         this.receiver.subscribe(WolfieAIStates.PLAYER_SEEN);
+        this.receiver.subscribe(WolfieAIEvent.ATTACKED);
+        this.receiver.subscribe(WolfieAIEvent.TRANSFORMED);
         this.receiver.subscribe(PlayerEvents.ATTACKED);
+        this.receiver.subscribe(WolfieAIEvent.VULNERABLE_ENDED);
     }
 
 }
